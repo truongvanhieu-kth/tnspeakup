@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0756b8">
+  <title>Phòng thực hành | TNSPEAKUP</title>
+  <meta name="description" content="Rút đề, bấm giờ, tự luyện nói và ghi lại cảm nhận. Không cần hoàn hảo, chỉ cần dám bắt đầu.">
+  <link rel="icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="TNSPEAKUP - Trang chủ"><img src="logo.png" alt="Logo TNSPEAKUP"><span class="brand-copy"><strong class="wordmark"><span class="wm-tn">TN</span><span class="wm-sp">SPEAK</span><span class="wm-up">UP</span></strong><small>Dám cất lời - Tự tin toả sáng</small></span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Mở menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav"><a class="" href="index.html">Trang chủ</a><a class="" href="kham-pha-ban-than.html">Khám phá bản thân</a><a class="" href="hoc-vien.html">Học viện</a><a class="active" href="phong-thuc-hanh.html">Thực hành</a><a class="nav-cta" href="chatbot.html">Trợ lý AI 5A <span>↗</span></a><a class="" href="thu-vien-chu-de.html">Thư viện</a><a class="" href="hanh-trinh-tien-bo.html">Tiến bộ</a><a class="" href="goc-giao-vien.html">Góc giáo viên</a></nav>
+    </div>
+  </header>
+  <main>
+    <section class="page-hero"><div class="container">
+      <div class="crumbs"><a href="index.html">Trang chủ</a> / Phòng thực hành</div>
+      <span class="eyebrow eyebrow-light">04 · PHÒNG THỰC HÀNH</span>
+      <h1>Học bằng trải nghiệm. <span>Trưởng thành qua từng lần thử.</span></h1><p>Rút đề, bấm giờ, tự luyện nói và ghi lại cảm nhận. Không cần hoàn hảo, chỉ cần dám bắt đầu.</p>
+    </div></section>
+    <section class="page-body"><div class="container">
+<div class="tabs" id="ptabs"></div>
+<div class="panel">
+  <h2 id="cTitle"></h2><p class="hint" id="cHint"></p>
+  <div id="camBox" style="display:none"><video class="preview" id="cam" autoplay muted playsinline></video><button class="btn alt sm" id="camBtn" type="button">Bật camera xem trước</button> <small style="color:var(--muted)">Hình ảnh chỉ hiển thị trên máy bạn, không được lưu hay gửi đi.</small><br><br></div>
+  <div class="prompt-box" id="prompt">Bấm “Rút đề” để nhận đề bài.</div>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="btn gold" id="draw" type="button">Rút đề</button>
+    <button class="btn" id="start" type="button">Bắt đầu bấm giờ</button>
+    <button class="btn alt" id="stop" type="button">Dừng</button>
+    <span class="timer" id="timer">00:00</span>
+  </div>
+  <hr style="border:0;border-top:1px solid #e3edf8;margin:22px 0">
+  <label class="field">Sau khi nói, bạn thấy mình làm tốt điều gì và cần cải thiện điều gì?<textarea id="reflect" placeholder="Viết 2–3 câu tự nhận xét"></textarea></label>
+  <button class="btn" id="saveLog" type="button">Ghi vào nhật kí luyện tập</button><span class="saved" id="logMsg"></span>
+</div>
+<p style="margin-top:24px"><a class="text-link" href="hanh-trinh-tien-bo.html">Xem nhật kí trong Hành trình tiến bộ →</a></p>
+    </div></section>
+  </main>
+  <div class="copyright-overlay" role="contentinfo"><img src="logo.png" alt=""><span>© 2026 TNSpeakUp <b>|</b> Sản phẩm dự thi KHKT trường THCS Thống Nhất</span></div>
+  <script src="app.js"></script>
+  <script>
+const C = [
+ { id: 'camera', t: 'Nói trước ống kính', h: 'Làm quen với máy quay và quan sát cách bạn thể hiện. Có thể bật camera để xem trước.', sec: 120, cam: true, p: ['Giới thiệu bản thân trong 2 phút', 'Kể về một người bạn ngưỡng mộ', 'Kể một kỉ niệm đáng nhớ ở trường', 'Giới thiệu sở thích của bạn'] },
+ { id: 'phut', t: 'Một phút tỏa sáng', h: 'Trình bày một ý tưởng chỉ trong 60 giây.', sec: 60, p: ['Vì sao nên đọc sách mỗi ngày?', 'Một thói quen tốt bạn muốn lan tỏa', 'Món ăn quê hương bạn', 'Nếu có một ngày làm hiệu trưởng, bạn sẽ làm gì?'] },
+ { id: 'gocnhin', t: 'Góc nhìn của tôi', h: 'Chia sẻ quan điểm cá nhân: nêu ý kiến, lí do và ví dụ.', sec: 120, p: ['Học sinh có nên dùng điện thoại ở trường?', 'Điểm số có quan trọng nhất không?', 'Bạn nghĩ gì về việc dùng AI để làm bài?', 'Mạng xã hội giúp ích hay gây hại cho tuổi trẻ?'] },
+ { id: 'hoinhanh', t: 'Hỏi nhanh – đáp hay', h: 'Trả lời mỗi câu hỏi trong 20 giây. Rút đề liên tục để luyện phản xạ.', sec: 20, p: ['Điều gì làm bạn tự hào nhất tuần này?', 'Nếu được thay đổi một điều ở lớp, bạn chọn gì?', 'Bạn sẽ khuyên gì cho một bạn đang sợ nói trước lớp?', 'Một cuốn sách hay một bộ phim bạn muốn giới thiệu?'] },
+ { id: 'nguvan', t: 'Sân khấu Ngữ văn', h: 'Thể hiện cảm nhận về tác phẩm đã học: nhân vật, chi tiết, thông điệp.', sec: 90, p: ['Nhân vật bạn ấn tượng nhất trong bài vừa học và vì sao?', 'Một chi tiết nghệ thuật đặc sắc bạn muốn chia sẻ', 'Bài học bạn rút ra từ một truyện đã học', 'Đọc diễn cảm một đoạn thơ rồi nói cảm nhận'] }];
+const topicPicked = S.get('topic', null);
+let cur = 0, left = 0, tm = null, stream = null;
+const tabs = $('#ptabs');
+C.forEach((c, i) => { const b = document.createElement('button'); b.className = 'tab'; b.textContent = c.t; b.onclick = () => sel(i); tabs.appendChild(b); });
+function fmt(s) { return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+function sel(i) { cur = i; stopT(); const c = C[i]; $$('.tab').forEach((t, k) => t.classList.toggle('on', k === i)); $('#cTitle').textContent = c.t; $('#cHint').textContent = c.h; $('#camBox').style.display = c.cam ? 'block' : 'none'; $('#prompt').textContent = (topicPicked && i === 2) ? 'Đề bạn đã chọn ở Thư viện: ' + topicPicked.title : 'Bấm “Rút đề” để nhận đề bài.'; $('#timer').textContent = fmt(c.sec); $('#timer').classList.remove('low'); }
+function stopT() { clearInterval(tm); tm = null; }
+$('#draw').onclick = () => { const p = C[cur].p; $('#prompt').textContent = p[Math.floor(Math.random() * p.length)]; };
+$('#start').onclick = () => { stopT(); left = C[cur].sec; $('#timer').textContent = fmt(left); tm = setInterval(() => { left--; $('#timer').textContent = fmt(Math.max(left, 0)); $('#timer').classList.toggle('low', left <= 10); if (left <= 0) { stopT(); $('#timer').textContent = 'Hết giờ!'; } }, 1000); };
+$('#stop').onclick = stopT;
+$('#camBtn').onclick = async () => { try { if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; $('#cam').srcObject = null; $('#cam').style.display = 'none'; $('#camBtn').textContent = 'Bật camera xem trước'; return; } stream = await navigator.mediaDevices.getUserMedia({ video: true }); $('#cam').srcObject = stream; $('#cam').style.display = 'block'; $('#camBtn').textContent = 'Tắt camera'; } catch (e) { alert('Không bật được camera. Hãy cho phép trình duyệt truy cập camera.'); } };
+$('#saveLog').onclick = () => { const t = $('#reflect').value.trim(); if (!t) { $('#logMsg').textContent = 'Hãy viết vài dòng nhận xét nhé.'; return; } const d = S.get('diary', []); d.unshift({ id: uid(), at: nowStr(), activity: C[cur].t, prompt: $('#prompt').textContent, text: t }); S.set('diary', d); $('#reflect').value = ''; $('#logMsg').textContent = 'Đã ghi vào nhật kí.'; };
+const hi = C.findIndex(c => '#' + c.id === location.hash); sel(hi >= 0 ? hi : 0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+TNSPEAKUP - Huong dan su dung
+1. Giai nen toan bo thu muc, GIU NGUYEN tat ca file cung mot cho.
+2. Mo file index.html bang Chrome/Edge/Firefox de bat dau.
+3. Neu thay giao dien cu: bam Ctrl+F5 de tai lai.
+4. Ma truy cap Goc giao vien (thu nghiem): giaovien2026 - nen doi trong goc-giao-vien.html (bien PASS).
+5. Du lieu hien chi luu trong trinh duyet dang dung (chua co may chu).

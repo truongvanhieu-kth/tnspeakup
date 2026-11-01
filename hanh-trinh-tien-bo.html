@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0756b8">
+  <title>Hành trình tiến bộ | TNSPEAKUP</title>
+  <meta name="description" content="Theo dõi mục tiêu, ghi nhật kí luyện tập, tự đánh giá và nhìn thấy dấu mốc tiến bộ của chính bạn.">
+  <link rel="icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="TNSPEAKUP - Trang chủ"><img src="logo.png" alt="Logo TNSPEAKUP"><span class="brand-copy"><strong class="wordmark"><span class="wm-tn">TN</span><span class="wm-sp">SPEAK</span><span class="wm-up">UP</span></strong><small>Dám cất lời - Tự tin toả sáng</small></span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Mở menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav"><a class="" href="index.html">Trang chủ</a><a class="" href="kham-pha-ban-than.html">Khám phá bản thân</a><a class="" href="hoc-vien.html">Học viện</a><a class="" href="phong-thuc-hanh.html">Thực hành</a><a class="nav-cta" href="chatbot.html">Trợ lý AI 5A <span>↗</span></a><a class="" href="thu-vien-chu-de.html">Thư viện</a><a class="" href="hanh-trinh-tien-bo.html">Tiến bộ</a><a class="active" href="goc-giao-vien.html">Góc giáo viên</a></nav>
+    </div>
+  </header>
+  <main>
+    <section class="page-hero"><div class="container">
+      <div class="crumbs"><a href="index.html">Trang chủ</a> / Hành trình tiến bộ</div>
+      <span class="eyebrow eyebrow-light">07 · HÀNH TRÌNH TIẾN BỘ</span>
+      <h1>Mỗi bước nhỏ <span>đều đáng tự hào.</span></h1><p>Theo dõi mục tiêu, ghi nhật kí luyện tập, tự đánh giá và nhìn thấy dấu mốc tiến bộ của chính bạn.</p>
+    </div></section>
+    <section class="page-body"><div class="container">
+<div class="grid-2">
+  <div class="panel" id="muc-tieu"><h2>Mục tiêu cá nhân</h2><p class="hint">Được đặt ở khu vực Khám phá bản thân.</p><div id="goalBox"></div></div>
+  <div class="panel" id="dau-moc"><h2>Dấu mốc tiến bộ</h2><p class="hint">Tự động mở khi bạn luyện tập và tự đánh giá.</p><div class="badges" id="medals"></div></div>
+</div>
+<div class="grid-2" style="margin-top:20px">
+  <div class="panel" id="nhat-ki"><h2>Nhật kí luyện tập</h2><p class="hint">Ghi lại mỗi lần luyện nói.</p>
+    <label class="field">Hôm nay bạn đã luyện gì và cảm thấy thế nào?<textarea id="dText"></textarea></label><button class="btn" id="dAdd" type="button">Thêm vào nhật kí</button>
+    <div class="list" id="diary"></div></div>
+  <div class="panel" id="tu-danh-gia"><h2>Tự đánh giá</h2><p class="hint">Chấm 1–5 cho bài nói gần nhất của bạn.</p><div id="rub"></div>
+    <label class="field">Điều mình sẽ cải thiện lần sau<input type="text" id="aNote"></label><button class="btn" id="aSave" type="button">Lưu đánh giá</button><div class="list" id="hist"></div></div>
+</div>
+    </div></section>
+  </main>
+  <div class="copyright-overlay" role="contentinfo"><img src="logo.png" alt=""><span>© 2026 TNSpeakUp <b>|</b> Sản phẩm dự thi KHKT trường THCS Thống Nhất</span></div>
+  <script src="app.js"></script>
+  <script>
+const R = (S.get('t_rubric', []).length ? S.get('t_rubric', []).map(r => r.title) : ['Nội dung rõ ràng', 'Bố cục mạch lạc', 'Giọng nói', 'Ngôn ngữ cơ thể', 'Tương tác với người nghe']);
+$('#rub').innerHTML = R.map((r, i) => '<label class="field">' + esc(r) + ': <b id="v' + i + '">3</b><input type="range" min="1" max="5" value="3" data-r="' + i + '"></label>').join('');
+$$('[data-r]').forEach(r => r.oninput = () => $('#v' + r.dataset.r).textContent = r.value);
+function draw() {
+  const g = S.get('goal', null);
+  $('#goalBox').innerHTML = g && g.title ? '<div class="item"><b>' + esc(g.title) + '</b><small>Chuyên đề: ' + esc(g.skill || '') + (g.due ? ' · Hạn: ' + esc(g.due) : '') + '</small></div>' : '<div class="item">Bạn chưa đặt mục tiêu. <a class="text-link" href="kham-pha-ban-than.html">Đặt mục tiêu →</a></div>';
+  const d = S.get('diary', []); $('#diary').innerHTML = d.length ? d.map(x => '<div class="item"><small>' + esc(x.at) + (x.activity ? ' · ' + esc(x.activity) : '') + '</small>' + esc(x.text) + '<div class="row"><button class="btn sm alt" data-del="' + x.id + '">Xóa</button></div></div>').join('') : '<div class="item">Chưa có mục nào.</div>';
+  $$('[data-del]').forEach(b => b.onclick = () => { S.set('diary', S.get('diary', []).filter(x => x.id !== b.dataset.del)); draw(); });
+  const a = S.get('assess', []); $('#hist').innerHTML = a.map(x => '<div class="item"><small>' + esc(x.at) + '</small>Điểm TB: <b>' + x.avg + '</b>/5' + (x.note ? ' · ' + esc(x.note) : '') + '</div>').join('');
+  const M = [['Bước đầu tiên', d.length >= 1], ['Luyện đủ 5 lần', d.length >= 5], ['Luyện đủ 10 lần', d.length >= 10], ['Tự đánh giá 3 lần', a.length >= 3], ['Điểm tự đánh giá tăng', a.length >= 2 && a[0].avg > a[a.length - 1].avg], ['Hoàn thành 4 chuyên đề', S.get('hv_done', []).length >= 4]];
+  $('#medals').innerHTML = M.map(m => '<span class="medal' + (m[1] ? ' got' : '') + '">' + (m[1] ? '★ ' : '☆ ') + m[0] + '</span>').join('');
+}
+$('#dAdd').onclick = () => { const t = $('#dText').value.trim(); if (!t) return; const d = S.get('diary', []); d.unshift({ id: uid(), at: nowStr(), text: t }); S.set('diary', d); $('#dText').value = ''; draw(); };
+$('#aSave').onclick = () => { const v = $$('[data-r]').map(r => +r.value), avg = (v.reduce((s, x) => s + x, 0) / v.length).toFixed(1); const a = S.get('assess', []); a.unshift({ at: nowStr(), avg: +avg, note: $('#aNote').value.trim() }); S.set('assess', a); $('#aNote').value = ''; draw(); };
+draw();
+  </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0756b8">
+  <meta name="description" content="TNSPEAKUP – Nền tảng hỗ trợ học sinh THCS phát triển sự tự tin và năng lực thuyết trình.">
+  <title>TNSPEAKUP | Dám cất lời – Tự tin tỏa sáng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .chat-fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(76px,calc(env(safe-area-inset-bottom) + 64px));z-index:1000;display:flex;align-items:center;gap:10px;flex-direction:row-reverse;text-decoration:none}
+    .chat-fab-btn{position:relative;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#0756b8,#2f8cff);box-shadow:0 10px 28px rgba(7,86,184,.38),0 2px 6px rgba(0,0,0,.12);transition:transform .2s ease,box-shadow .2s ease}
+    .chat-fab-btn::before{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;opacity:.45;z-index:-1;animation:fabPulse 2.4s ease-out infinite}
+    .chat-fab-btn svg{width:28px;height:28px}
+    .chat-fab-spark{position:absolute;top:8px;right:9px;font-size:12px;line-height:1}
+    .chat-fab-label{background:#fff;color:#0b3a7a;font:600 13px/1 "Be Vietnam Pro",system-ui,sans-serif;padding:10px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(7,86,184,.18);white-space:nowrap;opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+    .chat-fab:hover .chat-fab-label,.chat-fab:focus-visible .chat-fab-label{opacity:1;transform:none}
+    .chat-fab:hover .chat-fab-btn,.chat-fab:focus-visible .chat-fab-btn{transform:translateY(-3px) scale(1.06);box-shadow:0 14px 34px rgba(7,86,184,.46),0 2px 6px rgba(0,0,0,.12)}
+    .chat-fab:focus-visible{outline:none}.chat-fab:focus-visible .chat-fab-btn{outline:3px solid #fff;outline-offset:2px}
+    @keyframes fabPulse{0%{transform:scale(1);opacity:.45}100%{transform:scale(1.7);opacity:0}}
+    @media (max-width:640px){.chat-fab-btn{width:54px;height:54px}.chat-fab-label{display:none}}
+    @media (prefers-reduced-motion:reduce){.chat-fab-btn::before{animation:none}.chat-fab-btn,.chat-fab-label{transition:none}}
+  </style>
+</head>
+<body>
+  <div class="announcement">
+    <span class="announcement-dot"></span>
+    Không gian học tập và rèn luyện kỹ năng thuyết trình dành cho học sinh THCS
+  </div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="TNSPEAKUP - Trang chủ">
+        <img src="logo.png" alt="Logo TNSPEAKUP">
+        <span class="brand-copy"><strong class="wordmark"><span class="wm-tn">TN</span><span class="wm-sp">SPEAK</span><span class="wm-up">UP</span></strong><small>Dám cất lời - Tự tin toả sáng</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Mở menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <a class="active" href="index.html">Trang chủ</a>
+        <a href="goc-chia-se.html">Góc chia sẻ</a>
+        <a href="kham-pha-ban-than.html">Khám phá bản thân</a>
+        <a href="hoc-vien.html">Học viện</a>
+        <a href="phong-thuc-hanh.html">Thực hành</a>
+        <a href="thu-vien-chu-de.html">Thư viện</a>
+        <a href="hanh-trinh-tien-bo.html">Tiến bộ</a>
+        <a href="goc-giao-vien.html">Góc giáo viên</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section" id="trang-chu">
+      <div class="hero-glow hero-glow-one"></div><div class="hero-glow hero-glow-two"></div>
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-brandline"><span class="hero-wordmark" aria-label="TNSPEAKUP"><span class="wm-tn">TN</span><span class="wm-sp">SPEAK</span><span class="wm-up">UP</span></span><span class="slogan-fx">Dám cất lời – Tự tin tỏa sáng</span></div>
+          <h1>Mỗi tiếng nói<br>đều có thể <span>tỏa sáng.</span></h1>
+          <p class="hero-lead">Khám phá bản thân, rèn luyện kỹ năng và tự tin trình bày những điều bạn nghĩ, bạn tin và bạn muốn chia sẻ.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="kham-pha-ban-than.html">Khám phá bản thân <span>→</span></a>
+            <a class="button button-quiet" href="chatbot.html"><span class="play-icon">✦</span> Trò chuyện cùng Trợ lý 5A</a>
+          </div>
+          <div class="hero-note">
+            <div class="note-avatars" aria-hidden="true"><span>H</span><span>✦</span><span>✧</span></div>
+            <p><strong>Bắt đầu từ chính bạn</strong><br><small>Tiến bộ từng ngày, tự tin theo cách riêng.</small></p>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+          <div class="hero-logo-card"><img src="logo.png" alt="Biểu trưng TNSPEAKUP"></div>
+          <div class="floating-card card-top"><span class="float-icon">🎤</span><span><b>Cất lời</b><small>Dám thể hiện</small></span></div>
+          <div class="floating-card card-bottom"><span class="float-icon star">✦</span><span><b>Tỏa sáng</b><small>Tiến bộ mỗi ngày</small></span></div>
+          <span class="spark spark-one">✦</span><span class="spark spark-two">✧</span>
+        </div>
+      </div>
+      <div class="container hero-bottom"><span>01 / TRANG CHỦ</span><span class="bottom-line"></span><span>Dám cất lời - Tự tin toả sáng</span></div>
+    </section>
+
+    <section class="intro-strip">
+      <div class="container intro-grid">
+        <div><span class="strip-number">01</span><p><strong>Hiểu mình</strong><small>Nhận diện điểm mạnh và rào cản</small></p></div>
+        <div><span class="strip-number">02</span><p><strong>Học cách nói</strong><small>Trang bị kiến thức và kỹ năng</small></p></div>
+        <div><span class="strip-number">03</span><p><strong>Thực hành</strong><small>Luyện tập qua những thử thách</small></p></div>
+        <div><span class="strip-number">04</span><p><strong>Trưởng thành</strong><small>Nhìn lại và ghi nhận tiến bộ</small></p></div>
+      </div>
+    </section>
+
+    <section class="section about-section" id="gioi-thieu">
+      <div class="container two-column">
+        <div class="section-heading">
+          <span class="eyebrow">01 · GIỚI THIỆU</span>
+          <h2>Không chỉ học nói,<br><span>mà học cách tin vào mình.</span></h2>
+        </div>
+        <div class="about-copy">
+          <p>TNSPEAKUP là nền tảng học tập và rèn luyện kỹ năng thuyết trình dành cho học sinh THCS. Tại đây, mỗi bạn được khám phá bản thân, học từng kỹ năng nhỏ và thực hành trong một môi trường tích cực.</p>
+          <p class="highlight-quote">AI không nói thay bạn. AI đồng hành để bạn tự tin tìm thấy tiếng nói của chính mình.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section learning-section" id="khu-vuc">
+      <div class="container">
+        <div class="section-title-row">
+          <div class="section-heading">
+            <span class="eyebrow">ĐIỂM BẮT ĐẦU</span>
+            <h2>Chọn nơi bạn muốn<br><span>bắt đầu hôm nay.</span></h2>
+          </div>
+          <p class="section-description">Tám khu vực chức năng giúp bạn đi từ hiểu mình, học kỹ năng, thực hành đến ghi nhận tiến bộ.</p>
+        </div>
+        <div class="areas-grid">
+          <a class="area-card" href="goc-chia-se.html"><span class="skill-index">02</span><span class="skill-icon">💬</span><h3>Góc chia sẻ</h3><p>Nơi bạn chia sẻ bài nói, cảm nhận và kinh nghiệm cùng mọi người.</p><span class="area-go">Vào khu vực →</span></a>
+          <a class="area-card" href="kham-pha-ban-than.html"><span class="skill-index">03</span><span class="skill-icon">✧</span><h3>Khám phá bản thân</h3><p>Nhận diện cảm xúc, điểm mạnh, nỗi sợ và đặt mục tiêu rèn luyện.</p><span class="area-go">Vào khu vực →</span></a>
+          <a class="area-card" href="hoc-vien.html"><span class="skill-index">04</span><span class="skill-icon">▤</span><h3>Học viện thuyết trình</h3><p>Tám chuyên đề: từ mở đầu ấn tượng đến ứng biến và phản biện.</p><span class="area-go">Vào khu vực →</span></a>
+          <a class="area-card" href="phong-thuc-hanh.html"><span class="skill-index">05</span><span class="skill-icon">🎤</span><h3>Phòng thực hành</h3><p>Nói trước ống kính, Một phút tỏa sáng, Sân khấu Ngữ văn…</p><span class="area-go">Vào khu vực →</span></a>
+          <a class="area-card area-featured" href="chatbot.html"><span class="skill-index">06</span><span class="skill-icon">✦</span><h3>Trợ lý AI 5A</h3><p>Hỏi đáp, gợi mở, luyện tập và nhận phản hồi cho bài nói.</p><span class="area-go">Vào khu vực →</span></a>
+          <a class="area-card" href="thu-vien-chu-de.html"><span class="skill-index">07</span><span class="skill-icon">♧</span><h3>Thư viện chủ đề</h3><p>Văn học, trường học, cuộc sống, tuổi trẻ và công dân số.</p><span class="area-go">Vào khu vực →</span></a>
+          <a class="area-card" href="hanh-trinh-tien-bo.html"><span class="skill-index">08</span><span class="skill-icon">◉</span><h3>Hành trình tiến bộ</h3><p>Mục tiêu cá nhân, nhật kí luyện tập, tự đánh giá, dấu mốc.</p><span class="area-go">Vào khu vực →</span></a>
+          <a class="area-card" href="goc-giao-vien.html"><span class="skill-index">09</span><span class="skill-icon">⌘</span><h3>Góc giáo viên</h3><p>Khu quản trị học liệu, nhiệm vụ, đánh giá và Chatbot.</p><span class="area-go">Vào khu vực →</span></a>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section zone" id="goc-chia-se">
+      <div class="container">
+        <div class="zone-head">
+          <div class="section-heading"><span class="eyebrow">02 · GÓC CHIA SẺ</span><h2>Một câu chuyện nhỏ,<br><span>một nguồn cảm hứng lớn.</span></h2></div>
+          <div class="zone-side"><p class="section-description">Nơi bạn chia sẻ bài nói, cảm nhận và kinh nghiệm để cùng nhau tiến bộ.</p><a class="text-link" href="goc-chia-se.html">Xem toàn bộ khu vực <span>→</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section zone" id="kham-pha">
+      <div class="container">
+        <div class="zone-head">
+          <div class="section-heading"><span class="eyebrow">03 · KHÁM PHÁ BẢN THÂN</span><h2>Hiểu mình trước,<br><span>tự tin sau.</span></h2></div>
+          <div class="zone-side"><p class="section-description">Bốn bước nhỏ giúp bạn nhìn rõ cảm xúc, điểm mạnh và điều cần rèn luyện.</p><a class="text-link" href="kham-pha-ban-than.html">Xem toàn bộ khu vực <span>→</span></a></div>
+        </div>
+        <div class="mini-grid cols-4"><a class="mini-card" href="kham-pha-ban-than.html#cam-xuc"><span class="mini-ico">♡</span><h3>Cảm xúc khi thuyết trình</h3><p>Nhận diện bạn đang cảm thấy gì khi đứng trước mọi người.</p></a><a class="mini-card" href="kham-pha-ban-than.html#diem-manh"><span class="mini-ico">★</span><h3>Điểm mạnh của tôi</h3><p>Tìm ra những điều bạn đã làm tốt.</p></a><a class="mini-card" href="kham-pha-ban-than.html#noi-so"><span class="mini-ico">☁</span><h3>Nỗi sợ và rào cản</h3><p>Gọi tên điều khiến bạn ngại để vượt qua từng chút.</p></a><a class="mini-card" href="kham-pha-ban-than.html#muc-tieu"><span class="mini-ico">◎</span><h3>Mục tiêu rèn luyện</h3><p>Đặt mục tiêu vừa sức cho hành trình của riêng bạn.</p></a></div>
+      </div>
+    </section>
+
+    <section class="section zone zone-alt" id="hoc-vien">
+      <div class="container">
+        <div class="zone-head">
+          <div class="section-heading"><span class="eyebrow">04 · HỌC VIỆN THUYẾT TRÌNH</span><h2>Rèn từng kỹ năng.<br><span>Vững vàng từng bước.</span></h2></div>
+          <div class="zone-side"><p class="section-description">Tám chuyên đề giúp bạn xây dựng bài thuyết trình rõ ràng, cuốn hút và mang dấu ấn cá nhân.</p><a class="text-link" href="hoc-vien.html">Xem toàn bộ khu vực <span>→</span></a></div>
+        </div>
+        <div class="mini-grid cols-4"><a class="mini-card" href="hoc-vien.html#chuyen-de-1"><span class="mini-ico">✧</span><h3>Mở đầu ấn tượng</h3><p>Thu hút người nghe ngay từ những lời đầu tiên.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-2"><span class="mini-ico">▤</span><h3>Xây dựng nội dung</h3><p>Chọn lọc ý tưởng và phát triển thông điệp.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-3"><span class="mini-ico">⌘</span><h3>Bố cục và logic</h3><p>Sắp xếp ý tưởng mạch lạc, dễ theo dõi.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-4"><span class="mini-ico">✎</span><h3>Diễn đạt tự nhiên</h3><p>Dùng từ phù hợp, nói rõ ràng và chân thật.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-5"><span class="mini-ico">♫</span><h3>Làm chủ giọng nói</h3><p>Điều chỉnh âm lượng, tốc độ và ngữ điệu.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-6"><span class="mini-ico">◉</span><h3>Ngôn ngữ cơ thể</h3><p>Ánh mắt, cử chỉ và tư thế tự tin.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-7"><span class="mini-ico">♡</span><h3>Tương tác với người nghe</h3><p>Tạo kết nối và lan tỏa cảm xúc tích cực.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-8"><span class="mini-ico">⚡</span><h3>Ứng biến và phản biện</h3><p>Bình tĩnh xử lí câu hỏi và bảo vệ quan điểm.</p></a></div>
+      </div>
+    </section>
+
+    <section class="section zone" id="thuc-hanh">
+      <div class="container">
+        <div class="zone-head">
+          <div class="section-heading"><span class="eyebrow">05 · PHÒNG THỰC HÀNH</span><h2>Học bằng trải nghiệm.<br><span>Trưởng thành qua từng lần thử.</span></h2></div>
+          <div class="zone-side"><p class="section-description">Không cần hoàn hảo ngay từ đầu, chỉ cần bạn dám bắt đầu.</p><a class="text-link" href="phong-thuc-hanh.html">Xem toàn bộ khu vực <span>→</span></a></div>
+        </div>
+        <div class="mini-grid cols-5"><a class="mini-card" href="phong-thuc-hanh.html#camera"><span class="mini-ico">🎥</span><h3>Nói trước ống kính</h3><p>Làm quen với máy quay và quan sát cách bạn thể hiện.</p></a><a class="mini-card" href="phong-thuc-hanh.html#phut"><span class="mini-ico">⏱</span><h3>Một phút tỏa sáng</h3><p>Trình bày một ý tưởng chỉ trong 60 giây.</p></a><a class="mini-card" href="phong-thuc-hanh.html#gocnhin"><span class="mini-ico">💡</span><h3>Góc nhìn của tôi</h3><p>Chia sẻ quan điểm về điều bạn quan tâm.</p></a><a class="mini-card" href="phong-thuc-hanh.html#hoinhanh"><span class="mini-ico">⚡</span><h3>Hỏi nhanh – đáp hay</h3><p>Phản xạ nhanh với những câu hỏi bất ngờ.</p></a><a class="mini-card" href="phong-thuc-hanh.html#nguvan"><span class="mini-ico">📖</span><h3>Sân khấu Ngữ văn</h3><p>Thể hiện tác phẩm và cảm nhận văn học bằng lời nói.</p></a></div>
+      </div>
+    </section>
+
+    <section class="section ai-section" id="tro-ly-ai">
+      <div class="container ai-panel">
+        <div class="ai-content">
+          <span class="eyebrow eyebrow-light">06 · TRỢ LÝ AI 5A</span>
+          <h2>AI gợi mở.<br><span>Bạn tự tin cất lời.</span></h2>
+          <p>Chatbot TNSPEAKUP trả lời dựa trên kho kiến thức do giáo viên biên soạn và kiểm duyệt. Ở chế độ đồng hành 5A, trợ lý đặt câu hỏi, gợi ý và phản hồi để bạn tự xây dựng bài nói, không nói thay bạn.</p>
+          <div class="ai-chips"><span>Hỏi đáp kiến thức</span><span>Gợi ý nội dung</span><span>Luyện mở đầu</span><span>Cải thiện diễn đạt</span><span>Luyện phản biện</span><span>Phản hồi bài nói</span></div>
+          <a class="button button-white" href="chatbot.html">Trò chuyện với Trợ lý 5A <span>→</span></a>
+        </div>
+        <div class="steps-5a">
+          <div><b>01</b><span><strong>ASK</strong><small>Đặt câu hỏi</small></span><i>↗</i></div>
+          <div><b>02</b><span><strong>ANALYZE</strong><small>Phân tích, kiểm chứng gợi ý</small></span><i>↗</i></div>
+          <div><b>03</b><span><strong>ADAPT</strong><small>Chọn lọc, diễn đạt theo cách của mình</small></span><i>↗</i></div>
+          <div><b>04</b><span><strong>ACT</strong><small>Tự luyện tập và trình bày</small></span><i>↗</i></div>
+          <div><b>05</b><span><strong>ASSESS</strong><small>Nhận xét, điều chỉnh, cải thiện</small></span><i>↗</i></div>
+        </div>
+        <div class="ai-orb">✦</div>
+      </div>
+    </section>
+
+
+    <section class="section zone zone-alt" id="thu-vien">
+      <div class="container">
+        <div class="zone-head">
+          <div class="section-heading"><span class="eyebrow">07 · THƯ VIỆN CHỦ ĐỀ</span><h2>Có chủ đề hay,<br><span>bài nói sẽ có hồn.</span></h2></div>
+          <div class="zone-side"><p class="section-description">Năm nhóm chủ đề gần gũi để bạn chọn đề tài cho bài nói của mình.</p><a class="text-link" href="thu-vien-chu-de.html">Xem toàn bộ khu vực <span>→</span></a></div>
+        </div>
+        <div class="mini-grid cols-5"><a class="mini-card" href="thu-vien-chu-de.html#g1"><span class="mini-ico">📚</span><h3>Văn học và tác phẩm</h3><p>Cảm nhận, thuyết trình về tác phẩm đã học.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g2"><span class="mini-ico">🏫</span><h3>Trường học của em</h3><p>Chuyện lớp học, thầy cô, bạn bè, hoạt động.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g3"><span class="mini-ico">🌿</span><h3>Cuộc sống quanh ta</h3><p>Những điều quen thuộc đáng để nói ra.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g4"><span class="mini-ico">🚀</span><h3>Tuổi trẻ và tương lai</h3><p>Ước mơ, lựa chọn và định hướng của bạn.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g5"><span class="mini-ico">🛡</span><h3>Công dân số</h3><p>Ứng xử, an toàn và sáng tạo trong môi trường số.</p></a></div>
+      </div>
+    </section>
+
+    <section class="section zone" id="tien-bo">
+      <div class="container">
+        <div class="zone-head">
+          <div class="section-heading"><span class="eyebrow">08 · HÀNH TRÌNH TIẾN BỘ</span><h2>Mỗi bước nhỏ<br><span>đều đáng tự hào.</span></h2></div>
+          <div class="zone-side"><p class="section-description">Ghi lại quá trình luyện tập và nhận ra sự tự tin được bồi đắp qua từng trải nghiệm.</p><a class="text-link" href="hanh-trinh-tien-bo.html">Xem toàn bộ khu vực <span>→</span></a></div>
+        </div>
+        <div class="mini-grid cols-4"><a class="mini-card" href="hanh-trinh-tien-bo.html#muc-tieu"><span class="mini-ico">◎</span><h3>Mục tiêu cá nhân</h3><p>Theo dõi điều bạn muốn đạt được.</p></a><a class="mini-card" href="hanh-trinh-tien-bo.html#nhat-ki"><span class="mini-ico">✎</span><h3>Nhật kí luyện tập</h3><p>Ghi lại mỗi lần thực hành và cảm nhận.</p></a><a class="mini-card" href="hanh-trinh-tien-bo.html#tu-danh-gia"><span class="mini-ico">✓</span><h3>Tự đánh giá</h3><p>Nhìn lại bài nói và điều chỉnh.</p></a><a class="mini-card" href="hanh-trinh-tien-bo.html#dau-moc"><span class="mini-ico">⚑</span><h3>Dấu mốc tiến bộ</h3><p>Ghi nhận những bước tiến của chính bạn.</p></a></div>
+      </div>
+    </section>
+
+    <section class="section teacher-section" id="giao-vien">
+      <div class="container teacher-card">
+        <div class="teacher-icon">♧</div>
+        <div>
+          <span class="eyebrow">09 · GÓC GIÁO VIÊN</span>
+          <h2>Trung tâm quản lý <span>nội dung và học liệu</span></h2>
+          <p>Khu quản trị riêng để quản lý bài viết, học liệu, nhiệm vụ, đánh giá, kho kiến thức và Chatbot; theo dõi quá trình luyện tập của học sinh. Cần đăng nhập để truy cập.</p>
+        </div>
+        <a class="button button-outline" href="goc-giao-vien.html">Đăng nhập quản trị <span>→</span></a>
+      </div>
+      <div class="container teacher-modules"><a href="goc-giao-vien.html#posts">Quản lý bài viết</a><a href="goc-giao-vien.html#docs">Quản lý học liệu</a><a href="goc-giao-vien.html#tasks">Quản lý nhiệm vụ</a><a href="goc-giao-vien.html#rubric">Quản lý đánh giá</a><a href="goc-giao-vien.html#kb">Quản lý Chatbot</a><a href="goc-giao-vien.html#students">Theo dõi học sinh</a></div>
+    </section>
+
+    <section class="section final-cta" id="bat-dau">
+      <div class="container cta-inner">
+        <img class="cta-logo" src="logo.png" alt="Logo TNSPEAKUP">
+        <span class="eyebrow eyebrow-light">Dám cất lời - Tự tin toả sáng</span>
+        <h2>Tiếng nói của bạn<br>đáng được lắng nghe.</h2>
+        <p>Hãy bắt đầu từ một câu nói nhỏ. Hành trình tự tin của bạn bắt đầu ngay hôm nay.</p>
+        <a class="button button-white" href="kham-pha-ban-than.html">Bắt đầu hành trình <span>→</span></a>
+      </div>
+    </section>
+  </main>
+
+  
+  <a class="chat-fab" href="chatbot.html" aria-label="Trò chuyện với Trợ lý AI 5A" title="Trợ lý AI 5A">
+    <span class="chat-fab-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/><path d="M9 11.5h.01M12 11.5h.01M15 11.5h.01" stroke-width="2.6"/></svg>
+      <span class="chat-fab-spark" aria-hidden="true">✦</span>
+    </span>
+    <span class="chat-fab-label">Trợ lý AI 5A</span>
+  </a>
+
+  <div class="copyright-overlay" role="contentinfo">
+    <img src="logo.png" alt="">
+    <span>© 2026 TNSpeakUp <b>|</b> Sản phẩm dự thi KHKT trường THCS Thống Nhất </span>
+  </div>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    menuToggle.addEventListener('click', () => {
+      const opened = mainNav.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(opened));
+    });
+    mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      mainNav.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }));
+  </script>
+</body>
+</html>
