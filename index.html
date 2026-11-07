@@ -462,7 +462,7 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
       <div class="grid">
         <form id="cf" class="card">
           <label for="cn">Tên hiển thị</label><input id="cn" required>
-          <label for="ci">ID đăng nhập</label><input id="ci" autocapitalize="none" placeholder="chữ thường và số, từ 3 ký tự" required>
+          <label for="ci">ID đăng nhập</label><input id="ci" autocapitalize="none" placeholder="tự gợi ý theo tên và lớp, có thể sửa" required>
           <label for="cp">Mật khẩu ban đầu</label><input id="cp" type="text" placeholder="từ 6 ký tự" required>
           <label for="cr">Vai trò</label><select id="cr"></select>
           <label for="cc">Lớp (với học sinh)</label><input id="cc" placeholder="ví dụ 5A">
@@ -473,7 +473,7 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
       </div>
       <form id="bf" class="card" style="margin-top:18px">
         <h3>Tạo tài khoản hàng loạt</h3>
-        <p class="hint">Dán danh sách, mỗi dòng một người. Chỉ cần ghi <b>tên</b> (hệ thống tự đặt ID và mật khẩu), hoặc ghi đủ <b>Tên, ID, Mật khẩu, Lớp</b> ngăn cách bằng dấu phẩy, dấu ; , dấu | hoặc dán thẳng từ Excel. Ô nào để trống sẽ được tự điền.</p>
+        <p class="hint">Dán danh sách, mỗi dòng một người. Chỉ cần ghi <b>tên</b> (hệ thống tự tạo mật khẩu và đặt ID theo quy tắc: chữ cái đầu của các chữ đứng trước, chữ cuối viết đầy đủ, rồi đến lớp; ví dụ Trần Nguyễn Vũ Long, lớp 9/15 thành <b>tnvlong915</b>), hoặc ghi đủ <b>Tên, ID, Mật khẩu, Lớp</b> ngăn cách bằng dấu phẩy, dấu ; , dấu | hoặc dán thẳng từ Excel. Ô nào để trống sẽ được tự điền.</p>
         <textarea id="bList" placeholder="Nguyễn Văn An&#10;Trần Thị Bình, binh6a, matkhau1, 6A&#10;Lê Hoàng Cường" aria-label="Danh sách tài khoản cần tạo"></textarea>
         <div class="bgrid">
           <div><label for="bRole">Vai trò</label><select id="bRole"></select></div>
@@ -554,7 +554,7 @@ $('cf').addEventListener('submit',async e=>{
   if(pw.length<6)return fail('Mật khẩu cần từ 6 ký tự.');
   if(accounts.some(a=>a.id===id))return fail('ID này đã có người dùng.');
   accounts.push({id,name,role,cls:role==='student'?$('cc').value.trim():'',h:await hash(id,pw)});save();
-  m.textContent='Đã tạo tài khoản '+name+' ('+id+').';m.classList.add('ok');$('cf').reset();renderAccounts();
+  m.textContent='Đã tạo tài khoản '+name+' ('+id+').';m.classList.add('ok');$('cf').reset();ciTouched=false;renderAccounts();
 });
 const GUEST={id:'__guest',name:'Khách',role:'student',cls:'',guest:true};
 $('guest').onclick=async()=>{delete tMem['tnsu_test_'+GUEST.id];const g=$('guest');g.disabled=true;$('msg').className='msg';$('msg').textContent='Đang cập nhật dữ liệu mới nhất...';
@@ -675,9 +675,13 @@ function rndPw(){const a=new Uint32Array(6);crypto.getRandomValues(a);return [..
 function plain(t){return String(t).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase()}
 function autoId(name,cls,taken){
   const w=plain(name).replace(/[^a-z0-9\s]/g,'').split(/\s+/).filter(Boolean);if(!w.length)return '';
-  let base=w[w.length-1]+w.slice(0,-1).map(x=>x[0]).join('')+plain(cls||'').replace(/[^a-z0-9]/g,'');
+  let base=w.slice(0,-1).map(x=>x[0]).join('')+w[w.length-1]+plain(cls||'').replace(/[^a-z0-9]/g,'');
   if(base.length<3)base+='01';
   let id=base,n=2;while(taken.has(id))id=base+(n++);return id}
+var ciTouched=false;
+function sugId(){if(ciTouched&&$('ci').value)return;$('ci').value=autoId($('cn').value,$('cr').value==='student'?$('cc').value:'',new Set(accounts.map(a=>a.id)));ciTouched=false}
+$('ci').addEventListener('input',()=>{ciTouched=!!$('ci').value});
+['cn','cc','cr'].forEach(i=>{$(i).addEventListener('input',sugId);$(i).addEventListener('change',sugId)});
 function syncB(){$('bClsW').classList.toggle('hide',$('bRole').value!=='student')}
 $('bf').addEventListener('submit',async e=>{
   e.preventDefault();const m=$('bmsg');m.className='msg';
