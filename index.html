@@ -517,14 +517,14 @@ function load(){try{accounts=JSON.parse(localStorage.getItem('tnsu_accounts')||'
   if(!accounts.some(a=>a.id===SEED.id))accounts.unshift({...SEED});save()}
 function save(){mem=accounts;try{localStorage.setItem('tnsu_accounts',JSON.stringify(accounts))}catch(e){}try{noteChange()}catch(_){}}
 /* Chỗ nối Supabase sau này: tải bài viết, số liệu, tài khoản, tiến độ mới nhất. */
-async function syncLatestData(){await new Promise(r=>setTimeout(r,900));load()}
+async function syncLatestData(){await Promise.all([new Promise(r=>setTimeout(r,900)),sbPull().catch(()=>{})]);load()}
 
 function showTab(t){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t));
-  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='accounts')renderAccounts();if(t!=='journey')camOff();if(t==='journey')renderJ();if(t==='share')renderShare()}
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='accounts')renderAccounts();if(t!=='journey')camOff();if(t==='journey')renderJ();if(t==='share'){renderShare();sbPull(1).then(c=>{if(c&&SH_V!=='write'&&$('p-share').classList.contains('on'))renderShare()})}if(t==='survey')sbPull(1).then(c=>{if(c)renderSurvey()})}
 function enter(){
   $('login').classList.add('hide');$('app').classList.remove('hide');
   $('whoName').textContent=me.name;$('whoRole').textContent=ROLE[me.role];
-  $('hello').textContent=me.guest?'Xin chào bạn! Bạn đang vào với vai trò học sinh, không cần tài khoản.':'Xin chào '+me.name+'! Dữ liệu đã được cập nhật.';
+  $('hello').textContent=(me.guest?'Xin chào bạn! Bạn đang vào với vai trò học sinh, không cần tài khoản. Hãy đăng nhập để viết bài và lưu tiến bộ.':'Xin chào '+me.name+'! Dữ liệu đã được cập nhật.')+(BOOT_ERR?' ⚠ Chưa nạp được dữ liệu sao lưu: '+BOOT_ERR:'');
   const tabs=TABS.slice();if(CAN_CREATE[me.role].length)tabs.push(['accounts','Quản lý tài khoản','Tạo và quản lý tài khoản']);
   if(me.role==='admin')tabs.push(['settings','Cài đặt','Sao lưu và khôi phục dữ liệu']);
   $('nav').innerHTML=tabs.map(t=>`<button class="tabbtn" data-t="${t[0]}" type="button">${t[1]}</button>`).join('');
@@ -557,7 +557,9 @@ $('cf').addEventListener('submit',async e=>{
   m.textContent='Đã tạo tài khoản '+name+' ('+id+').';m.classList.add('ok');$('cf').reset();renderAccounts();
 });
 const GUEST={id:'__guest',name:'Khách',role:'student',cls:'',guest:true};
-$('guest').onclick=()=>{me={...GUEST};try{sessionStorage.setItem('tnsu_me',GUEST.id)}catch(_){}enter()};
+$('guest').onclick=async()=>{delete tMem['tnsu_test_'+GUEST.id];const g=$('guest');g.disabled=true;$('msg').className='msg';$('msg').textContent='Đang cập nhật dữ liệu mới nhất...';
+  try{await applyBootBackup();await sbPull()}catch(_){}
+  load();g.disabled=false;$('msg').textContent='';me={...GUEST};try{sessionStorage.setItem('tnsu_me',GUEST.id)}catch(_){}enter()};
 $('f').addEventListener('submit',async e=>{
   e.preventDefault();const msg=$('msg');msg.className='msg';
   const id=$('u').value.trim().toLowerCase(),pw=$('p').value;
@@ -583,13 +585,16 @@ async function readCode(code){const p=code.replace(/\s+/g,'').split('.');if(p.le
   return d}
 /*ENDBK*/
 /* Mỗi lần đăng nhập: nạp mã trong saoluu.js nếu là mã mới hơn mã đã nạp. Gộp vào dữ liệu hiện có, mã sao lưu được ưu tiên khi trùng ID. */
-async function applyBootBackup(){
-  const code=window.TNSU_BACKUP;if(!code)return;
-  try{const d=await readCode(code);const at=String(d.at||'');let seen='';
-    try{seen=localStorage.getItem('tnsu_bk_at')||''}catch(_){}
+var BOOT_ERR='';
+async function applyBootBackup(){BOOT_ERR='';
+  const code=window.TNSU_BACKUP;if(!code){BOOT_ERR='không tìm thấy mã sao lưu (file saoluu.js chưa tải được hoặc chưa có dòng window.TNSU_BACKUP).';return}
+  if(!window.crypto||!crypto.subtle){BOOT_ERR='trang cần mở bằng địa chỉ https để đọc mã sao lưu.';return}
+  let d;try{d=await readCode(code)}catch(e){BOOT_ERR='mã sao lưu trong saoluu.js không hợp lệ hoặc bị thiếu ký tự, hãy tạo và dán lại.';return}
+  try{mergeBootPosts(d)}catch(e){}
+  try{const at=String(d.at||'');let seen='';try{seen=localStorage.getItem('tnsu_bk_at')||''}catch(_){}
     if(at&&at<=seen)return;
     load();const m=new Map(accounts.map(a=>[a.id,a]));d.accounts.forEach(a=>m.set(a.id,a));
-    accounts=[...m.values()];save();mergeBootPosts(d);
+    accounts=[...m.values()];save();
     try{localStorage.setItem('tnsu_bk_at',at)}catch(_){}
   }catch(e){}
 }
@@ -600,7 +605,7 @@ $('bkCopy').onclick=async()=>{const v=$('bk').value;if(!v)return say('bkMsg','B�
 $('bkDl').onclick=()=>{const v=$('bk').value;if(!v)return say('bkMsg','Bấm "Tạo mã sao lưu" trước.','err');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([v],{type:'text/plain'}));
   a.download='tnspeakup-saoluu-'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);markExt()};
-const asLine=c=>'window.TNSU_BACKUP="'+c+'";\n';
+const asLine=c=>bkFile(c);
 $('bkLine').onclick=async()=>{const c=await makeCode(bkExtra());$('bk').value=c;
   let ok=true;try{await navigator.clipboard.writeText(asLine(c))}catch(e){$('bk').value=asLine(c);$('bk').select();ok=document.execCommand('copy')}
   say('bkMsg',ok?'Đã sao chép dòng lệnh đầy đủ. Dán vào file saoluu.js rồi tải lại trang.':'Không sao chép được, hãy bôi đen ô mã bên dưới và sao chép thủ công.',ok?'ok':'err')};
@@ -803,7 +808,7 @@ function readSV(){
   const d={n,note:$('svNoteIn').value.trim(),skills,diff};
   if(!svValid(d))throw 'Số liệu chưa hợp lệ: mỗi ô là số nguyên từ 0, mỗi kỹ năng cần có ít nhất một học sinh, và số học sinh chọn mỗi khó khăn không vượt quá tổng số khảo sát.';
   return d}
-$('svSave').onclick=()=>{try{const d=readSV();svMem=d;try{localStorage.setItem('tnsu_survey',JSON.stringify(d))}catch(e){}renderSurvey();noteChange();say('svMsg','Đã lưu số liệu khảo sát.','ok')}catch(e){say('svMsg',typeof e==='string'?e:'Có lỗi, bạn kiểm tra lại số liệu nhé.','err')}};
+$('svSave').onclick=()=>{try{const d=readSV();svMem=d;try{localStorage.setItem('tnsu_survey',JSON.stringify(d))}catch(e){}renderSurvey();noteChange();sbPush('survey',d);try{localStorage.setItem('tnsu_sv_ts',String(Date.now()))}catch(e){}say('svMsg','Đã lưu số liệu khảo sát.','ok')}catch(e){say('svMsg',typeof e==='string'?e:'Có lỗi, bạn kiểm tra lại số liệu nhé.','err')}};
 $('svCode').onclick=async()=>{try{const d=readSV(),t='window.TNSU_SURVEY='+JSON.stringify(d)+';';
   try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}
   say('svMsg','Đã sao chép. Dán dòng này vào file saoluu.js rồi tải lại trang.','ok')}catch(e){say('svMsg',typeof e==='string'?e:'Có lỗi, bạn kiểm tra lại số liệu nhé.','err')}};
@@ -836,7 +841,7 @@ async function runBackup(force){
   if(BK.handle&&(changed||force||isDirty())){
     try{
       if(await BK.handle.queryPermission({mode:'readwrite'})!=='granted')BK.file='perm';
-      else{const w=await BK.handle.createWritable();await w.write(/\.js$/i.test(BK.handle.name)?'window.TNSU_BACKUP="'+await mk()+'";\n':await mk());await w.close();BK.file='ok';BK.fileAt=iso;try{localStorage.setItem('tnsu_ext_at',iso)}catch(e){}}
+      else{const w=await BK.handle.createWritable();await w.write(/\.js$/i.test(BK.handle.name)?bkFile(await mk()):await mk());await w.close();BK.file='ok';BK.fileAt=iso;try{localStorage.setItem('tnsu_ext_at',iso)}catch(e){}}
     }catch(e){BK.file='err'}
   }
   renderBk()}
@@ -905,15 +910,15 @@ const TTIPS=[
 ];
 let T={i:0,ans:[]};const tMem={};
 const tKey=()=>'tnsu_test_'+me.id;
-function tHist(){try{const a=JSON.parse(localStorage.getItem(tKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return tMem[tKey()]||[]}}
-function tSave(r){const h=tHist();h.push(r);const keep=h.slice(-10);tMem[tKey()]=keep;try{localStorage.setItem(tKey(),JSON.stringify(keep))}catch(e){}}
+function tHist(){if(me.guest)return tMem[tKey()]||[];try{const a=JSON.parse(localStorage.getItem(tKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return tMem[tKey()]||[]}}
+function tSave(r){const h=tHist();h.push(r);const keep=h.slice(-10);tMem[tKey()]=keep;if(me.guest)return;try{localStorage.setItem(tKey(),JSON.stringify(keep))}catch(e){}}
 const tLvl=p=>p>=80?0:p>=60?1:p>=40?2:3;
 function tScores(ans){return TSK.map((_,k)=>Math.round((ans.slice(k*5,k*5+5).reduce((a,b)=>a+b,0)-5)/15*100))}
 function renderTestIntro(){
   T={i:0,ans:[]};const h=tHist(),last=h[h.length-1];
   $('tIntro').classList.remove('hide');$('tQ').classList.add('hide');$('tRes').classList.add('hide');
   $('tView').classList.toggle('hide',!last);$('tStart').textContent=last?'Làm lại bài test':'Bắt đầu làm bài';
-  $('tLast').textContent=last?('Lần làm gần nhất: '+fmt(last.at)+'.'+(me.guest?' Kết quả của khách chỉ lưu trên máy này.':'')):''}
+  $('tLast').textContent=last?('Lần làm gần nhất: '+fmt(last.at)+'.'+(me.guest?' Khách không được lưu kết quả; hãy đăng nhập bằng tài khoản để lưu.':'')):''}
 function tStart(){T={i:0,ans:Array(TQ.length).fill(0)};$('tIntro').classList.add('hide');$('tRes').classList.add('hide');$('tQ').classList.remove('hide');renderQ();$('tQ').scrollIntoView({block:'start'})}
 function renderQ(){
   const q=TQ[T.i],a=T.ans[T.i],N=TQ.length;
@@ -959,7 +964,7 @@ function tShow(h){
   $('tRes').innerHTML=`<div class="card" style="margin-top:14px"><div class="klab">Kết quả tự đánh giá · ${esc(fmt(cur.at))}</div>
     <h3 style="margin-top:4px">Mức chung: ${TLV[tLvl(avg)][0]} (${avg}%)</h3><p>${lead}</p>
     <div class="rgrid"><div class="radar">${radar(v)}</div><div>${bars}</div></div>
-    <p class="hint" style="margin-top:6px">Đây là bài tự đánh giá để định hướng luyện tập, không phải bài kiểm tra chấm điểm.${me.guest?' Kết quả của khách chỉ lưu trên máy này.':''}</p></div>
+    <p class="hint" style="margin-top:6px">Đây là bài tự đánh giá để định hướng luyện tập, không phải bài kiểm tra chấm điểm.${me.guest?' Khách không được lưu kết quả; hãy đăng nhập bằng tài khoản để lưu.':''}</p></div>
     <h3 class="sh">Gợi ý luyện tập cho từng kỹ năng</h3><div class="posts">${cards}</div>
     ${h.length>1?`<h3 class="sh">Tiến bộ qua các lần làm</h3><div class="card tw"><table class="hist"><thead><tr><th>Thời gian</th>${TSK.map(t=>`<th>${t.n}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`:''}
     <div class="card cta"><h3>Bước tiếp theo</h3><p class="hint">Chọn một gợi ý ở trên, luyện đều vài phút mỗi ngày rồi quay lại làm bài để xem mình tiến bộ.</p>
@@ -998,7 +1003,7 @@ const chks=a=>a.map(t=>`<label class="chk"><input type="checkbox" data-ck><span>
 function gid(){if(!me.guest)return me.id;try{let g=localStorage.getItem('tnsu_gid');if(!g){g='g'+Math.random().toString(36).slice(2,9);localStorage.setItem('tnsu_gid',g)}return g}catch(e){return 'guest'}}
 const jKey=()=>'tnsu_jr_'+gid();
 function jLog(){try{const a=JSON.parse(localStorage.getItem(jKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return jMem[jKey()]||[]}}
-function jAdd(x){const l=jLog();l.push(x);const k=l.slice(-60);jMem[jKey()]=k;try{localStorage.setItem(jKey(),JSON.stringify(k))}catch(e){}}
+function jAdd(x){if(me.guest)return;const l=jLog();l.push(x);const k=l.slice(-60);jMem[jKey()]=k;try{localStorage.setItem(jKey(),JSON.stringify(k))}catch(e){}}
 function camOff(){if(camS){camS.getTracks().forEach(t=>t.stop());camS=null}clearInterval(camTm);camTm=null;
   const v=$('camV');if(v){v.srcObject=null;v.classList.add('hide')}const m=$('camMsg');if(m){m.classList.remove('hide');m.textContent='Camera đang tắt. Bấm “Bật camera” để bắt đầu.'}
   const t=$('camT');if(t)t.classList.add('hide');const b=document.querySelector('[data-jact="camTimer"]');if(b)b.textContent='Bắt đầu tính giờ'}
@@ -1049,13 +1054,13 @@ function vAI(){const f=(id,l,ph)=>`<label for="${id}">${l}</label><input id="${i
 function aBuild(){const a=$('aAsk').value.trim();if(!a)return say('aMsg','Em hãy ghi việc em muốn AI giúp.','err');
   $('aOut').value=`Mình là học sinh THCS, đang ${$('aCtx').value.trim()||'luyện kỹ năng thuyết trình'}. Mình đã tự nghĩ: ${$('aMine').value.trim()||'(chưa có, hãy hỏi mình vài câu để gợi ý)'}. Nhờ bạn: ${a}. Hãy góp ý ngắn gọn bằng câu hỏi hoặc gợi ý, nêu cả điểm mạnh và điểm cần sửa, không viết thay bài của mình, và nói rõ chỗ nào bạn chưa chắc chắn để mình tự kiểm chứng.`;say('aMsg','Đã tạo câu lệnh. Em dán vào công cụ AI mà trường cho phép dùng.','ok')}
 function vLog(){const l=jLog(),days=new Set(l.map(x=>x.at.slice(0,10))).size;
-  return `${jTitle(mod('log'))}<div class="two"><div class="card"><h3>Em đã luyện</h3><p><b style="font-size:1.6rem;color:var(--tn)">${l.length}</b> lần trong <b>${days}</b> ngày</p>${me.guest?'<p class="hint">Nhật ký của khách chỉ lưu trên máy này.</p>':''}<div class="chart" style="margin-top:12px">${MODS.filter(m=>m.id!=='log').map(m=>{const n=l.filter(x=>x.m===m.id).length;return `<div><div class="cl"><span>${m.e} ${m.n}</span><b>${n}</b></div><div class="hb"><i style="width:${Math.min(100,n*20)}%"></i></div></div>`}).join('')}</div></div>
+  return `${jTitle(mod('log'))}<div class="two"><div class="card"><h3>Em đã luyện</h3><p><b style="font-size:1.6rem;color:var(--tn)">${l.length}</b> lần trong <b>${days}</b> ngày</p>${me.guest?'<p class="hint">Khách không được lưu nhật ký; hãy đăng nhập bằng tài khoản để lưu.</p>':''}<div class="chart" style="margin-top:12px">${MODS.filter(m=>m.id!=='log').map(m=>{const n=l.filter(x=>x.m===m.id).length;return `<div><div class="cl"><span>${m.e} ${m.n}</span><b>${n}</b></div><div class="hb"><i style="width:${Math.min(100,n*20)}%"></i></div></div>`}).join('')}</div></div>
   <div class="card"><h3>Các lần luyện gần đây</h3>${l.length?[...l].reverse().slice(0,10).map(x=>{const m=mod(x.m)||MODS[0];return `<div class="snap" style="flex-direction:column;align-items:flex-start;gap:2px"><b>${m.e} ${m.n} · ${esc(fmt(x.at))}</b>${x.p?`<span class="hint">${esc(x.p)}</span>`:''}${x.t?`<span>${esc(x.t.slice(0,200))}${x.t.length>200?'…':''}</span>`:''}<small class="hint">Tự kiểm tra: ${x.c}/${x.n}</small></div>`}).join(''):'<p class="soon">Chưa có lần luyện nào. Hãy chọn một mục để bắt đầu.</p>'}
   ${l.length?'<div class="acts" style="margin-top:10px"><button class="btn ghost danger" type="button" data-jact="clr">Xoá nhật ký</button></div>':''}</div></div>`}
 function renderJ(){camOff();if(!mod(J_V)&&J_V!=='home')J_V='home';
   $('jNav').innerHTML=[['home','🏠','Tổng quan'],...MODS.map(m=>[m.id,m.e,m.n])].map(t=>`<button class="q ${J_V===t[0]?'on':''}" type="button" data-jv="${t[0]}" aria-pressed="${J_V===t[0]}">${t[1]} ${t[2]}</button>`).join('');
   $('jBody').innerHTML=({home:vHome,mirror:vMirror,topic:vTopic,ai:vAI,log:vLog}[J_V]||(()=>vPractice(J_V)))()}
-function jSave(m){const tx=$('jTx')?$('jTx').value.trim():'',ck=[...document.querySelectorAll('#jBody [data-ck]')],c=ck.filter(x=>x.checked).length;
+function jSave(m){if(me.guest)return say('jMsg','Em cần đăng nhập bằng tài khoản để lưu nhật ký luyện tập.','err');const tx=$('jTx')?$('jTx').value.trim():'',ck=[...document.querySelectorAll('#jBody [data-ck]')],c=ck.filter(x=>x.checked).length;
   if(m!=='mirror'&&tx.length<10)return say('jMsg','Em hãy viết ít nhất một câu rồi mới lưu nhé.','err');
   jAdd({m,at:new Date().toISOString(),p:m==='ai'?'Dùng AI hỗ trợ':($('jPr')?$('jPr').textContent:''),t:m==='mirror'?(tx+(camSec?' (đã luyện '+camSec+' giây)':'')).trim():tx,c,n:ck.length});camSec=0;
   say('jMsg','Đã lưu vào Nhật ký tiến bộ. Giỏi lắm!','ok')}
@@ -1065,7 +1070,7 @@ $('p-journey').addEventListener('click',async e=>{
   if(a==='camOn')camOn();else if(a==='camOff')camOff();else if(a==='camTimer')camTimer(b);
   else if(a==='rnd')$('jPr').textContent=rnd(PR[b.dataset.m].pr);
   else if(a==='save')jSave(b.dataset.m);else if(a==='tScore')tScore();
-  else if(a==='tSave'){jAdd({m:'topic',at:new Date().toISOString(),p:'Chấm điểm đề tài',t:J_TS,c:0,n:4});b.textContent='Đã lưu';b.disabled=true}
+  else if(a==='tSave'){if(me.guest){b.textContent='Cần đăng nhập để lưu';b.disabled=true;return}jAdd({m:'topic',at:new Date().toISOString(),p:'Chấm điểm đề tài',t:J_TS,c:0,n:4});b.textContent='Đã lưu';b.disabled=true}
   else if(a==='aBuild')aBuild();
   else if(a==='aCopy'){if(!$('aOut').value)return say('aMsg','Bấm “Tạo câu lệnh” trước.','err');say('aMsg',await copyTxt($('aOut').value)?'Đã sao chép.':'Không sao chép được, em hãy bôi đen và sao chép thủ công.','ok')}
   else if(a==='clr'){if(confirm('Xoá toàn bộ nhật ký luyện tập?')){jMem[jKey()]=[];try{localStorage.removeItem(jKey())}catch(_){}renderJ()}}});
@@ -1086,12 +1091,12 @@ function postsLocal(){try{const a=JSON.parse(localStorage.getItem('tnsu_posts')|
 function postsSaved(){const a=postsLocal();const l=Array.isArray(a)?a.filter(pValid):[];return l.length?l:null}
 function mergeBootPosts(d){if(Array.isArray(d.posts)){const m=new Map((postsLocal()||[]).filter(pValid).map(p=>[p.id,p]));
   d.posts.filter(pValid).forEach(p=>{const o=m.get(p.id);if(!o||(p.ts||'')>=(o.ts||''))m.set(p.id,p)});const l=[...m.values()];postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}}
-  if(d.survey&&svValid(d.survey)&&!svSaved()){svMem=d.survey;try{localStorage.setItem('tnsu_survey',JSON.stringify(d.survey))}catch(e){}}}
+  if(d.survey&&svValid(d.survey)&&Date.parse(d.at)>(+lsGet('tnsu_sv_ts')||0)){svMem=d.survey;try{localStorage.setItem('tnsu_survey',JSON.stringify(d.survey));localStorage.setItem('tnsu_sv_ts',String(Date.parse(d.at)))}catch(e){}}}
 function restorePosts(d){if(!Array.isArray(d.posts))return;const l=d.posts.filter(pValid);postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}}
 function allPosts(){const m=new Map(PSEED.map(p=>[p.id,p])),put=p=>{const o=m.get(p.id);if(!o||(p.ts||'')>=(o.ts||''))m.set(p.id,p)};
   (Array.isArray(window.TNSU_POSTS)?window.TNSU_POSTS:[]).filter(pValid).forEach(put);
   (postsLocal()||[]).filter(pValid).forEach(put);return [...m.values()].filter(p=>!p.del)}
-function putPost(p){p={...p,ts:new Date().toISOString()};const l=(postsLocal()||[]).filter(x=>x&&x.id!==p.id);l.push(p);postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}try{noteChange()}catch(_){}}
+function putPost(p){if(me&&me.guest)return;p={...p,ts:new Date().toISOString()};sbPush('post:'+p.id,p);const l=(postsLocal()||[]).filter(x=>x&&x.id!==p.id);l.push(p);postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}try{noteChange()}catch(_){}}
 const isMod=()=>!!me&&(me.role==='admin'||me.role==='mod');
 const toLocalIn=i=>{const d=new Date(i);return isNaN(d)?'':new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,16)};
 const pdate=i=>{try{return new Date(i).toLocaleDateString('vi-VN')}catch(e){return ''}};
@@ -1101,7 +1106,7 @@ function postCard(p,act,st){return `<article class="card post"><details><summary
 function vRead(){const l=allPosts().filter(p=>p.status==='approved').sort((a,b)=>b.at.localeCompare(a.at)),f=SH_CAT?l.filter(p=>p.cat===SH_CAT):l,adm=me.role==='admin';
   return `<div class="jump" style="margin:0 0 14px"><button class="q ${SH_CAT?'':'on'}" type="button" data-cat="">Tất cả</button>${PCATS.map(c=>`<button class="q ${SH_CAT===c?'on':''}" type="button" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
   <div class="posts">${f.length?f.map(p=>postCard(p,isMod()?`<div class="acts"><button class="btn ghost" type="button" data-pa="medit" data-id="${esc(p.id)}">Sửa bài và ngày đăng</button>${adm?`<button class="btn ghost danger" type="button" data-pa="del" data-id="${esc(p.id)}">Gỡ bài</button>`:''}</div>`:'')).join(''):'<p class="soon">Chưa có bài nào trong chuyên mục này.</p>'}</div>
-  <div class="card cta"><h3>Em cũng có điều muốn chia sẻ?</h3><p class="hint">Viết một bài ngắn về kinh nghiệm, thông điệp hay bài nói của em. Bài được duyệt sẽ đăng công khai.</p><div class="acts"><button class="btn" type="button" data-sv="write">Viết bài</button></div></div>`}
+  <div class="card cta"><h3>Em cũng có điều muốn chia sẻ?</h3><p class="hint">Viết một bài ngắn về kinh nghiệm, thông điệp hay bài nói của em. Bài được duyệt sẽ đăng công khai.</p>${me.guest?'<p class="note">Cần đăng nhập bằng tài khoản do thầy cô cấp để viết và gửi bài.</p>':'<div class="acts"><button class="btn" type="button" data-sv="write">Viết bài</button></div>'}</div>`}
 function vWrite(){const e=SH_EDIT?allPosts().find(p=>p.id===SH_EDIT):null,adm=me.role==='admin',mm=!!e&&SH_MOD&&isMod();
   return `<div class="two"><form id="pf" class="card"><h3>${mm?'Chỉnh sửa bài viết':e?'Chỉnh sửa và gửi lại':'Viết bài chia sẻ'}</h3>
   <label for="pT">Tiêu đề</label><input id="pT" maxlength="100" required value="${esc(e?e.title:'')}">
@@ -1120,11 +1125,11 @@ function vReview(){const l=allPosts().filter(p=>p.status==='pending').sort((a,b)
   <div class="two"><div class="card"><h3>Nhận bài từ học sinh bằng mã</h3><p class="hint">Học sinh gửi bài từ máy khác sẽ bấm “Sao chép mã bài” rồi gửi mã cho thầy cô. Dán mã vào đây để bài hiện trong danh sách chờ duyệt.</p><textarea id="pImp" placeholder="Dán mã bài viết (bắt đầu bằng TNPOST1.)" aria-label="Mã bài viết"></textarea><button class="btn" type="button" data-pa="imp">Nhận bài</button><p class="msg" id="pImpMsg" role="status"></p></div>
   ${adm?`<div class="card"><h3>Đưa bài đã đăng lên cho mọi người</h3><p class="hint">Bài hiện lưu trên trình duyệt này. Bấm nút, dán dòng mã vào file saoluu.js rồi tải lại trang để mọi máy cùng thấy các bài đã đăng. Cách khác: vào Cài đặt, bấm “Tạo mã sao lưu”; mã đó đã gồm cả bài viết.</p><button class="btn" type="button" data-pa="export">Sao chép mã bài đã đăng</button><p class="msg" id="pExMsg" role="status"></p></div>`:''}</div>`}
 function renderShare(){const pend=allPosts().filter(p=>p.status==='pending').length;
-  const tabs=[['read','Bài viết'],['write','Viết bài và gửi duyệt'],['mine','Bài của tôi']];if(isMod())tabs.push(['review','Chờ duyệt'+(pend?' ('+pend+')':'')]);
+  const tabs=me.guest?[['read','Bài viết']]:[['read','Bài viết'],['write','Viết bài và gửi duyệt'],['mine','Bài của tôi']];if(isMod())tabs.push(['review','Chờ duyệt'+(pend?' ('+pend+')':'')]);
   if(!tabs.some(t=>t[0]===SH_V))SH_V='read';
   $('sNav').innerHTML=tabs.map(t=>`<button class="q ${SH_V===t[0]?'on':''}" type="button" data-sv="${t[0]}" aria-pressed="${SH_V===t[0]}">${t[1]}</button>`).join('');
-  $('sBody').innerHTML=({read:vRead,write:vWrite,mine:vMine,review:vReview})[SH_V]()}
-$('p-share').addEventListener('submit',e=>{if(e.target.id!=='pf')return;e.preventDefault();
+  $('sBody').innerHTML=(isMod()&&SB()?`<p class="hint">Supabase: ${esc(SB_ST||'chưa chạy')}</p>`:'')+({read:vRead,write:vWrite,mine:vMine,review:vReview})[SH_V]()}
+$('p-share').addEventListener('submit',e=>{if(e.target.id!=='pf')return;e.preventDefault();if(me.guest)return;
   const t=$('pT').value.trim(),b=$('pB').value.trim(),a=$('pA').value.trim(),f=m=>say('pMsg',m,'err');
   if(t.length<5)return f('Tiêu đề cần từ 5 ký tự.');if(b.length<50)return f('Nội dung cần từ 50 ký tự.');if(!a)return f('Em hãy nhập tên hiển thị.');
   const em=SH_EDIT&&SH_MOD&&isMod()?allPosts().find(p=>p.id===SH_EDIT):null;
@@ -1159,7 +1164,34 @@ $('p-share').addEventListener('click',async e=>{
     else{const n=prompt('Nhập lời nhắn để bạn học sinh chỉnh sửa bài (bắt buộc):');if(!n||!n.trim())return;putPost({...p,status:'rejected',by:me.name,decAt:new Date().toISOString(),note:n.trim().slice(0,300)})}
     renderShare()}
   else if(a==='del'&&me.role==='admin'){if(confirm('Gỡ bài “'+p.title+'” khỏi trang công khai?')){putPost({...p,del:true});renderShare()}}});
-load();try{const s=sessionStorage.getItem('tnsu_me');const a=s===GUEST.id?{...GUEST}:(s&&accounts.find(x=>x.id===s));if(a){me=a;enter()}}catch(_){}
+/* ===== Đồng bộ Supabase (bài viết và số liệu khảo sát) =====
+   Cấu hình trong saoluu.js: window.TNSU_SB={url:"https://xxxx.supabase.co",key:"khoá publishable/anon"};
+   Tài khoản vẫn đi theo mã sao lưu, không gửi lên Supabase. */
+var SB_AT=0,SB_ST='';
+const SB=()=>{const s=window.TNSU_SB;return s&&s.url&&s.key?s:null};
+const lsGet=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}};
+function bkFile(c){return (SB()?'window.TNSU_SB='+JSON.stringify(window.TNSU_SB)+';\n':'')+'window.TNSU_BACKUP="'+c+'";\n'}
+async function sbReq(path,o){const s=SB(),h={apikey:s.key,'Content-Type':'application/json','x-mod-key':lsGet('tnsu_modkey'),...((o&&o.headers)||{})};
+  if(String(s.key).startsWith('eyJ'))h.Authorization='Bearer '+s.key;
+  const r=await fetch(s.url.replace(/\/$/,'')+'/rest/v1/'+path,{...o,headers:h});
+  if(!r.ok){const e=new Error('http '+r.status);e.st=r.status;throw e}return r.status===204?null:r.json()}
+async function sbPush(key,value,retry){if(!SB())return;
+  try{await sbReq('tnsu_kv?on_conflict=key',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({key,value,ts:new Date().toISOString()})});
+    if(key==='survey')try{localStorage.setItem('tnsu_sv_ts',String(Date.now()))}catch(e){}
+    SB_ST='đã gửi lên lúc '+new Date().toLocaleTimeString('vi-VN')}
+  catch(e){if((e.st===401||e.st===403)&&!retry&&isMod()){const k=prompt('Nhập mã kiểm duyệt do quản trị viên cấp để lưu lên Supabase:');
+      if(k&&k.trim()){try{localStorage.setItem('tnsu_modkey',k.trim())}catch(_){}return sbPush(key,value,1)}}
+    SB_ST='chưa gửi được ('+(e.st||'lỗi mạng')+')'}}
+async function sbPull(th){if(!SB())return false;if(th&&Date.now()-SB_AT<20000)return false;SB_AT=Date.now();
+  try{const rows=await sbReq('tnsu_kv?select=key,value,ts');let ch=false;
+    const m=new Map((postsLocal()||[]).filter(pValid).map(p=>[p.id,p])),rm=new Map();
+    rows.forEach(r=>{if(r.key.startsWith('post:')&&pValid(r.value)){rm.set(r.value.id,r.value.ts||'');const o=m.get(r.value.id);if(!o||(r.value.ts||'')>(o.ts||'')){m.set(r.value.id,r.value);ch=true}}
+      else if(r.key==='survey'&&svValid(r.value)&&Date.parse(r.ts)>(+lsGet('tnsu_sv_ts')||0)){svMem=r.value;try{localStorage.setItem('tnsu_survey',JSON.stringify(r.value));localStorage.setItem('tnsu_sv_ts',String(Date.parse(r.ts)))}catch(e){}ch=true;try{renderSurvey()}catch(_){}}});
+    if(ch){const l=[...m.values()];postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}}
+    (postsLocal()||[]).filter(pValid).forEach(p=>{if(!rm.has(p.id)||(p.ts||'')>rm.get(p.id))sbPush('post:'+p.id,p)});
+    SB_ST='đã đồng bộ lúc '+new Date().toLocaleTimeString('vi-VN');return ch}
+  catch(e){SB_ST='lỗi kết nối ('+(e.st||'mạng')+')';return false}}
+load();(async()=>{try{await applyBootBackup();load()}catch(_){}try{const s=sessionStorage.getItem('tnsu_me');const a=s===GUEST.id?{...GUEST}:(s&&accounts.find(x=>x.id===s));if(a){me=a;enter()}}catch(_){}})();
 </script>
 </body>
 </html>
