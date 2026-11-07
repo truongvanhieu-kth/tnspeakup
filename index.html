@@ -1,259 +1,1165 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0756b8">
-  <meta name="description" content="TNSPEAKUP – Nền tảng hỗ trợ học sinh THCS phát triển sự tự tin và năng lực thuyết trình.">
-  <title>TNSPEAKUP | Dám cất lời – Tự tin tỏa sáng</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="logo.png">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .chat-fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(76px,calc(env(safe-area-inset-bottom) + 64px));z-index:1000;display:flex;align-items:center;gap:10px;flex-direction:row-reverse;text-decoration:none}
-    .chat-fab-btn{position:relative;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#0756b8,#2f8cff);box-shadow:0 10px 28px rgba(7,86,184,.38),0 2px 6px rgba(0,0,0,.12);transition:transform .2s ease,box-shadow .2s ease}
-    .chat-fab-btn::before{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;opacity:.45;z-index:-1;animation:fabPulse 2.4s ease-out infinite}
-    .chat-fab-btn svg{width:28px;height:28px}
-    .chat-fab-spark{position:absolute;top:8px;right:9px;font-size:12px;line-height:1}
-    .chat-fab-label{background:#fff;color:#0b3a7a;font:600 13px/1 "Be Vietnam Pro",system-ui,sans-serif;padding:10px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(7,86,184,.18);white-space:nowrap;opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
-    .chat-fab:hover .chat-fab-label,.chat-fab:focus-visible .chat-fab-label{opacity:1;transform:none}
-    .chat-fab:hover .chat-fab-btn,.chat-fab:focus-visible .chat-fab-btn{transform:translateY(-3px) scale(1.06);box-shadow:0 14px 34px rgba(7,86,184,.46),0 2px 6px rgba(0,0,0,.12)}
-    .chat-fab:focus-visible{outline:none}.chat-fab:focus-visible .chat-fab-btn{outline:3px solid #fff;outline-offset:2px}
-    @keyframes fabPulse{0%{transform:scale(1);opacity:.45}100%{transform:scale(1.7);opacity:0}}
-    @media (max-width:640px){.chat-fab-btn{width:54px;height:54px}.chat-fab-label{display:none}}
-    @media (prefers-reduced-motion:reduce){.chat-fab-btn::before{animation:none}.chat-fab-btn,.chat-fab-label{transition:none}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TNSpeakUp | Dám cất lời - Tự tin toả sáng</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--tn:#0a3a9e;--speak:#1c7be6;--up:#ff9500;--ink:#12264d;--mute:#5a6b8c;--bg:#eef5ff;--line:#cfe0fb;--w:1760px;--pad:clamp(16px,4vw,56px)}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);line-height:1.6;display:flex;flex-direction:column;min-height:100vh;
+ background:radial-gradient(60rem 40rem at 50% -10%,#d6e8ff 0%,transparent 60%),radial-gradient(40rem 30rem at 100% 100%,#fff0d6 0%,transparent 60%),var(--bg)}
+.tn{color:var(--tn)}.speak{color:var(--speak)}.up{color:var(--up)}
+.slogan{display:inline-block;font-weight:600;background:linear-gradient(90deg,#0a3a9e,#1c9bff,#ff9500,#e8590c,#0a3a9e);background-size:300% 100%;
+ -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:flow 6s linear infinite}
+@keyframes flow{to{background-position:-300% 0}}
+.logo{aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 14px 40px rgba(10,58,158,.25)}
+.hide{display:none!important}
+/* Đăng nhập */
+#login{flex:1;display:grid;place-items:center;padding:24px 16px;padding-top:calc(24px + env(safe-area-inset-top,0))}
+.lbox{width:100%;max-width:440px;text-align:center}
+.lbox .logo{width:clamp(150px,38vw,210px)}
+.name{font-size:clamp(2rem,8vw,2.6rem);font-weight:800;letter-spacing:-.02em;margin-top:18px;line-height:1.1}
+.lbox .slogan{font-size:clamp(1.05rem,4.2vw,1.3rem);margin-top:8px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 30px rgba(10,58,158,.08)}
+#f{margin-top:26px;text-align:left}
+label{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px}
+input,select{width:100%;font:inherit;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#f8fbff;color:var(--ink);margin-bottom:14px}
+input:focus,select:focus{outline:3px solid #9cc7ff;border-color:var(--speak)}
+.btn{font:inherit;font-weight:800;color:#fff;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;background:linear-gradient(135deg,var(--speak),var(--tn));box-shadow:0 8px 18px rgba(10,58,158,.25);transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}.btn:focus-visible,.tabbtn:focus-visible{outline:3px solid var(--up);outline-offset:2px}
+.btn:disabled{opacity:.7;cursor:progress}
+#go{width:100%;font-size:1.05rem}
+.ghost{background:transparent;color:var(--tn);border:1.5px solid var(--tn);box-shadow:none;padding:7px 14px;font-size:.88rem}
+.danger{color:#c62828;border-color:#c62828}
+.msg{min-height:1.4em;font-size:.9rem;margin-top:10px;text-align:center;color:var(--mute)}.msg.err{color:#c62828}.msg.ok{color:#1b7f3b}
+.bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:10px;display:none}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--speak),var(--up));transition:width .9s ease}
+/* Sau đăng nhập */
+#app{flex:1;display:flex;flex-direction:column}
+header{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0)}
+.top{display:flex;align-items:center;gap:12px;padding:8px var(--pad);max-width:var(--w);margin:auto;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem}
+.brand .logo{width:38px;box-shadow:none}
+.who{margin-left:auto;display:flex;align-items:center;gap:10px;text-align:right;line-height:1.25}
+.who b{display:block;font-size:.92rem}.who small{color:var(--mute)}
+nav{max-width:var(--w);margin:auto;display:flex;gap:4px;overflow-x:auto;padding:0 max(0px,calc(var(--pad) - 14px));scrollbar-width:none}
+.tabbtn{font:inherit;font-weight:600;color:var(--mute);background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;white-space:nowrap;cursor:pointer}
+.tabbtn:hover{color:var(--tn)}.tabbtn.on{color:var(--tn);border-bottom-color:var(--up)}
+.wrap{flex:1;width:100%;max-width:var(--w);margin:auto;padding:28px var(--pad)}
+.panel{display:none}.panel.on{display:block}
+.hero{text-align:center;padding:12px 0 8px}
+.hero .logo{width:clamp(120px,26vw,170px)}
+.hero h1{font-size:clamp(1.8rem,6vw,2.4rem);font-weight:800;margin-top:12px;line-height:1.15}
+.hero .slogan{font-size:clamp(1.05rem,3.5vw,1.3rem);margin-top:6px}
+.hero p{color:var(--mute);margin-top:8px}
+.row{display:flex;gap:14px;margin-top:26px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity}
+.tile{flex:1 0 210px;scroll-snap-align:start;text-align:left;cursor:pointer;font:inherit;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;transition:border-color .15s}
+.tile:hover{border-color:var(--speak)}.tile b{display:block;color:var(--tn);font-size:1.02rem}.tile span{color:var(--mute);font-size:.9rem}
+h2{font-size:1.4rem;color:var(--tn);margin-bottom:6px}
+.soon{color:var(--mute)}
+.grid{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:18px;align-items:start;margin-top:14px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.who small{display:none}}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}th{color:var(--mute);font-weight:600}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.8rem;font-weight:600;background:#e6f0ff;color:var(--tn)}
+.badge.admin{background:#fff0d6;color:#a35a00}.badge.mod{background:#e3f7ec;color:#1b7f3b}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;margin-top:14px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+textarea{width:100%;min-height:130px;font:.8rem/1.4 ui-monospace,Consolas,monospace;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#f8fbff;color:var(--ink);margin:10px 0;word-break:break-all;resize:vertical}
+textarea:focus{outline:3px solid #9cc7ff;border-color:var(--speak)}
+.card h3{color:var(--tn);font-size:1.05rem;margin-bottom:4px}.card p.hint{color:var(--mute);font-size:.9rem}
+footer{padding:14px 16px calc(14px + env(safe-area-inset-bottom,0));text-align:center;font-size:.85rem;color:var(--mute);border-top:1px solid var(--line);background:rgba(255,255,255,.7)}
+footer b{font-weight:800}
+@media (prefers-reduced-motion:reduce){.slogan{animation:none;background-position:50% 0}.btn,.bar i{transition:none}}
+
+.brand .bt{display:flex;flex-direction:column;line-height:1.15}
+.brand .nm{font-size:1.2rem}
+.brand .slogan{font-size:.74rem;font-weight:600}
+.alt{display:flex;align-items:center;gap:10px;margin:14px 0 2px;color:var(--mute);font-size:.85rem}
+.alt::before,.alt::after{content:"";flex:1;height:1px;background:var(--line)}
+#guest{width:100%;padding:11px 16px;font-size:.98rem}
+/* Trang chủ: banner quảng cáo */
+.hero.compact{display:flex;align-items:center;justify-content:center;gap:16px;text-align:left;padding:0;flex-wrap:wrap}
+.hero.compact .logo{width:76px;box-shadow:0 8px 22px rgba(10,58,158,.2)}
+.hero.compact h1{font-size:clamp(1.6rem,5vw,2.1rem);margin:0}
+.hero.compact .slogan{margin:0;font-size:clamp(.95rem,3vw,1.15rem)}
+.hero.compact #hello{margin:2px 0 0;font-size:.9rem}
+.banner{position:relative;margin-top:20px;border-radius:28px;overflow:hidden;color:#fff;box-shadow:0 18px 46px rgba(10,58,158,.22)}
+.track{display:flex;transition:transform .7s cubic-bezier(.65,0,.25,1)}
+.slide{flex:0 0 100%;min-height:clamp(360px,46vw,470px);padding:clamp(24px,5vw,64px) clamp(52px,7vw,88px) clamp(64px,7vw,84px);display:grid;grid-template-columns:1.3fr .7fr;gap:24px;align-items:center;position:relative;isolation:isolate;overflow:hidden}
+.slide::before,.slide::after{content:"";position:absolute;border-radius:50%;z-index:-1;background:rgba(255,255,255,.08)}
+.slide::before{width:420px;height:420px;right:-120px;top:-160px}
+.slide::after{width:260px;height:260px;left:-80px;bottom:-120px}
+.s1{background:linear-gradient(135deg,#0a3a9e,#1c7be6)}
+.s2{background:linear-gradient(135deg,#08266b,#1561c9)}
+.s3{background:linear-gradient(135deg,#3b2a9e,#1c6fd6)}
+.s4{background:linear-gradient(135deg,#a8360a,#e8590c)}
+.s5{background:linear-gradient(135deg,#075f5a,#1479c9)}
+.s6{background:linear-gradient(135deg,#12264d,#0a3a9e)}
+.kick{display:inline-block;font-weight:600;font-size:.88rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:3px 14px}
+.slide h2{color:#fff;font-size:clamp(1.7rem,4.6vw,3rem);font-weight:800;line-height:1.15;margin:14px 0 10px;letter-spacing:-.01em}
+.slide p{font-size:clamp(1rem,2vw,1.18rem);max-width:46ch;opacity:.96}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:3px 12px;font-size:.84rem;font-weight:600}
+.btn.white{background:#fff;color:var(--tn);box-shadow:0 8px 20px rgba(0,0,0,.18);margin-top:22px}
+.art{display:grid;place-items:center}
+.orb{width:clamp(130px,21vw,230px);aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.35);display:grid;place-items:center;font-size:clamp(4rem,9vw,7rem);animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px)}}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.45);background:rgba(10,30,80,.35);color:#fff;font-size:1.3rem;cursor:pointer;display:grid;place-items:center;z-index:2}
+.arrow:hover{background:rgba(10,30,80,.6)}.arrow:focus-visible,.dot:focus-visible,.pp:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.arrow.prev{left:10px}.arrow.next{right:10px}
+.ctl{position:absolute;left:0;right:0;bottom:16px;display:flex;align-items:center;justify-content:center;gap:4px;z-index:2}
+.dot{width:30px;height:24px;border:0;background:none;cursor:pointer;display:grid;place-items:center;padding:0}
+.dot i{display:block;width:10px;height:10px;border-radius:99px;background:rgba(255,255,255,.5);transition:width .3s,background .3s}
+.dot[aria-current="true"] i{width:30px;background:#fff}
+.pp{position:absolute;right:14px;bottom:12px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.45);background:rgba(10,30,80,.35);color:#fff;cursor:pointer;font-size:.8rem;z-index:3}
+.ticker{overflow:hidden;margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:10px 0;white-space:nowrap}
+.tk{display:inline-flex;gap:44px;padding-left:44px;animation:tick 40s linear infinite;font-weight:600}
+.tk span:nth-child(3n+1){color:var(--tn)}.tk span:nth-child(3n+2){color:var(--speak)}.tk span:nth-child(3n){color:var(--up)}
+.ticker:hover .tk{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+.sec{margin-top:28px;font-size:1.15rem}
+.daily .lab{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--up)}
+.daily blockquote{font-size:1.15rem;font-weight:600;color:var(--tn);margin-top:6px;line-height:1.5}
+.daily p{margin-top:6px;color:var(--ink)}
+@media(max-width:700px){.slide{grid-template-columns:1fr;padding:28px 22px 70px}.art{display:none}.arrow{display:none}.pp{display:none}}
+@media (prefers-reduced-motion:reduce){.track{transition:none}.orb,.tk{animation:none}.ticker{overflow-x:auto}.dot i{transition:none}}
+
+/* Tạo hàng loạt */
+.bgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0 14px}
+#bList{min-height:150px}
+.fails{margin:8px 0;padding:10px 14px;border-radius:12px;background:#fff4f4;border:1px solid #f3c6c6;color:#9b1c1c;font-size:.88rem}
+.fails ul{margin:4px 0 0 18px}
+.note{margin:8px 0;padding:10px 14px;border-radius:12px;background:#fff8e6;border:1px solid #f6d78a;color:#7a4b00;font-size:.88rem}
+/* Chatbot luôn hiện */
+.wrap{padding-bottom:96px}
+#chFab{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;width:62px;height:62px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(135deg,var(--speak),var(--tn));color:#fff;font-size:1.75rem;box-shadow:0 10px 26px rgba(10,58,158,.4);display:grid;place-items:center}
+#chFab::after{content:"";position:absolute;inset:0;border-radius:50%;border:3px solid var(--up);animation:ring 2.4s ease-out infinite;pointer-events:none}
+@keyframes ring{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+#chFab:focus-visible,.ch-h button:focus-visible,.q:focus-visible{outline:3px solid var(--up);outline-offset:2px}
+#chat{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:calc(90px + env(safe-area-inset-bottom,0px));width:min(380px,calc(100vw - 24px));height:min(540px,calc(100dvh - 120px));display:none;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 50px rgba(10,58,158,.3);z-index:60;overflow:hidden}
+#chat.open{display:flex}
+.ch-h{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(135deg,var(--tn),var(--speak));color:#fff}
+.ch-h b{flex:1;line-height:1.2}.ch-h small{display:block;font-weight:400;opacity:.9;font-size:.78rem}
+.ch-h button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:#fff;cursor:pointer;font-size:1rem}
+#chLog{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:#f8fbff}
+.m{max-width:88%;padding:9px 12px;border-radius:14px;white-space:pre-wrap;font-size:.92rem;line-height:1.5;overflow-wrap:anywhere}
+.m.bot{background:#fff;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.m.me{background:var(--speak);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.m .go{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.qs{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;border-top:1px solid var(--line);max-height:92px;overflow-y:auto}
+.q{font:inherit;font-size:.82rem;background:#e6f0ff;color:var(--tn);border:1px solid var(--line);border-radius:99px;padding:4px 11px;cursor:pointer}
+.q:hover{border-color:var(--speak)}
+#chForm{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+#chForm input{margin:0;flex:1;min-width:0}
+#chForm .btn{padding:10px 16px}
+@media (prefers-reduced-motion:reduce){#chFab::after{animation:none;display:none}}
+
+/* Thực trạng */
+.lead{color:var(--mute);margin:6px 0 4px;max-width:72ch}
+.sh{font-size:1.2rem;color:var(--tn);margin:34px 0 10px;scroll-margin-top:130px}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.flow{display:grid;grid-template-columns:1fr 1.35fr 1fr 1fr;gap:34px;align-items:stretch}
+.fcol{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;border-top:5px solid var(--c,var(--tn));box-shadow:0 8px 22px rgba(10,58,158,.06)}
+.fcol:not(:last-child)::after{content:"→";content:"→"/"";position:absolute;right:-27px;top:50%;transform:translateY(-50%);font-size:1.5rem;font-weight:800;color:var(--up)}
+.fcol h3{font-size:1.02rem;color:var(--c,var(--tn))}
+.fi{margin-top:8px;padding:8px 11px;border-radius:12px;background:#f3f8ff;font-size:.9rem;line-height:1.45}
+.fi b{display:block;color:var(--ink)}
+.fcol .btn.ghost{margin-top:10px;width:100%}
+@media(max-width:940px){.flow{grid-template-columns:1fr;gap:36px}
+ .fcol:not(:last-child)::after{content:"↓";content:"↓"/"";right:auto;left:50%;top:auto;bottom:-34px;transform:translateX(-50%)}}
+.legend{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.86rem;color:var(--mute);margin:8px 0 14px}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:4px;background:var(--c);margin-right:6px;vertical-align:-1px}
+.chart{display:grid;gap:14px}
+.cl{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:600;font-size:.95rem;margin-bottom:4px}
+.cl small{color:var(--mute);font-weight:400}
+.stack{display:flex;height:34px;border-radius:10px;overflow:hidden;background:var(--line)}
+.stack i{display:grid;place-items:center;font-style:normal;font-size:.8rem;font-weight:700;overflow:hidden;white-space:nowrap;min-width:0}
+.hb{height:14px;border-radius:99px;background:#e6f0ff;overflow:hidden}
+.hb i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--speak),var(--up))}
+.svhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.svt th,.svt td{padding:6px 6px}.svt input{margin:0;padding:6px 8px;min-width:64px}
+.posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;align-items:start}
+.post summary{cursor:pointer;list-style:none}.post summary::-webkit-details-marker{display:none}
+.post summary:focus-visible{outline:3px solid var(--up);outline-offset:4px;border-radius:8px}
+.tag{display:inline-block;font-size:.76rem;font-weight:700;color:#a35a00;background:#fff0d6;border-radius:99px;padding:2px 10px;margin-bottom:6px}
+.post .ex{color:var(--mute);font-size:.92rem;margin:4px 0 8px}
+.post .meta{color:var(--mute);font-size:.8rem}
+.more{display:inline-block;margin-top:6px;font-weight:700;color:var(--speak);font-size:.9rem}
+.more .o{display:none}.post details[open] .more .o{display:inline}.post details[open] .more .c{display:none}
+.more::after{content:" ▾"}.post details[open] .more::after{content:" ▴"}
+.pbody{margin-top:12px;border-top:1px solid var(--line);padding-top:12px;font-size:.95rem}
+.pbody p{margin:0 0 10px}.pbody h4{color:var(--tn);margin:14px 0 4px;font-size:.98rem}
+.pbody ul,.pbody ol{margin:0 0 10px 20px}.pbody li{margin-bottom:4px}
+.pbody .acts{margin-top:8px}
+.cta{margin-top:30px;text-align:center;background:linear-gradient(135deg,#eaf3ff,#fff4df)}
+.cta .acts{justify-content:center;margin-top:10px}
+
+/* Sao lưu tự động */
+.bkbar{background:#fff8e6;border-bottom:1px solid #f6d78a;color:#7a4b00;font-size:.9rem;padding:8px var(--pad);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bkbar span{flex:1;min-width:200px}
+.bkbar .btn.ghost{padding:4px 12px;font-size:.82rem;color:#7a4b00;border-color:#7a4b00}
+.stat{margin:8px 0 12px 18px;font-size:.92rem}.stat li{margin-bottom:4px}
+.snap{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.snap .btn{padding:4px 12px;font-size:.82rem}
+
+/* Khám phá bản thân */
+.klab{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--up)}
+.tprog{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.9rem;color:var(--mute)}
+.tbar{height:8px;border-radius:8px;background:var(--line);overflow:hidden;margin:8px 0 18px}
+.tbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--speak),var(--up));transition:width .3s}
+#tText{font-size:1.2rem;line-height:1.45;color:var(--ink);outline:none}
+.topts{display:grid;gap:10px;margin:16px 0}
+.topt{font:inherit;text-align:left;display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:48px;border:1.5px solid var(--line);border-radius:14px;background:#f8fbff;color:var(--ink);cursor:pointer}
+.topt:hover{border-color:var(--speak)}.topt:focus-visible{outline:3px solid var(--up);outline-offset:2px}
+.topt b{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1.5px solid var(--line);color:var(--tn)}
+.topt.sel{border-color:var(--tn);background:#e6f0ff;font-weight:600}
+.topt.sel b{background:var(--tn);color:#fff;border-color:var(--tn)}
+.rgrid{display:grid;grid-template-columns:minmax(260px,430px) 1fr;gap:22px;align-items:center;margin-top:14px}
+@media(max-width:760px){.rgrid{grid-template-columns:1fr}}
+.radar svg{width:100%;height:auto;display:block}
+.radar text{font:600 13px 'Be Vietnam Pro',system-ui,sans-serif;fill:#12264d}.radar .pv{fill:#0a3a9e;font-weight:800}
+.rb{margin-bottom:14px}
+.lvl{display:inline-block;padding:1px 10px;border-radius:99px;font-size:.78rem;font-weight:700;margin-left:6px}
+.delta{font-size:.8rem;font-weight:700;margin-left:6px}.delta.up{color:#1b7f3b}.delta.down{color:#c62828}.delta.eq{color:var(--mute)}
+.tl{margin:6px 0 0 18px;font-size:.92rem}.tl li{margin-bottom:5px}
+.hist td,.hist th{white-space:nowrap}
+
+/* Hành trình tiến bộ và Góc chia sẻ */
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.pills .q{font-size:.92rem;padding:7px 14px}
+.q.on{background:var(--tn);color:#fff;border-color:var(--tn)}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.mg .tile{flex:none}
+.cam{position:relative;background:#0b1b3d;border-radius:18px;overflow:hidden;aspect-ratio:4/3;display:grid;place-items:center;color:#fff;text-align:center;padding:16px}
+.cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam .tm{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.55);padding:2px 12px;border-radius:99px;font-weight:800}
+.chk{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-weight:400}
+.chk input{width:auto;min-width:0;margin:3px 0 0;padding:0;flex:none}
+textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-height:150px}
+.badge.wait{background:#fff0d6;color:#a35a00}.badge.no{background:#fde8e8;color:#c62828}
+</style>
 </head>
 <body>
-  <div class="announcement">
-    <span class="announcement-dot"></span>
-    Không gian học tập và rèn luyện kỹ năng thuyết trình dành cho học sinh THCS
-  </div>
 
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="index.html" aria-label="TNSPEAKUP - Trang chủ">
-        <img src="logo.png" alt="Logo TNSPEAKUP">
-        <span class="brand-copy"><strong class="wordmark"><span class="wm-tn">TN</span><span class="wm-sp">SPEAK</span><span class="wm-up">UP</span></strong><small>Dám cất lời - Tự tin toả sáng</small></span>
-      </a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Mở menu" aria-expanded="false"><span></span><span></span><span></span></button>
-      <nav class="main-nav" id="mainNav">
-        <a class="active" href="index.html">Trang chủ</a>
-        <a href="goc-chia-se.html">Góc chia sẻ</a>
-        <a href="kham-pha-ban-than.html">Khám phá bản thân</a>
-        <a href="hoc-vien.html">Học viện</a>
-        <a href="phong-thuc-hanh.html">Thực hành</a>
-        <a href="thu-vien-chu-de.html">Thư viện</a>
-        <a href="hanh-trinh-tien-bo.html">Tiến bộ</a>
-        <a href="goc-giao-vien.html">Góc giáo viên</a>
-      </nav>
+<section id="login" aria-label="Đăng nhập">
+  <div class="lbox">
+    <img class="logo" src="logo.png" alt="Logo TNSpeakUp">
+    <h1 class="name"><span class="tn">TN</span><span class="speak">Speak</span><span class="up">Up</span></h1>
+    <p class="slogan">Dám cất lời - Tự tin toả sáng</p>
+    <form id="f" class="card" autocomplete="on">
+      <label for="u">Tên đăng nhập (ID)</label>
+      <input id="u" name="username" autocomplete="username" autocapitalize="none" required>
+      <label for="p">Mật khẩu</label>
+      <input id="p" name="password" type="password" autocomplete="current-password" required>
+      <button id="go" class="btn" type="submit">Đăng nhập</button>
+      <div class="alt">hoặc</div>
+      <button id="guest" class="btn ghost" type="button">Vào với vai trò học sinh (không cần tài khoản)</button>
+      <div class="bar" id="bar"><i id="fill"></i></div>
+      <p class="msg" id="msg" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<div id="app" class="hide">
+  <header>
+    <div class="top">
+      <div class="brand"><img class="logo" src="logo.png" alt=""><span class="bt"><span class="nm"><span class="tn">TN</span><span class="speak">Speak</span><span class="up">Up</span></span><small class="slogan">Dám cất lời - Tự tin toả sáng</small></span></div>
+      <div class="who"><div><b id="whoName"></b><small id="whoRole"></small></div><button id="out" class="btn ghost" type="button">Đăng xuất</button></div>
     </div>
+    <nav id="nav" aria-label="Các mục chính"></nav>
   </header>
-
-  <main>
-    <section class="hero section" id="trang-chu">
-      <div class="hero-glow hero-glow-one"></div><div class="hero-glow hero-glow-two"></div>
-      <div class="container hero-grid">
-        <div class="hero-content">
-          <div class="hero-brandline"><span class="hero-wordmark" aria-label="TNSPEAKUP"><span class="wm-tn">TN</span><span class="wm-sp">SPEAK</span><span class="wm-up">UP</span></span><span class="slogan-fx">Dám cất lời – Tự tin tỏa sáng</span></div>
-          <h1>Mỗi tiếng nói<br>đều có thể <span>tỏa sáng.</span></h1>
-          <p class="hero-lead">Khám phá bản thân, rèn luyện kỹ năng và tự tin trình bày những điều bạn nghĩ, bạn tin và bạn muốn chia sẻ.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="kham-pha-ban-than.html">Khám phá bản thân <span>→</span></a>
-            <a class="button button-quiet" href="chatbot.html"><span class="play-icon">✦</span> Trò chuyện cùng Trợ lý 5A</a>
-          </div>
-          <div class="hero-note">
-            <div class="note-avatars" aria-hidden="true"><span>H</span><span>✦</span><span>✧</span></div>
-            <p><strong>Bắt đầu từ chính bạn</strong><br><small>Tiến bộ từng ngày, tự tin theo cách riêng.</small></p>
-          </div>
-        </div>
-        <div class="hero-art">
-          <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
-          <div class="hero-logo-card"><img src="logo.png" alt="Biểu trưng TNSPEAKUP"></div>
-          <div class="floating-card card-top"><span class="float-icon">🎤</span><span><b>Cất lời</b><small>Dám thể hiện</small></span></div>
-          <div class="floating-card card-bottom"><span class="float-icon star">✦</span><span><b>Tỏa sáng</b><small>Tiến bộ mỗi ngày</small></span></div>
-          <span class="spark spark-one">✦</span><span class="spark spark-two">✧</span>
-        </div>
-      </div>
-      <div class="container hero-bottom"><span>01 / TRANG CHỦ</span><span class="bottom-line"></span><span>Dám cất lời - Tự tin toả sáng</span></div>
-    </section>
-
-    <section class="intro-strip">
-      <div class="container intro-grid">
-        <div><span class="strip-number">01</span><p><strong>Hiểu mình</strong><small>Nhận diện điểm mạnh và rào cản</small></p></div>
-        <div><span class="strip-number">02</span><p><strong>Học cách nói</strong><small>Trang bị kiến thức và kỹ năng</small></p></div>
-        <div><span class="strip-number">03</span><p><strong>Thực hành</strong><small>Luyện tập qua những thử thách</small></p></div>
-        <div><span class="strip-number">04</span><p><strong>Trưởng thành</strong><small>Nhìn lại và ghi nhận tiến bộ</small></p></div>
-      </div>
-    </section>
-
-    <section class="section about-section" id="gioi-thieu">
-      <div class="container two-column">
-        <div class="section-heading">
-          <span class="eyebrow">01 · GIỚI THIỆU</span>
-          <h2>Không chỉ học nói,<br><span>mà học cách tin vào mình.</span></h2>
-        </div>
-        <div class="about-copy">
-          <p>TNSPEAKUP là nền tảng học tập và rèn luyện kỹ năng thuyết trình dành cho học sinh THCS. Tại đây, mỗi bạn được khám phá bản thân, học từng kỹ năng nhỏ và thực hành trong một môi trường tích cực.</p>
-          <p class="highlight-quote">AI không nói thay bạn. AI đồng hành để bạn tự tin tìm thấy tiếng nói của chính mình.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section learning-section" id="khu-vuc">
-      <div class="container">
-        <div class="section-title-row">
-          <div class="section-heading">
-            <span class="eyebrow">ĐIỂM BẮT ĐẦU</span>
-            <h2>Chọn nơi bạn muốn<br><span>bắt đầu hôm nay.</span></h2>
-          </div>
-          <p class="section-description">Tám khu vực chức năng giúp bạn đi từ hiểu mình, học kỹ năng, thực hành đến ghi nhận tiến bộ.</p>
-        </div>
-        <div class="areas-grid">
-          <a class="area-card" href="goc-chia-se.html"><span class="skill-index">02</span><span class="skill-icon">💬</span><h3>Góc chia sẻ</h3><p>Nơi bạn chia sẻ bài nói, cảm nhận và kinh nghiệm cùng mọi người.</p><span class="area-go">Vào khu vực →</span></a>
-          <a class="area-card" href="kham-pha-ban-than.html"><span class="skill-index">03</span><span class="skill-icon">✧</span><h3>Khám phá bản thân</h3><p>Nhận diện cảm xúc, điểm mạnh, nỗi sợ và đặt mục tiêu rèn luyện.</p><span class="area-go">Vào khu vực →</span></a>
-          <a class="area-card" href="hoc-vien.html"><span class="skill-index">04</span><span class="skill-icon">▤</span><h3>Học viện thuyết trình</h3><p>Tám chuyên đề: từ mở đầu ấn tượng đến ứng biến và phản biện.</p><span class="area-go">Vào khu vực →</span></a>
-          <a class="area-card" href="phong-thuc-hanh.html"><span class="skill-index">05</span><span class="skill-icon">🎤</span><h3>Phòng thực hành</h3><p>Nói trước ống kính, Một phút tỏa sáng, Sân khấu Ngữ văn…</p><span class="area-go">Vào khu vực →</span></a>
-          <a class="area-card area-featured" href="chatbot.html"><span class="skill-index">06</span><span class="skill-icon">✦</span><h3>Trợ lý AI 5A</h3><p>Hỏi đáp, gợi mở, luyện tập và nhận phản hồi cho bài nói.</p><span class="area-go">Vào khu vực →</span></a>
-          <a class="area-card" href="thu-vien-chu-de.html"><span class="skill-index">07</span><span class="skill-icon">♧</span><h3>Thư viện chủ đề</h3><p>Văn học, trường học, cuộc sống, tuổi trẻ và công dân số.</p><span class="area-go">Vào khu vực →</span></a>
-          <a class="area-card" href="hanh-trinh-tien-bo.html"><span class="skill-index">08</span><span class="skill-icon">◉</span><h3>Hành trình tiến bộ</h3><p>Mục tiêu cá nhân, nhật kí luyện tập, tự đánh giá, dấu mốc.</p><span class="area-go">Vào khu vực →</span></a>
-          <a class="area-card" href="goc-giao-vien.html"><span class="skill-index">09</span><span class="skill-icon">⌘</span><h3>Góc giáo viên</h3><p>Khu quản trị học liệu, nhiệm vụ, đánh giá và Chatbot.</p><span class="area-go">Vào khu vực →</span></a>
-        </div>
-      </div>
-    </section>
-
-
-    <section class="section zone" id="goc-chia-se">
-      <div class="container">
-        <div class="zone-head">
-          <div class="section-heading"><span class="eyebrow">02 · GÓC CHIA SẺ</span><h2>Một câu chuyện nhỏ,<br><span>một nguồn cảm hứng lớn.</span></h2></div>
-          <div class="zone-side"><p class="section-description">Nơi bạn chia sẻ bài nói, cảm nhận và kinh nghiệm để cùng nhau tiến bộ.</p><a class="text-link" href="goc-chia-se.html">Xem toàn bộ khu vực <span>→</span></a></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section zone" id="kham-pha">
-      <div class="container">
-        <div class="zone-head">
-          <div class="section-heading"><span class="eyebrow">03 · KHÁM PHÁ BẢN THÂN</span><h2>Hiểu mình trước,<br><span>tự tin sau.</span></h2></div>
-          <div class="zone-side"><p class="section-description">Bốn bước nhỏ giúp bạn nhìn rõ cảm xúc, điểm mạnh và điều cần rèn luyện.</p><a class="text-link" href="kham-pha-ban-than.html">Xem toàn bộ khu vực <span>→</span></a></div>
-        </div>
-        <div class="mini-grid cols-4"><a class="mini-card" href="kham-pha-ban-than.html#cam-xuc"><span class="mini-ico">♡</span><h3>Cảm xúc khi thuyết trình</h3><p>Nhận diện bạn đang cảm thấy gì khi đứng trước mọi người.</p></a><a class="mini-card" href="kham-pha-ban-than.html#diem-manh"><span class="mini-ico">★</span><h3>Điểm mạnh của tôi</h3><p>Tìm ra những điều bạn đã làm tốt.</p></a><a class="mini-card" href="kham-pha-ban-than.html#noi-so"><span class="mini-ico">☁</span><h3>Nỗi sợ và rào cản</h3><p>Gọi tên điều khiến bạn ngại để vượt qua từng chút.</p></a><a class="mini-card" href="kham-pha-ban-than.html#muc-tieu"><span class="mini-ico">◎</span><h3>Mục tiêu rèn luyện</h3><p>Đặt mục tiêu vừa sức cho hành trình của riêng bạn.</p></a></div>
-      </div>
-    </section>
-
-    <section class="section zone zone-alt" id="hoc-vien">
-      <div class="container">
-        <div class="zone-head">
-          <div class="section-heading"><span class="eyebrow">04 · HỌC VIỆN THUYẾT TRÌNH</span><h2>Rèn từng kỹ năng.<br><span>Vững vàng từng bước.</span></h2></div>
-          <div class="zone-side"><p class="section-description">Tám chuyên đề giúp bạn xây dựng bài thuyết trình rõ ràng, cuốn hút và mang dấu ấn cá nhân.</p><a class="text-link" href="hoc-vien.html">Xem toàn bộ khu vực <span>→</span></a></div>
-        </div>
-        <div class="mini-grid cols-4"><a class="mini-card" href="hoc-vien.html#chuyen-de-1"><span class="mini-ico">✧</span><h3>Mở đầu ấn tượng</h3><p>Thu hút người nghe ngay từ những lời đầu tiên.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-2"><span class="mini-ico">▤</span><h3>Xây dựng nội dung</h3><p>Chọn lọc ý tưởng và phát triển thông điệp.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-3"><span class="mini-ico">⌘</span><h3>Bố cục và logic</h3><p>Sắp xếp ý tưởng mạch lạc, dễ theo dõi.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-4"><span class="mini-ico">✎</span><h3>Diễn đạt tự nhiên</h3><p>Dùng từ phù hợp, nói rõ ràng và chân thật.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-5"><span class="mini-ico">♫</span><h3>Làm chủ giọng nói</h3><p>Điều chỉnh âm lượng, tốc độ và ngữ điệu.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-6"><span class="mini-ico">◉</span><h3>Ngôn ngữ cơ thể</h3><p>Ánh mắt, cử chỉ và tư thế tự tin.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-7"><span class="mini-ico">♡</span><h3>Tương tác với người nghe</h3><p>Tạo kết nối và lan tỏa cảm xúc tích cực.</p></a><a class="mini-card" href="hoc-vien.html#chuyen-de-8"><span class="mini-ico">⚡</span><h3>Ứng biến và phản biện</h3><p>Bình tĩnh xử lí câu hỏi và bảo vệ quan điểm.</p></a></div>
-      </div>
-    </section>
-
-    <section class="section zone" id="thuc-hanh">
-      <div class="container">
-        <div class="zone-head">
-          <div class="section-heading"><span class="eyebrow">05 · PHÒNG THỰC HÀNH</span><h2>Học bằng trải nghiệm.<br><span>Trưởng thành qua từng lần thử.</span></h2></div>
-          <div class="zone-side"><p class="section-description">Không cần hoàn hảo ngay từ đầu, chỉ cần bạn dám bắt đầu.</p><a class="text-link" href="phong-thuc-hanh.html">Xem toàn bộ khu vực <span>→</span></a></div>
-        </div>
-        <div class="mini-grid cols-5"><a class="mini-card" href="phong-thuc-hanh.html#camera"><span class="mini-ico">🎥</span><h3>Nói trước ống kính</h3><p>Làm quen với máy quay và quan sát cách bạn thể hiện.</p></a><a class="mini-card" href="phong-thuc-hanh.html#phut"><span class="mini-ico">⏱</span><h3>Một phút tỏa sáng</h3><p>Trình bày một ý tưởng chỉ trong 60 giây.</p></a><a class="mini-card" href="phong-thuc-hanh.html#gocnhin"><span class="mini-ico">💡</span><h3>Góc nhìn của tôi</h3><p>Chia sẻ quan điểm về điều bạn quan tâm.</p></a><a class="mini-card" href="phong-thuc-hanh.html#hoinhanh"><span class="mini-ico">⚡</span><h3>Hỏi nhanh – đáp hay</h3><p>Phản xạ nhanh với những câu hỏi bất ngờ.</p></a><a class="mini-card" href="phong-thuc-hanh.html#nguvan"><span class="mini-ico">📖</span><h3>Sân khấu Ngữ văn</h3><p>Thể hiện tác phẩm và cảm nhận văn học bằng lời nói.</p></a></div>
-      </div>
-    </section>
-
-    <section class="section ai-section" id="tro-ly-ai">
-      <div class="container ai-panel">
-        <div class="ai-content">
-          <span class="eyebrow eyebrow-light">06 · TRỢ LÝ AI 5A</span>
-          <h2>AI gợi mở.<br><span>Bạn tự tin cất lời.</span></h2>
-          <p>Chatbot TNSPEAKUP trả lời dựa trên kho kiến thức do giáo viên biên soạn và kiểm duyệt. Ở chế độ đồng hành 5A, trợ lý đặt câu hỏi, gợi ý và phản hồi để bạn tự xây dựng bài nói, không nói thay bạn.</p>
-          <div class="ai-chips"><span>Hỏi đáp kiến thức</span><span>Gợi ý nội dung</span><span>Luyện mở đầu</span><span>Cải thiện diễn đạt</span><span>Luyện phản biện</span><span>Phản hồi bài nói</span></div>
-          <a class="button button-white" href="chatbot.html">Trò chuyện với Trợ lý 5A <span>→</span></a>
-        </div>
-        <div class="steps-5a">
-          <div><b>01</b><span><strong>ASK</strong><small>Đặt câu hỏi</small></span><i>↗</i></div>
-          <div><b>02</b><span><strong>ANALYZE</strong><small>Phân tích, kiểm chứng gợi ý</small></span><i>↗</i></div>
-          <div><b>03</b><span><strong>ADAPT</strong><small>Chọn lọc, diễn đạt theo cách của mình</small></span><i>↗</i></div>
-          <div><b>04</b><span><strong>ACT</strong><small>Tự luyện tập và trình bày</small></span><i>↗</i></div>
-          <div><b>05</b><span><strong>ASSESS</strong><small>Nhận xét, điều chỉnh, cải thiện</small></span><i>↗</i></div>
-        </div>
-        <div class="ai-orb">✦</div>
-      </div>
-    </section>
-
-
-    <section class="section zone zone-alt" id="thu-vien">
-      <div class="container">
-        <div class="zone-head">
-          <div class="section-heading"><span class="eyebrow">07 · THƯ VIỆN CHỦ ĐỀ</span><h2>Có chủ đề hay,<br><span>bài nói sẽ có hồn.</span></h2></div>
-          <div class="zone-side"><p class="section-description">Năm nhóm chủ đề gần gũi để bạn chọn đề tài cho bài nói của mình.</p><a class="text-link" href="thu-vien-chu-de.html">Xem toàn bộ khu vực <span>→</span></a></div>
-        </div>
-        <div class="mini-grid cols-5"><a class="mini-card" href="thu-vien-chu-de.html#g1"><span class="mini-ico">📚</span><h3>Văn học và tác phẩm</h3><p>Cảm nhận, thuyết trình về tác phẩm đã học.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g2"><span class="mini-ico">🏫</span><h3>Trường học của em</h3><p>Chuyện lớp học, thầy cô, bạn bè, hoạt động.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g3"><span class="mini-ico">🌿</span><h3>Cuộc sống quanh ta</h3><p>Những điều quen thuộc đáng để nói ra.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g4"><span class="mini-ico">🚀</span><h3>Tuổi trẻ và tương lai</h3><p>Ước mơ, lựa chọn và định hướng của bạn.</p></a><a class="mini-card" href="thu-vien-chu-de.html#g5"><span class="mini-ico">🛡</span><h3>Công dân số</h3><p>Ứng xử, an toàn và sáng tạo trong môi trường số.</p></a></div>
-      </div>
-    </section>
-
-    <section class="section zone" id="tien-bo">
-      <div class="container">
-        <div class="zone-head">
-          <div class="section-heading"><span class="eyebrow">08 · HÀNH TRÌNH TIẾN BỘ</span><h2>Mỗi bước nhỏ<br><span>đều đáng tự hào.</span></h2></div>
-          <div class="zone-side"><p class="section-description">Ghi lại quá trình luyện tập và nhận ra sự tự tin được bồi đắp qua từng trải nghiệm.</p><a class="text-link" href="hanh-trinh-tien-bo.html">Xem toàn bộ khu vực <span>→</span></a></div>
-        </div>
-        <div class="mini-grid cols-4"><a class="mini-card" href="hanh-trinh-tien-bo.html#muc-tieu"><span class="mini-ico">◎</span><h3>Mục tiêu cá nhân</h3><p>Theo dõi điều bạn muốn đạt được.</p></a><a class="mini-card" href="hanh-trinh-tien-bo.html#nhat-ki"><span class="mini-ico">✎</span><h3>Nhật kí luyện tập</h3><p>Ghi lại mỗi lần thực hành và cảm nhận.</p></a><a class="mini-card" href="hanh-trinh-tien-bo.html#tu-danh-gia"><span class="mini-ico">✓</span><h3>Tự đánh giá</h3><p>Nhìn lại bài nói và điều chỉnh.</p></a><a class="mini-card" href="hanh-trinh-tien-bo.html#dau-moc"><span class="mini-ico">⚑</span><h3>Dấu mốc tiến bộ</h3><p>Ghi nhận những bước tiến của chính bạn.</p></a></div>
-      </div>
-    </section>
-
-    <section class="section teacher-section" id="giao-vien">
-      <div class="container teacher-card">
-        <div class="teacher-icon">♧</div>
+  <div id="bkBar" class="bkbar hide" role="status"></div>
+  <div class="wrap">
+    <section id="p-home" class="panel on">
+      <div class="hero compact">
+        <img class="logo" src="logo.png" alt="Logo TNSpeakUp">
         <div>
-          <span class="eyebrow">09 · GÓC GIÁO VIÊN</span>
-          <h2>Trung tâm quản lý <span>nội dung và học liệu</span></h2>
-          <p>Khu quản trị riêng để quản lý bài viết, học liệu, nhiệm vụ, đánh giá, kho kiến thức và Chatbot; theo dõi quá trình luyện tập của học sinh. Cần đăng nhập để truy cập.</p>
+          <h1><span class="tn">TN</span><span class="speak">Speak</span><span class="up">Up</span></h1>
+          <p class="slogan">Dám cất lời - Tự tin toả sáng</p>
+          <p id="hello"></p>
         </div>
-        <a class="button button-outline" href="goc-giao-vien.html">Đăng nhập quản trị <span>→</span></a>
       </div>
-      <div class="container teacher-modules"><a href="goc-giao-vien.html#posts">Quản lý bài viết</a><a href="goc-giao-vien.html#docs">Quản lý học liệu</a><a href="goc-giao-vien.html#tasks">Quản lý nhiệm vụ</a><a href="goc-giao-vien.html#rubric">Quản lý đánh giá</a><a href="goc-giao-vien.html#kb">Quản lý Chatbot</a><a href="goc-giao-vien.html#students">Theo dõi học sinh</a></div>
-    </section>
 
-    <section class="section final-cta" id="bat-dau">
-      <div class="container cta-inner">
-        <img class="cta-logo" src="logo.png" alt="Logo TNSPEAKUP">
-        <span class="eyebrow eyebrow-light">Dám cất lời - Tự tin toả sáng</span>
-        <h2>Tiếng nói của bạn<br>đáng được lắng nghe.</h2>
-        <p>Hãy bắt đầu từ một câu nói nhỏ. Hành trình tự tin của bạn bắt đầu ngay hôm nay.</p>
-        <a class="button button-white" href="kham-pha-ban-than.html">Bắt đầu hành trình <span>→</span></a>
+      <section class="banner" id="banner" role="region" aria-roledescription="carousel" aria-label="Giới thiệu và lời cổ động">
+        <div class="track" id="track" aria-live="off"></div>
+        <button class="arrow prev" id="bPrev" type="button" aria-label="Thẻ trước">&#8249;</button>
+        <button class="arrow next" id="bNext" type="button" aria-label="Thẻ sau">&#8250;</button>
+        <div class="ctl" id="dots"></div>
+        <button class="pp" id="bPause" type="button" aria-label="Tạm dừng tự chạy">&#10074;&#10074;</button>
+      </section>
+
+      <div class="ticker" aria-hidden="true"><div class="tk" id="tk"></div></div>
+
+      <h2 class="sec">Truy cập nhanh</h2>
+      <div class="row" id="tiles" style="margin-top:12px"></div>
+
+      <div class="two">
+        <div class="card daily"><div class="lab">Lời cổ động hôm nay</div><blockquote id="cheer"></blockquote></div>
+        <div class="card daily"><div class="lab">Mẹo nói và nghe hôm nay</div><p id="tip"></p></div>
       </div>
     </section>
-  </main>
+    <section id="p-survey" class="panel">
+      <h2>Thực trạng</h2>
+      <p class="lead">Học sinh hôm nay đang đứng ở đâu trên hành trình rèn kỹ năng thuyết trình, nói và nghe, cũng như sử dụng trí tuệ nhân tạo để học môn Ngữ văn? Trang này gồm một sơ đồ tổng quan, kết quả khảo sát và các bài viết phân tích.</p>
+      <div class="jump"><button class="q" type="button" data-sc="sv-flow">Sơ đồ tổng quan</button><button class="q" type="button" data-sc="sv-data">Kết quả khảo sát</button><button class="q" type="button" data-sc="sv-posts">Bài viết</button></div>
 
-  
-  <a class="chat-fab" href="chatbot.html" aria-label="Trò chuyện với Trợ lý AI 5A" title="Trợ lý AI 5A">
-    <span class="chat-fab-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/><path d="M9 11.5h.01M12 11.5h.01M15 11.5h.01" stroke-width="2.6"/></svg>
-      <span class="chat-fab-spark" aria-hidden="true">✦</span>
-    </span>
-    <span class="chat-fab-label">Trợ lý AI 5A</span>
-  </a>
+      <h3 class="sh" id="sv-flow">1. Sơ đồ tổng quan: từ nguyên nhân đến giải pháp</h3>
+      <div class="flow" role="list">
+        <div class="fcol" role="listitem" style="--c:#0a3a9e"><h3>🔎 Nguyên nhân</h3>
+          <div class="fi"><b>Ít cơ hội luyện tập</b>Nói và nghe thường chỉ có vài lần trong một học kỳ.</div>
+          <div class="fi"><b>Tâm lý ngại sai</b>Sợ bị bạn cười, sợ bị đánh giá.</div>
+          <div class="fi"><b>Thiên về viết</b>Học để làm bài hơn là học để giao tiếp.</div>
+          <div class="fi"><b>Thiếu hướng dẫn dùng AI</b>Chưa có "luật chơi" rõ ràng khi học Ngữ văn.</div></div>
+        <div class="fcol" role="listitem" style="--c:#1c7be6"><h3>📊 Thực trạng bốn kỹ năng</h3>
+          <div class="fi"><b>🎤 Thuyết trình</b>Bài nói thiếu cấu trúc, hay đọc lại từ giấy, ít nhìn vào người nghe.</div>
+          <div class="fi"><b>🗣️ Nói</b>Ý rời rạc, vốn từ chưa linh hoạt, nói nhỏ hoặc quá nhanh khi hồi hộp.</div>
+          <div class="fi"><b>👂 Nghe</b>Nghe bị động, ít ghi ý chính, hiếm khi đặt câu hỏi phản hồi.</div>
+          <div class="fi"><b>🤖 Dùng AI học Ngữ văn</b>Dễ lấy bài mẫu có sẵn, ít kiểm chứng, nguy cơ lệ thuộc.</div></div>
+        <div class="fcol" role="listitem" style="--c:#a35a00"><h3>⚠️ Hệ quả</h3>
+          <div class="fi"><b>Thiếu tự tin</b>Ngại phát biểu và tranh luận.</div>
+          <div class="fi"><b>Thiếu cá tính</b>Bài nói, bài viết giống nhau, ít dấu ấn riêng.</div>
+          <div class="fi"><b>Cảm thụ nông</b>Khó diễn đạt cảm xúc về tác phẩm.</div>
+          <div class="fi"><b>Bỏ lỡ cơ hội</b>Chưa tận dụng tốt công cụ số để học tập.</div></div>
+        <div class="fcol" role="listitem" style="--c:#1b7f3b"><h3>🚀 Hướng giải quyết</h3>
+          <div class="fi"><b>Hiểu mình</b>Bài test năng lực.</div>
+          <div class="fi"><b>Luyện mỗi ngày</b>Phòng thực hành nói, nghe.</div>
+          <div class="fi"><b>AI đồng hành</b>Gợi ý, phản hồi, không nói thay.</div>
+          <div class="fi"><b>Chia sẻ</b>Gửi thông điệp, nhận cổ vũ.</div>
+          <button class="btn ghost" type="button" data-t="journey">Đến Hành trình tiến bộ</button></div>
+      </div>
+      <p class="lead" style="margin-top:12px;font-size:.88rem">Sơ đồ tổng hợp những biểu hiện thường gặp để định hướng cho dự án. Số liệu cụ thể xem ở phần khảo sát bên dưới.</p>
 
-  <div class="copyright-overlay" role="contentinfo">
-    <img src="logo.png" alt="">
-    <span>© 2026 TNSpeakUp <b>|</b> Sản phẩm dự thi KHKT trường THCS Thống Nhất </span>
+      <h3 class="sh" id="sv-data">2. Kết quả khảo sát</h3>
+      <div class="svhead"><span id="svBadge" class="badge"></span><span id="svNote" class="soon"></span></div>
+      <div class="two">
+        <div class="card"><h3>Học sinh tự đánh giá kỹ năng của mình</h3>
+          <div class="legend" id="svLegend"></div><div class="chart" id="svStack"></div></div>
+        <div class="card"><h3>Những khó khăn học sinh gặp phải</h3>
+          <p class="hint" style="margin-bottom:12px">Tỉ lệ học sinh chọn từng khó khăn (được chọn nhiều mục).</p><div class="chart" id="svDiff"></div></div>
+      </div>
+      <details class="card hide" id="svEditW" style="margin-top:16px">
+        <summary style="cursor:pointer;font-weight:700;color:var(--tn)">Cập nhật số liệu khảo sát (chỉ Quản trị viên)</summary>
+        <p class="hint" style="margin:8px 0">Nhập số học sinh ở mỗi mức, hệ thống tự tính tỉ lệ phần trăm. Số liệu lưu trên trình duyệt này; để mọi người cùng thấy, bấm "Sao chép mã số liệu" và dán vào file saoluu.js.</p>
+        <div id="svFields"></div>
+        <div class="acts" style="margin-top:12px"><button id="svSave" class="btn" type="button">Lưu số liệu</button><button id="svCode" class="btn ghost" type="button">Sao chép mã số liệu</button><button id="svReset" class="btn ghost danger" type="button">Dùng lại số liệu minh hoạ</button></div>
+        <p class="msg" id="svMsg" role="status"></p>
+      </details>
+
+      <h3 class="sh" id="sv-posts">3. Bài viết</h3>
+      <div class="posts">
+        <article class="card post"><details><summary><span class="tag">Thuyết trình</span><h3>Vì sao nhiều học sinh ngại đứng trước lớp?</h3><p class="ex">Ba rào cản thường gặp và cách bắt đầu tháo gỡ từng rào.</p><span class="meta">3 phút đọc</span><br><span class="more"><span class="c">Đọc bài viết</span><span class="o">Thu gọn</span></span></summary>
+          <div class="pbody">
+            <p>Thuyết trình là trình bày một vấn đề trước người nghe một cách rõ ràng, có cấu trúc và có sức thuyết phục. Trong chương trình Ngữ văn hiện hành, nói và nghe là một trong bốn kỹ năng cốt lõi, đứng cạnh đọc và viết. Thế nhưng, ở nhiều lớp học, các buổi thuyết trình vẫn thường là sân khấu của vài bạn quen thuộc, còn số đông chọn đứng ngoài.</p>
+            <h4>Ba rào cản thường gặp</h4>
+            <ul><li><b>Tâm lý:</b> sợ nói sai, sợ bị bạn cười, hồi hộp đến mức quên bài.</li><li><b>Kỹ thuật:</b> chưa có dàn ý rõ, đọc lại nguyên văn từ giấy, nói quá nhanh hoặc quá nhỏ, ít nhìn vào người nghe.</li><li><b>Cơ hội:</b> mỗi học kỳ chỉ được đứng lên vài lần, chưa kịp quen đã hết dịp luyện.</li></ul>
+            <p>Phần lớn những rào cản này không đến từ việc thiếu năng lực, mà từ thiếu luyện tập có hướng dẫn và thiếu một môi trường an toàn để được sai, được sửa.</p>
+            <h4>Gợi ý hành động</h4>
+            <ul><li>Chuẩn bị ba ý chính thay vì học thuộc cả bài.</li><li>Luyện nói trước gương hoặc ghi âm 3 đến 5 phút mỗi ngày.</li><li>Bắt đầu với nhóm nhỏ, rồi mới đến cả lớp.</li></ul>
+          </div></details></article>
+
+        <article class="card post"><details><summary><span class="tag">Nói và nghe</span><h3>Nói và nghe: hai nửa của một cuộc trò chuyện</h3><p class="ex">Giỏi nói chưa đủ, nghe hiểu mới làm cuộc trò chuyện trọn vẹn.</p><span class="meta">3 phút đọc</span><br><span class="more"><span class="c">Đọc bài viết</span><span class="o">Thu gọn</span></span></summary>
+          <div class="pbody">
+            <p>Chúng ta thường nghĩ giỏi nói là giỏi giao tiếp. Thực ra, một cuộc trò chuyện chỉ trọn vẹn khi có người nói rõ và có người nghe hiểu. Hai kỹ năng này nâng đỡ nhau: nghe tốt giúp ta biết cần nói điều gì, còn nói rõ giúp người khác nghe không phải đoán.</p>
+            <h4>Biểu hiện thường gặp</h4>
+            <ul><li><b>Về nói:</b> ý còn rời rạc, vốn từ chưa linh hoạt, trả lời ngắn cho xong, nói nhanh hoặc nhỏ khi hồi hộp.</li><li><b>Về nghe:</b> nghe để chờ đến lượt mình nói, ít ghi lại ý chính, hiếm khi đặt câu hỏi hay phản hồi điều bạn vừa chia sẻ.</li></ul>
+            <p>Nghe vì thế thường bị xem là kỹ năng "tự có", ít được luyện có chủ đích, trong khi đây là nền tảng của thảo luận, tranh biện và làm việc nhóm.</p>
+            <h4>Gợi ý hành động</h4>
+            <ul><li>Trước khi trả lời, thử tóm tắt ý bạn vừa nói bằng lời của mình.</li><li>Ghi ba từ khoá khi nghe một bài nói.</li><li>Tập đặt một câu hỏi làm rõ thay vì chỉ gật đầu.</li></ul>
+          </div></details></article>
+
+        <article class="card post"><details><summary><span class="tag">AI trong học tập</span><h3>Học Ngữ văn cùng AI: cơ hội và điều cần tỉnh táo</h3><p class="ex">Dùng đúng, AI là người bạn học kiên nhẫn. Dùng sai, nó là lối tắt.</p><span class="meta">4 phút đọc</span><br><span class="more"><span class="c">Đọc bài viết</span><span class="o">Thu gọn</span></span></summary>
+          <div class="pbody">
+            <p>Trí tuệ nhân tạo đã đi vào bàn học của học sinh: hỏi nghĩa từ khó, xin gợi ý dàn ý, nhờ góp ý một đoạn văn. Dùng đúng, AI giống một người bạn học kiên nhẫn; dùng sai, nó dễ trở thành lối tắt khiến ta đánh mất chính tiếng nói của mình.</p>
+            <h4>Cơ hội</h4>
+            <ul><li>Gợi ý hướng triển khai khi bí ý, giải thích khái niệm và bối cảnh tác phẩm.</li><li>Đóng vai người nghe để hỏi ngược lại bài nói của em.</li><li>Góp ý cách diễn đạt để em tự chỉnh sửa.</li></ul>
+            <h4>Điều cần tỉnh táo</h4>
+            <ul><li>Chép bài mẫu thay cho tự viết khiến bài văn thiếu cá tính và không rèn được tư duy.</li><li>AI có thể đưa thông tin hoặc dẫn chứng sai, thậm chí bịa ra, nên luôn cần kiểm chứng với sách giáo khoa và nguồn tin cậy.</li><li>Dễ lệ thuộc và ngại tự suy nghĩ.</li></ul>
+            <h4>Nguyên tắc "Tự nghĩ, nhờ AI, tự viết"</h4>
+            <p>Hãy tự suy nghĩ trước, nhờ AI gợi ý hoặc phản biện sau, rồi tự kiểm chứng và viết lại bằng giọng của mình. Khi dùng AI cho bài làm, hãy trung thực và tuân thủ quy định của thầy cô, nhà trường.</p>
+          </div></details></article>
+
+        <article class="card post"><details><summary><span class="tag">Phát triển kỹ năng</span><h3>Từ thực trạng đến hành động: bắt đầu nhỏ, luyện đều</h3><p class="ex">Lộ trình bốn bước để kỹ năng lớn lên mỗi ngày.</p><span class="meta">3 phút đọc</span><br><span class="more"><span class="c">Đọc bài viết</span><span class="o">Thu gọn</span></span></summary>
+          <div class="pbody">
+            <p>Kỹ năng không tự đến sau một buổi tập huấn mà lớn lên từ những lần luyện nhỏ nhưng đều đặn. Thay vì đặt mục tiêu "nói thật hay", hãy đặt mục tiêu "hôm nay nói rõ thêm một ý".</p>
+            <h4>Lộ trình bốn bước</h4>
+            <ol><li><b>Hiểu mình:</b> làm bài test năng lực để biết điểm mạnh và điểm cần luyện.</li><li><b>Luyện mỗi ngày:</b> 5 phút nói hoặc nghe có chủ đích trong phòng thực hành.</li><li><b>Nhận phản hồi:</b> từ bạn bè, thầy cô và công cụ AI, rồi chọn một điều để sửa.</li><li><b>Chia sẻ:</b> đăng thông điệp, bài viết để thấy mình tiến bộ và truyền cảm hứng cho bạn.</li></ol>
+            <p>Mỗi bước đều nhỏ, nhưng cộng lại thành một hành trình dài. Đó cũng là tinh thần của TNSpeakUp: dám cất lời, tự tin toả sáng.</p>
+            <div class="acts"><button class="btn ghost" type="button" data-t="test">Làm bài test</button><button class="btn ghost" type="button" data-t="journey">Vào phòng thực hành</button></div>
+          </div></details></article>
+      </div>
+
+      <div class="card cta"><h3>Sẵn sàng bước tiếp chưa?</h3><p class="hint">Hiểu thực trạng là bước đầu. Giờ hãy tìm hiểu xem bản thân em đang ở đâu.</p>
+        <div class="acts"><button class="btn" type="button" data-t="test">Khám phá bản thân</button><button class="btn ghost" type="button" data-t="share">Góc chia sẻ</button></div></div>
+    </section>
+    <section id="p-test" class="panel">
+      <h2>Khám phá bản thân</h2>
+      <p class="lead">Em đang ở đâu trên hành trình rèn kỹ năng thuyết trình, nói, nghe và dùng AI để học Ngữ văn? Hãy cùng tự đánh giá để biết điểm mạnh và việc nên luyện trước.</p>
+      <div id="tIntro" class="card" style="margin-top:14px">
+        <h3>Bài tự đánh giá năng lực</h3>
+        <ul class="tl" style="margin-top:8px">
+          <li><b>20 câu</b>, khoảng 5 phút, chia đều cho 4 kỹ năng.</li>
+          <li>Không có đáp án đúng hay sai. Em chọn mức đúng nhất với mình, thật thà là tốt nhất.</li>
+          <li>Kết quả chỉ để định hướng luyện tập, không dùng để chấm điểm hay xếp loại.</li>
+        </ul>
+        <div class="acts" style="margin-top:14px"><button id="tStart" class="btn" type="button">Bắt đầu làm bài</button><button id="tView" class="btn ghost hide" type="button">Xem lại kết quả gần nhất</button></div>
+        <p class="hint" id="tLast" style="margin-top:8px"></p>
+      </div>
+      <div id="tQ" class="card hide" style="margin-top:14px" role="group" aria-label="Câu hỏi tự đánh giá">
+        <div class="tprog"><span id="tCount"></span><span id="tSk" class="tag" style="margin:0"></span></div>
+        <div class="tbar" aria-hidden="true"><i id="tBar"></i></div>
+        <h3 id="tText" tabindex="-1" aria-live="polite"></h3>
+        <div id="tOpts" class="topts"></div>
+        <div class="acts" style="justify-content:space-between"><button id="tBack" class="btn ghost" type="button">&larr; Câu trước</button><button id="tFwd" class="btn ghost" type="button">Câu sau &rarr;</button></div>
+      </div>
+      <div id="tRes" class="hide"></div>
+    </section>
+    <section id="p-journey" class="panel"><h2>Hành trình tiến bộ</h2><p class="lead">Luyện tập từng kỹ năng nhỏ mỗi ngày: nói trước gương, chọn đề tài, viết mở bài, kết bài, tương tác với người nghe và dùng AI đúng cách.</p><div class="pills" id="jNav"></div><div id="jBody"></div></section>
+    <section id="p-share" class="panel"><h2>Góc chia sẻ</h2><p class="lead">Đọc bài viết của thầy cô và các bạn, hoặc viết bài của em và gửi để kiểm duyệt viên, Quản trị viên duyệt trước khi đăng công khai.</p><div class="pills" id="sNav"></div><div id="sBody"></div></section>
+    <section id="p-settings" class="panel">
+      <h2>Cài đặt</h2>
+      <p class="soon">Chỉ Quản trị viên thấy mục này.</p>
+      <div class="two">
+        <div class="card">
+          <h3>Mã sao lưu dữ liệu</h3>
+          <p class="hint">Tạo một đoạn mã chứa toàn bộ dữ liệu hiện có. Lưu mã ở nơi an toàn để khôi phục khi cần hoặc chuyển sang máy khác.</p>
+          <button id="bkMake" class="btn" type="button">Tạo mã sao lưu</button>
+          <textarea id="bk" readonly placeholder="Mã sao lưu sẽ hiện ở đây" aria-label="Mã sao lưu"></textarea>
+          <div class="acts"><button id="bkCopy" class="btn ghost" type="button">Sao chép mã</button><button id="bkDl" class="btn ghost" type="button">Tải về file</button></div>
+          <div class="acts" style="margin-top:8px"><button id="bkLine" class="btn" type="button">Sao chép dòng lệnh cho saoluu.js</button><button id="bkJs" class="btn ghost" type="button">Tải file saoluu.js</button></div>
+          <p class="hint" style="margin-top:6px">Hai nút này tự tạo mã mới nhất, kèm sẵn dòng window.TNSU_BACKUP=“…”; chỉ cần dán thay toàn bộ nội dung file saoluu.js (hoặc thay file bằng bản tải về).</p>
+          <p class="msg" id="bkMsg" role="status"></p>
+        </div>
+        <div class="card">
+          <h3>Dán mã để khôi phục</h3>
+          <p class="hint">Dán mã sao lưu vào ô dưới. Dữ liệu hiện tại sẽ được thay bằng dữ liệu trong mã.</p>
+          <textarea id="rs" placeholder="Dán mã sao lưu vào đây" aria-label="Dán mã sao lưu"></textarea>
+          <button id="rsGo" class="btn" type="button">Khôi phục dữ liệu</button>
+          <p class="msg" id="rsMsg" role="status"></p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3>Sao lưu tự động</h3>
+        <p class="hint">Mỗi khi dữ liệu thay đổi (tạo, xoá tài khoản, đặt lại mật khẩu, tạo hàng loạt, cập nhật số liệu khảo sát, khôi phục), web tự sao lưu sau khoảng một giây.</p>
+        <ul id="autoStat" class="stat"></ul>
+        <div class="acts"><button id="afPick" class="btn" type="button">Chọn file để tự ghi</button><button id="afPerm" class="btn ghost hide" type="button">Cho phép ghi file</button><button id="afStop" class="btn ghost danger hide" type="button">Ngừng tự ghi file</button><button id="afNow" class="btn ghost" type="button">Sao lưu ngay</button></div>
+        <p class="msg" id="snapMsg" role="status"></p>
+        <h3 style="margin-top:10px">Các bản sao lưu gần đây</h3>
+        <p class="hint">Giữ 10 bản gần nhất trong trình duyệt này. Có thể khôi phục về bất kỳ bản nào.</p>
+        <div id="snapList"></div>
+      </div>
+    </section>
+    <section id="p-accounts" class="panel">
+      <h2>Quản lý tài khoản</h2>
+      <p class="soon" id="permNote"></p>
+      <div class="grid">
+        <form id="cf" class="card">
+          <label for="cn">Tên hiển thị</label><input id="cn" required>
+          <label for="ci">ID đăng nhập</label><input id="ci" autocapitalize="none" placeholder="chữ thường và số, từ 3 ký tự" required>
+          <label for="cp">Mật khẩu ban đầu</label><input id="cp" type="text" placeholder="từ 6 ký tự" required>
+          <label for="cr">Vai trò</label><select id="cr"></select>
+          <label for="cc">Lớp (với học sinh)</label><input id="cc" placeholder="ví dụ 5A">
+          <button class="btn" type="submit">Tạo tài khoản</button>
+          <p class="msg" id="cmsg" role="status"></p>
+        </form>
+        <div class="card tw"><table><thead><tr><th>Tên hiển thị</th><th>ID</th><th>Vai trò</th><th>Lớp</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
+      </div>
+      <form id="bf" class="card" style="margin-top:18px">
+        <h3>Tạo tài khoản hàng loạt</h3>
+        <p class="hint">Dán danh sách, mỗi dòng một người. Chỉ cần ghi <b>tên</b> (hệ thống tự đặt ID và mật khẩu), hoặc ghi đủ <b>Tên, ID, Mật khẩu, Lớp</b> ngăn cách bằng dấu phẩy, dấu ; , dấu | hoặc dán thẳng từ Excel. Ô nào để trống sẽ được tự điền.</p>
+        <textarea id="bList" placeholder="Nguyễn Văn An&#10;Trần Thị Bình, binh6a, matkhau1, 6A&#10;Lê Hoàng Cường" aria-label="Danh sách tài khoản cần tạo"></textarea>
+        <div class="bgrid">
+          <div><label for="bRole">Vai trò</label><select id="bRole"></select></div>
+          <div id="bClsW"><label for="bCls">Lớp (chung cho cả danh sách)</label><input id="bCls" placeholder="ví dụ 6A"></div>
+          <div><label for="bPw">Mật khẩu chung (không bắt buộc)</label><input id="bPw" type="text" placeholder="để trống = tự tạo từng bạn"></div>
+        </div>
+        <button id="bGo" class="btn" type="submit">Tạo hàng loạt</button>
+        <p class="msg" id="bmsg" role="status"></p>
+        <div id="bRes" class="hide">
+          <div id="bFail"></div>
+          <div class="note">Mật khẩu chỉ hiện một lần ngay lúc này (hệ thống chỉ lưu mã băm). Hãy tải hoặc sao chép danh sách để phát cho học sinh.</div>
+          <div class="acts" style="margin-bottom:10px"><button id="bCsv" class="btn ghost" type="button">Tải danh sách (CSV)</button><button id="bCopy" class="btn ghost" type="button">Sao chép danh sách</button></div>
+          <div class="tw"><table><thead><tr><th>Tên hiển thị</th><th>ID</th><th>Mật khẩu</th><th>Lớp</th></tr></thead><tbody id="bTb"></tbody></table></div>
+        </div>
+      </form>
+    </section>
   </div>
+</div>
 
-  <script>
-    const menuToggle = document.getElementById('menuToggle');
-    const mainNav = document.getElementById('mainNav');
-    menuToggle.addEventListener('click', () => {
-      const opened = mainNav.classList.toggle('open');
-      menuToggle.setAttribute('aria-expanded', String(opened));
-    });
-    mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-      mainNav.classList.remove('open');
-      menuToggle.setAttribute('aria-expanded', 'false');
-    }));
-  </script>
+<footer><b><span class="tn">TN</span><span class="speak">Speak</span><span class="up">Up</span></b> | 2026 | Sản phẩm dự thi KHKT Trường THCS Thống Nhất</footer>
+
+<button id="chFab" type="button" aria-label="Mở trò chuyện với TN Bot" aria-expanded="false" aria-controls="chat">💬</button>
+<section id="chat" role="dialog" aria-label="TN Bot - trợ lý TNSpeakUp">
+  <div class="ch-h"><b>TN Bot<small>Trợ lý nhỏ của TNSpeakUp</small></b><button id="chX" type="button" aria-label="Đóng khung trò chuyện">&#10005;</button></div>
+  <div id="chLog" aria-live="polite"></div>
+  <div class="qs" id="chQs"></div>
+  <form id="chForm" autocomplete="off"><input id="chIn" placeholder="Nhập câu hỏi của bạn..." aria-label="Câu hỏi gửi TN Bot" maxlength="300"><button class="btn" type="submit">Gửi</button></form>
+</section>
+
+<script src="saoluu.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const ROLE={admin:'Quản trị viên',mod:'Kiểm duyệt viên',student:'Học sinh'};
+const CAN_CREATE={admin:['mod','student'],mod:['student'],student:[]};
+const TABS=[['home','Trang chủ','Giới thiệu'],['survey','Thực trạng','Biểu đồ khảo sát và bài viết'],['test','Khám phá bản thân','Bài test năng lực'],['journey','Hành trình tiến bộ','Luyện tập kỹ năng mỗi ngày'],['share','Góc chia sẻ','Thông điệp và bài viết của em']];
+/* Mật khẩu không nằm trong code: chỉ lưu mã băm (SHA-256 của "ID:mật khẩu"). */
+const SEED={id:'thayhieugenz',name:'Thầy Hiếu GenZ',role:'admin',cls:'',h:'da7b52e3aee7e571144c3c03515f2eebc104995f1413ecb20c1fb96f83405ab8'};
+let accounts=[],me=null,mem=null;
+async function hash(id,pw){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(id+':'+pw));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function load(){try{accounts=JSON.parse(localStorage.getItem('tnsu_accounts')||'[]')}catch(e){accounts=mem||[]}
+  if(!accounts.some(a=>a.id===SEED.id))accounts.unshift({...SEED});save()}
+function save(){mem=accounts;try{localStorage.setItem('tnsu_accounts',JSON.stringify(accounts))}catch(e){}try{noteChange()}catch(_){}}
+/* Chỗ nối Supabase sau này: tải bài viết, số liệu, tài khoản, tiến độ mới nhất. */
+async function syncLatestData(){await new Promise(r=>setTimeout(r,900));load()}
+
+function showTab(t){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t));
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='accounts')renderAccounts();if(t!=='journey')camOff();if(t==='journey')renderJ();if(t==='share')renderShare()}
+function enter(){
+  $('login').classList.add('hide');$('app').classList.remove('hide');
+  $('whoName').textContent=me.name;$('whoRole').textContent=ROLE[me.role];
+  $('hello').textContent=me.guest?'Xin chào bạn! Bạn đang vào với vai trò học sinh, không cần tài khoản.':'Xin chào '+me.name+'! Dữ liệu đã được cập nhật.';
+  const tabs=TABS.slice();if(CAN_CREATE[me.role].length)tabs.push(['accounts','Quản lý tài khoản','Tạo và quản lý tài khoản']);
+  if(me.role==='admin')tabs.push(['settings','Cài đặt','Sao lưu và khôi phục dữ liệu']);
+  $('nav').innerHTML=tabs.map(t=>`<button class="tabbtn" data-t="${t[0]}" type="button">${t[1]}</button>`).join('');
+  $('tiles').innerHTML=tabs.slice(1).map(t=>`<button class="tile" data-t="${t[0]}" type="button"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('');
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+  $('cr').innerHTML=CAN_CREATE[me.role].map(r=>`<option value="${r}">${ROLE[r]}</option>`).join('');$('bRole').innerHTML=$('cr').innerHTML;$('bRole').onchange=syncB;syncB();
+  $('permNote').textContent=me.role==='admin'?'Quản trị viên tạo và quản lý Kiểm duyệt viên và học sinh.':'Kiểm duyệt viên tạo và quản lý tài khoản học sinh.';
+  renderSurvey();renderBk();renderTestIntro();showTab('home');
+}
+function manageable(a){return a.id!==me.id&&CAN_CREATE[me.role].includes(a.role)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderAccounts(){
+  $('tb').innerHTML=accounts.map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.id)}</td><td><span class="badge ${a.role}">${ROLE[a.role]}</span></td><td>${esc(a.cls||'')}</td><td>${manageable(a)?`<div class="acts"><button class="btn ghost" data-act="reset" data-id="${esc(a.id)}" type="button">Đặt lại mật khẩu</button><button class="btn ghost danger" data-act="del" data-id="${esc(a.id)}" type="button">Xoá</button></div>`:''}</td></tr>`).join('');
+}
+$('tb').addEventListener('click',async e=>{
+  const b=e.target.closest('button[data-act]');if(!b)return;
+  const a=accounts.find(x=>x.id===b.dataset.id);if(!a||!manageable(a))return;
+  if(b.dataset.act==='del'){if(confirm('Xoá tài khoản '+a.name+' ('+a.id+')?')){accounts=accounts.filter(x=>x!==a);save();renderAccounts()}}
+  else{const pw=prompt('Nhập mật khẩu mới cho '+a.name+' (từ 6 ký tự):');if(pw&&pw.length>=6){a.h=await hash(a.id,pw);save();alert('Đã đặt lại mật khẩu.')}else if(pw!==null)alert('Mật khẩu cần từ 6 ký tự.')}
+});
+$('cf').addEventListener('submit',async e=>{
+  e.preventDefault();const m=$('cmsg');m.className='msg';
+  const id=$('ci').value.trim().toLowerCase(),name=$('cn').value.trim(),pw=$('cp').value,role=$('cr').value;
+  const fail=t=>{m.textContent=t;m.classList.add('err')};
+  if(!CAN_CREATE[me.role].includes(role))return fail('Bạn không có quyền tạo vai trò này.');
+  if(!/^[a-z0-9]{3,}$/.test(id))return fail('ID chỉ gồm chữ thường không dấu và số, từ 3 ký tự.');
+  if(pw.length<6)return fail('Mật khẩu cần từ 6 ký tự.');
+  if(accounts.some(a=>a.id===id))return fail('ID này đã có người dùng.');
+  accounts.push({id,name,role,cls:role==='student'?$('cc').value.trim():'',h:await hash(id,pw)});save();
+  m.textContent='Đã tạo tài khoản '+name+' ('+id+').';m.classList.add('ok');$('cf').reset();renderAccounts();
+});
+const GUEST={id:'__guest',name:'Khách',role:'student',cls:'',guest:true};
+$('guest').onclick=()=>{me={...GUEST};try{sessionStorage.setItem('tnsu_me',GUEST.id)}catch(_){}enter()};
+$('f').addEventListener('submit',async e=>{
+  e.preventDefault();const msg=$('msg');msg.className='msg';
+  const id=$('u').value.trim().toLowerCase(),pw=$('p').value;
+  if(!window.crypto||!crypto.subtle){msg.textContent='Trình duyệt cần mở trang bằng địa chỉ https.';msg.classList.add('err');return}
+  $('go').disabled=true;msg.textContent='Đang kiểm tra...';
+  try{
+    await applyBootBackup();load();const a=accounts.find(x=>x.id===id);
+    if(!a||a.h!==await hash(id,pw)){msg.textContent='Sai tên đăng nhập hoặc mật khẩu.';msg.classList.add('err');return}
+    msg.textContent='Đang cập nhật dữ liệu mới nhất...';$('bar').style.display='block';requestAnimationFrame(()=>{$('fill').style.width='100%'});
+    await syncLatestData();me=accounts.find(x=>x.id===id)||a;
+    try{sessionStorage.setItem('tnsu_me',me.id)}catch(_){}
+    enter();
+  }catch(err){msg.textContent='Chưa đăng nhập được. Em kiểm tra mạng rồi thử lại.';msg.classList.add('err')}
+  finally{$('go').disabled=false;$('bar').style.display='none';$('fill').style.width='0';$('p').value=''}
+});
+/*BK*/
+async function makeCode(x){const json=JSON.stringify({v:1,at:new Date().toISOString(),accounts,...(x||{})});
+  return 'TNSU1.'+btoa(unescape(encodeURIComponent(json)))+'.'+(await hash('tnsu',json)).slice(0,8)}
+async function readCode(code){const p=code.replace(/\s+/g,'').split('.');if(p.length!==3||p[0]!=='TNSU1')throw 0;
+  const json=decodeURIComponent(escape(atob(p[1])));if((await hash('tnsu',json)).slice(0,8)!==p[2])throw 0;
+  const d=JSON.parse(json);if(!Array.isArray(d.accounts))throw 0;
+  for(const a of d.accounts){if(!/^[a-z0-9]{3,}$/.test(a.id)||!ROLE[a.role]||typeof a.name!=='string'||!/^[0-9a-f]{64}$/.test(a.h))throw 0}
+  return d}
+/*ENDBK*/
+/* Mỗi lần đăng nhập: nạp mã trong saoluu.js nếu là mã mới hơn mã đã nạp. Gộp vào dữ liệu hiện có, mã sao lưu được ưu tiên khi trùng ID. */
+async function applyBootBackup(){
+  const code=window.TNSU_BACKUP;if(!code)return;
+  try{const d=await readCode(code);const at=String(d.at||'');let seen='';
+    try{seen=localStorage.getItem('tnsu_bk_at')||''}catch(_){}
+    if(at&&at<=seen)return;
+    load();const m=new Map(accounts.map(a=>[a.id,a]));d.accounts.forEach(a=>m.set(a.id,a));
+    accounts=[...m.values()];save();mergeBootPosts(d);
+    try{localStorage.setItem('tnsu_bk_at',at)}catch(_){}
+  }catch(e){}
+}
+const say=(id,t,c)=>{const m=$(id);m.textContent=t;m.className='msg '+(c||'')};
+$('bkMake').onclick=async()=>{$('bk').value=await makeCode(bkExtra());say('bkMsg','Đã tạo mã gồm '+accounts.length+' tài khoản, '+((postsSaved()||[]).filter(p=>!p.del).length)+' bài viết đã lưu và số liệu khảo sát. Hãy sao chép hoặc tải về để lưu.','ok')};
+$('bkCopy').onclick=async()=>{const v=$('bk').value;if(!v)return say('bkMsg','Bấm "Tạo mã sao lưu" trước.','err');
+  try{await navigator.clipboard.writeText(v)}catch(e){$('bk').select();document.execCommand('copy')}say('bkMsg','Đã sao chép mã.','ok')};
+$('bkDl').onclick=()=>{const v=$('bk').value;if(!v)return say('bkMsg','Bấm "Tạo mã sao lưu" trước.','err');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([v],{type:'text/plain'}));
+  a.download='tnspeakup-saoluu-'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);markExt()};
+const asLine=c=>'window.TNSU_BACKUP="'+c+'";\n';
+$('bkLine').onclick=async()=>{const c=await makeCode(bkExtra());$('bk').value=c;
+  let ok=true;try{await navigator.clipboard.writeText(asLine(c))}catch(e){$('bk').value=asLine(c);$('bk').select();ok=document.execCommand('copy')}
+  say('bkMsg',ok?'Đã sao chép dòng lệnh đầy đủ. Dán vào file saoluu.js rồi tải lại trang.':'Không sao chép được, hãy bôi đen ô mã bên dưới và sao chép thủ công.',ok?'ok':'err')};
+$('bkJs').onclick=async()=>{const c=await makeCode(bkExtra());$('bk').value=c;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([asLine(c)],{type:'text/javascript'}));a.download='saoluu.js';a.click();URL.revokeObjectURL(a.href);markExt();
+  say('bkMsg','Đã tải file saoluu.js. Thay file này vào thư mục web rồi tải lại trang.','ok')};
+$('rsGo').onclick=async()=>{
+  if(!$('rs').value.trim())return say('rsMsg','Dán mã sao lưu vào ô trước.','err');
+  let d;try{d=await readCode($('rs').value)}catch(e){return say('rsMsg','Mã không hợp lệ hoặc bị thiếu ký tự. Em kiểm tra lại mã đã sao chép đủ chưa.','err')}
+  if(!confirm('Thay dữ liệu hiện tại bằng bản sao lưu gồm '+d.accounts.length+' tài khoản (tạo lúc '+new Date(d.at).toLocaleString('vi-VN')+')?'))return;
+  await runBackup();accounts=d.accounts;restoreSurvey(d);save();load();
+  const still=accounts.find(a=>a.id===me.id);
+  if(!still||still.role!=='admin'){alert('Tài khoản của bạn không còn quyền Quản trị trong bản sao lưu. Hãy đăng nhập lại.');$('out').click();return}
+  me=still;$('rs').value='';say('rsMsg','Đã khôi phục '+accounts.length+' tài khoản.','ok');renderAccounts()};
+$('out').onclick=()=>{camOff();J_V='home';SH_V='read';SH_EDIT=null;try{sessionStorage.removeItem('tnsu_me')}catch(_){}me=null;$('app').classList.add('hide');$('login').classList.remove('hide');$('f').reset();$('msg').textContent=''};
+/* ===== Banner trang chủ ===== */
+const SLIDES=[
+ {e:'🌟',k:'Lời cổ động',t:'Dám cất lời – Tự tin toả sáng',p:'Mỗi giọng nói đều đáng được lắng nghe. Hôm nay, em hãy mạnh dạn nói ra một ý tưởng của riêng mình – dù nhỏ thôi, em nhé!',c:['Dám nói','Dám nghe','Dám toả sáng'],g:['journey','Vào phòng thực hành']},
+ {e:'🎤',k:'Về dự án',t:'TNSpeakUp là gì?',p:'Không gian số giúp học sinh rèn kỹ năng nói, nghe và thuyết trình: nhìn rõ thực trạng, khám phá năng lực, luyện tập mỗi ngày và chia sẻ thông điệp của chính mình.',c:['Thực trạng','Khám phá bản thân','Hành trình tiến bộ','Góc chia sẻ'],g:['survey','Xem thực trạng']},
+ {e:'🤖',k:'Trí tuệ nhân tạo',t:'AI – người bạn đồng hành',p:'AI không nói thay em. AI giúp em nhận ra điểm mạnh, gợi ý cách cải thiện và luyện tập theo nhịp độ riêng; ý tưởng, câu chữ và cảm xúc vẫn là của em.',c:['Gợi ý cá nhân hoá','Luyện tập mọi lúc','Dùng AI có trách nhiệm'],g:['test','Khám phá bản thân']},
+ {e:'📣',k:'Kỹ năng thuyết trình',t:'Mở đầu thu hút – Kết thúc đọng lại',p:'Một bài thuyết trình hay có lời mở cuốn hút, ý chính rõ ràng và lời kết ấn tượng. Hãy luyện giọng nói, ánh mắt, cử chỉ và cách chia sẻ ý tưởng thật tự tin.',c:['Giọng nói','Ánh mắt','Nhịp độ','Cấu trúc bài nói'],g:['journey','Luyện thuyết trình']},
+ {e:'👂',k:'Kỹ năng nói và nghe',t:'Nói hay bắt đầu từ biết lắng nghe',p:'Lắng nghe là hiểu người khác; nói là để người khác hiểu mình. Khi cả hai cùng tốt, mỗi cuộc trò chuyện trong lớp học đều trở nên thú vị và ý nghĩa hơn.',c:['Nghe chủ động','Đặt câu hỏi','Phản hồi tích cực'],g:['journey','Thực hành nói – nghe']},
+ {e:'📚',k:'Học Văn thời đại số',t:'Văn học sống động trong thời đại số',p:'Văn chương không chỉ nằm trong trang sách. Em có thể kể chuyện, tranh biện, ghi âm podcast hay làm video ngắn để biến cảm xúc thành lời nói chạm đến người nghe.',c:['Kể chuyện','Tranh biện','Podcast','Video ngắn'],g:['share','Đến Góc chia sẻ']}
+];
+const CHEERS=['Mỗi giọng nói đều đáng được lắng nghe.','Không ai nói hay ngay từ lần đầu – chỉ cần em dám bắt đầu.','Hít một hơi thật sâu, mỉm cười và nói điều em nghĩ.','Lắng nghe là tôn trọng người khác, dám nói ra là tôn trọng chính mình.','Một lời chân thành có thể làm sáng cả lớp học.','Tiến bộ mỗi ngày một chút, em sẽ ngạc nhiên về chặng đường mình đã đi.','Văn chương cho ta lời để nói, tự tin cho ta dũng khí để cất lời.'];
+const TIPS=['Nhìn người nghe ở ba hướng: trái, giữa, phải, để ai cũng cảm thấy được trò chuyện cùng.','Dừng lại hai giây sau ý quan trọng: khoảng lặng giúp lời nói có sức nặng.','Mở đầu bằng một câu hỏi hoặc một hình ảnh thay vì lời chào dài dòng.','Khi nghe, thử tóm tắt ý bạn vừa nói bằng lời của em để chắc chắn đã hiểu.','Nói chậm hơn thường ngày một chút: người nghe theo kịp và em cũng bớt hồi hộp.','Chuẩn bị ba ý chính thay vì học thuộc từng chữ.','Nhờ AI hỏi ngược lại bài nói của em: chỗ nào chưa rõ, chỗ nào cần thêm ví dụ.'];
+let cur=0,timer=null,paused=false;
+const REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function buildBanner(){
+  const N=SLIDES.length;
+  $('track').innerHTML=SLIDES.map((s,i)=>`<article class="slide s${i+1}" role="group" aria-roledescription="slide" aria-label="${i+1} / ${N}">
+    <div><span class="kick">${s.e} ${s.k}</span><h2>${s.t}</h2><p>${s.p}</p>
+    <div class="chips">${s.c.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+    <button class="btn white" type="button" data-t="${s.g[0]}">${s.g[1]} &rarr;</button></div>
+    <div class="art" aria-hidden="true"><div class="orb">${s.e}</div></div></article>`).join('');
+  $('dots').innerHTML=SLIDES.map((s,i)=>`<button class="dot" type="button" data-i="${i}" aria-label="Chuyển đến thẻ ${i+1}"><i></i></button>`).join('');
+  const items=['Dám nói','Dám nghe','Dám toả sáng','Nói tự tin','Nghe thấu hiểu','Thuyết trình ấn tượng','Học Văn thời đại số','Dám cất lời – Tự tin toả sáng'].map(x=>`<span>✦ ${x}</span>`).join('');
+  $('tk').innerHTML=items+items;
+  const d=Math.floor(Date.now()/864e5);
+  $('cheer').textContent='“'+CHEERS[d%CHEERS.length]+'”';$('tip').textContent=TIPS[d%TIPS.length];
+  goTo(0);play();
+}
+function goTo(i){const N=SLIDES.length;cur=(i+N)%N;$('track').style.transform='translateX(-'+cur*100+'%)';
+  document.querySelectorAll('.slide').forEach((el,k)=>{el.toggleAttribute('inert',k!==cur);el.setAttribute('aria-hidden',k!==cur?'true':'false')});
+  document.querySelectorAll('.dot').forEach((b,k)=>b.setAttribute('aria-current',k===cur?'true':'false'))}
+function stop(){clearInterval(timer);timer=null}
+function play(){stop();if(paused||REDUCED)return;
+  timer=setInterval(()=>{if(document.hidden||$('app').classList.contains('hide')||!$('p-home').classList.contains('on'))return;goTo(cur+1)},6500)}
+function setPaused(v){paused=v;$('bPause').innerHTML=v?'&#9654;':'&#10074;&#10074;';$('bPause').setAttribute('aria-label',v?'Tiếp tục tự chạy':'Tạm dừng tự chạy');$('track').setAttribute('aria-live',v?'polite':'off');v?stop():play()}
+$('bPrev').onclick=()=>{goTo(cur-1);play()};
+$('bNext').onclick=()=>{goTo(cur+1);play()};
+$('bPause').onclick=()=>setPaused(!paused);
+$('dots').addEventListener('click',e=>{const b=e.target.closest('.dot');if(b){goTo(+b.dataset.i);play()}});
+$('banner').addEventListener('mouseenter',stop);
+$('banner').addEventListener('mouseleave',()=>{if(!paused)play()});
+$('banner').addEventListener('focusin',stop);
+$('banner').addEventListener('focusout',()=>{if(!paused)play()});
+$('banner').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){goTo(cur-1)}else if(e.key==='ArrowRight'){goTo(cur+1)}});
+let tx=null;
+$('banner').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+$('banner').addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>50){goTo(cur+(dx<0?1:-1));play()}},{passive:true});
+buildBanner();
+/* ===== Tạo tài khoản hàng loạt ===== */
+let bulkOut=[];
+const PWCH='abcdefghjkmnpqrstuvwxyz23456789';
+function rndPw(){const a=new Uint32Array(6);crypto.getRandomValues(a);return [...a].map(x=>PWCH[x%PWCH.length]).join('')}
+function plain(t){return String(t).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase()}
+function autoId(name,cls,taken){
+  const w=plain(name).replace(/[^a-z0-9\s]/g,'').split(/\s+/).filter(Boolean);if(!w.length)return '';
+  let base=w[w.length-1]+w.slice(0,-1).map(x=>x[0]).join('')+plain(cls||'').replace(/[^a-z0-9]/g,'');
+  if(base.length<3)base+='01';
+  let id=base,n=2;while(taken.has(id))id=base+(n++);return id}
+function syncB(){$('bClsW').classList.toggle('hide',$('bRole').value!=='student')}
+$('bf').addEventListener('submit',async e=>{
+  e.preventDefault();const m=$('bmsg');m.className='msg';
+  const fail=t=>{m.textContent=t;m.classList.add('err')};
+  const role=$('bRole').value;
+  if(!CAN_CREATE[me.role].includes(role))return fail('Bạn không có quyền tạo vai trò này.');
+  const lines=$('bList').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  if(!lines.length)return fail('Dán danh sách vào ô trước.');
+  if(lines.length>300)return fail('Mỗi lần tạo tối đa 300 tài khoản. Hãy chia danh sách ra.');
+  const common=$('bPw').value.trim(),defCls=$('bCls').value.trim();
+  if(common&&common.length<6)return fail('Mật khẩu chung cần từ 6 ký tự.');
+  $('bGo').disabled=true;m.textContent='Đang tạo...';
+  try{
+    const taken=new Set(accounts.map(a=>a.id)),ok=[],bad=[];
+    for(const [i,line] of lines.entries()){
+      const p=line.split(/\t|;|\||,/).map(x=>x.trim()),name=p[0],cls=role==='student'?(p[3]||defCls):'';
+      let id=(p[1]||'').toLowerCase();
+      if(!name){bad.push([i+1,line,'thiếu tên']);continue}
+      if(id){if(!/^[a-z0-9]{3,}$/.test(id)){bad.push([i+1,line,'ID chỉ gồm chữ thường không dấu và số, từ 3 ký tự']);continue}
+        if(taken.has(id)){bad.push([i+1,line,'ID đã có người dùng']);continue}}
+      else{id=autoId(name,cls,taken);if(!id){bad.push([i+1,line,'không tạo được ID từ tên']);continue}}
+      const pw=p[2]||common||rndPw();
+      if(pw.length<6){bad.push([i+1,line,'mật khẩu dưới 6 ký tự']);continue}
+      taken.add(id);ok.push({id,name,role,cls,h:await hash(id,pw),pw});
+    }
+    if(ok.length){accounts.push(...ok.map(({pw,...a})=>a));save();renderAccounts()}
+    bulkOut=ok.map(a=>[a.name,a.id,a.pw,a.cls]);
+    $('bTb').innerHTML=ok.map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.id)}</td><td><code>${esc(a.pw)}</code></td><td>${esc(a.cls)}</td></tr>`).join('');
+    $('bFail').innerHTML=bad.length?`<div class="fails"><b>${bad.length} dòng chưa tạo được:</b><ul>${bad.map(b=>`<li>Dòng ${b[0]} (${esc(b[1])}): ${b[2]}</li>`).join('')}</ul></div>`:'';
+    $('bRes').classList.toggle('hide',!ok.length&&!bad.length);
+    $('bCsv').disabled=$('bCopy').disabled=!ok.length;
+    if(ok.length){m.textContent='Đã tạo '+ok.length+' tài khoản'+(bad.length?', '+bad.length+' dòng bị bỏ qua.':'.');m.classList.add('ok');if(!bad.length)$('bList').value=''}
+    else fail('Chưa tạo được tài khoản nào. Xem lỗi ở bên dưới.');
+  }catch(err){fail('Có lỗi khi tạo. Bạn thử lại nhé.')}
+  finally{$('bGo').disabled=false}
+});
+$('bCsv').onclick=()=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const rows=[['Họ tên','ID','Mật khẩu','Lớp'],...bulkOut].map(r=>r.map(q).join(',')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows],{type:'text/csv;charset=utf-8'}));
+  a.download='tai-khoan-'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(a.href)};
+$('bCopy').onclick=async()=>{const t=['Họ tên\tID\tMật khẩu\tLớp',...bulkOut.map(r=>r.join('\t'))].join('\n');
+  try{await navigator.clipboard.writeText(t);say('bmsg','Đã sao chép danh sách.','ok')}catch(e){say('bmsg','Không sao chép được. Hãy dùng nút Tải danh sách.','err')}};
+
+/* ===== TN Bot: trợ lý luôn hiện =====
+   Chạy ngay trong trang bằng bộ câu trả lời có sẵn. Muốn nối với AI thật, đặt trước thẻ script này:
+   window.TNSU_CHAT_URL='https://địa-chỉ-máy-chủ-của-bạn/chat'  (nhận {message}, trả {reply}). */
+const KB=[
+ {k:['xin chao','chao','hello','alo','hi'],a:'Chào bạn! Mình là TN Bot, trợ lý nhỏ của TNSpeakUp. Bạn muốn hỏi về dự án, mẹo thuyết trình, cách bớt run khi nói hay cách học Văn trong thời đại số?'},
+ {k:['tnspeakup','du an','gioi thieu','ung dung','trang web','la gi'],a:'TNSpeakUp là không gian số giúp học sinh rèn kỹ năng nói, nghe và thuyết trình. Hành trình gồm 4 chặng: xem thực trạng, khám phá năng lực bản thân, luyện tập mỗi ngày và chia sẻ thông điệp của chính mình. Khẩu hiệu của dự án: "Dám cất lời - Tự tin toả sáng".',go:[['survey','Xem thực trạng'],['journey','Hành trình tiến bộ']]},
+ {k:['run','hoi hop','lo lang','ngai','e de','so noi','so phat bieu','khong dam','thieu tu tin','kho noi'],a:'Hồi hộp là chuyện rất bình thường, ai cũng từng như vậy. Bạn thử nhé:\n1. Hít vào thật sâu 4 giây, thở ra chậm 6 giây trước khi nói.\n2. Chuẩn bị 3 ý chính thay vì học thuộc từng chữ.\n3. Nhìn vào một người thân thiện trong lớp để bắt đầu.\n4. Nói chậm hơn thường ngày một chút.\nLuyện đều mỗi ngày vài phút sẽ hiệu quả hơn luyện dồn một lần.',go:[['journey','Vào phòng thực hành']]},
+ {k:['mo dau','mo bai','ket thuc','ket bai','cau truc','thuyet trinh','bai noi','dan y','phat bieu'],a:'Một bài thuyết trình gọn thường có 3 phần:\n• Mở đầu: gây chú ý bằng một câu hỏi, một con số hay một câu chuyện ngắn.\n• Thân bài: 3 ý chính, mỗi ý kèm một ví dụ.\n• Kết thúc: nhắc lại thông điệp chính và để lại một câu đọng lại.\nGiọng nói, ánh mắt và nhịp độ sẽ giúp bài nói sống động hơn.',go:[['journey','Luyện thuyết trình']]},
+ {k:['nghe','lang nghe','nghe chu dong','phan hoi'],a:'Nghe tốt là một kỹ năng cần luyện:\n• Nhìn người nói và không ngắt lời.\n• Ghi nhanh từ khoá thay vì chép cả câu.\n• Tóm tắt lại ý bằng lời của mình để chắc chắn đã hiểu.\n• Đặt một câu hỏi để làm rõ rồi mới phản hồi.'},
+ {k:['giong','phat am','nhip','toc do','noi to','noi nho','am luong','ngu dieu','noi'],a:'Mẹo cho giọng nói: nói rõ từng chữ, dừng ngắt hai giây sau ý quan trọng, nhấn nhẹ vào từ khoá và thay đổi cao độ để người nghe không thấy đơn điệu. Em có thể ghi âm lại chính mình rồi nghe để tự nhận xét, đó là cách tiến bộ nhanh nhất.',go:[['journey','Phòng thực hành']]},
+ {k:['ai','tri tue nhan tao','chatgpt','may moc'],a:'Trí tuệ nhân tạo là người bạn đồng hành, không nói thay bạn. AI có thể gợi ý dàn ý, hỏi ngược lại bài nói để bạn thấy chỗ chưa rõ và góp ý cách diễn đạt. Ý tưởng, câu chữ và cảm xúc vẫn là của bạn, và nhớ kiểm chứng thông tin trước khi dùng nhé.'},
+ {k:['hoc van','mon van','van hoc','bai van','lam van','thoi dai so','ke chuyen','tranh bien','podcast','video','sang tao','ngu van'],a:'Học Văn trong thời đại số rất thú vị: bạn có thể kể lại một tác phẩm bằng lời của mình, tranh biện về nhân vật, ghi âm podcast cảm nhận hay làm video ngắn giới thiệu một cuốn sách. Nói ra được cảm xúc cũng là cách hiểu văn sâu hơn.',go:[['share','Đến Góc chia sẻ']]},
+ {k:['dang nhap','tai khoan','mat khau','quen mat khau','khach','id'],a:'Bạn có thể đăng nhập bằng ID và mật khẩu do thầy cô cấp, hoặc bấm "Vào với vai trò học sinh (không cần tài khoản)" ở trang đầu. Nếu quên mật khẩu, hãy nhờ thầy cô hoặc người quản lý đặt lại giúp.'},
+ {k:['thuc trang','khao sat','kham pha','bai test','hanh trinh','thuc hanh','chia se','goc chia se','muc nao','o dau','tab','menu','cac muc','muc chinh','trang chu'],a:'Các mục chính của TNSpeakUp:\n• Thực trạng: biểu đồ khảo sát và bài viết.\n• Khám phá bản thân: bài test năng lực.\n• Hành trình tiến bộ: phòng thực hành nói.\n• Góc chia sẻ: nơi gửi thông điệp và bài viết của em.',go:[['survey','Thực trạng'],['test','Khám phá bản thân'],['journey','Hành trình tiến bộ'],['share','Góc chia sẻ']]},
+ {k:['dong vien','co vu','buon','chan','met','nan','khich le','khong tu tin'],a:'__cheer'},
+ {k:['cam on','thanks','tks'],a:'Không có gì! Chúc bạn luôn dám cất lời và toả sáng nhé.'},
+ {k:['tam biet','bye'],a:'Hẹn gặp lại bạn! Nhớ luyện nói một chút mỗi ngày nhé.'}
+];
+const QUICK=['TNSpeakUp là gì?','Mẹo bớt run khi nói','Cách mở đầu bài thuyết trình','AI giúp gì cho mình?','Học Văn thời đại số','Các mục trong trang'];
+function local(q){
+  const t=' '+plain(q).replace(/[^a-z0-9]+/g,' ').trim()+' ';let best=null,sc=0;
+  for(const e of KB){const n=e.k.filter(w=>t.includes(' '+w+' ')).length;if(n>sc){sc=n;best=e}}
+  if(!best)return {t:'Mình chưa hiểu rõ câu hỏi này. Bạn thử hỏi về: dự án TNSpeakUp, mẹo thuyết trình, cách bớt run, kỹ năng nghe, học Văn thời đại số… hoặc nhờ thầy cô giải đáp thêm nhé.'};
+  if(best.a==='__cheer')return {t:'Bạn đã dám bắt đầu, vậy là giỏi rồi. '+CHEERS[Math.floor(Math.random()*CHEERS.length)]};
+  return {t:best.a,go:best.go}}
+async function answer(q){
+  if(window.TNSU_CHAT_URL){try{const r=await fetch(window.TNSU_CHAT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});
+    if(r.ok){const d=await r.json();if(d&&d.reply)return {t:String(d.reply)}}}catch(_){}}
+  return local(q)}
+function addMsg(who,text,go){
+  const d=document.createElement('div');d.className='m '+who;d.textContent=text;
+  if(go&&go.length){const g=document.createElement('div');g.className='go';
+    go.forEach(([tab,label])=>{const b=document.createElement('button');b.type='button';b.className='q';b.textContent=label;
+      b.onclick=()=>{if(!me)return addMsg('bot','Bạn hãy đăng nhập hoặc vào với vai trò học sinh trước để mở mục này nhé.');
+        if(!document.querySelector('.tabbtn[data-t="'+tab+'"]'))return addMsg('bot','Mục này chưa mở cho tài khoản của bạn.');
+        showTab(tab);if(innerWidth<700)setChat(false)};g.appendChild(b)});d.appendChild(g)}
+  $('chLog').appendChild(d);$('chLog').scrollTop=$('chLog').scrollHeight;return d}
+async function ask(q){q=q.trim();if(!q)return;addMsg('me',q);const w=addMsg('bot','Đang trả lời…');
+  const r=await answer(q);await new Promise(x=>setTimeout(x,350));w.remove();addMsg('bot',r.t,r.go)}
+function setChat(on){$('chat').classList.toggle('open',on);$('chFab').setAttribute('aria-expanded',on);
+  $('chFab').textContent=on?'✕':'💬';
+  if(on){if(!$('chLog').children.length)addMsg('bot','Chào bạn! Mình là TN Bot. Bạn cần mình hỗ trợ gì về kỹ năng nói, nghe, thuyết trình hay dự án TNSpeakUp?');$('chIn').focus()}else $('chFab').focus()}
+$('chQs').innerHTML=QUICK.map(q=>`<button class="q" type="button">${q}</button>`).join('');
+$('chQs').addEventListener('click',e=>{const b=e.target.closest('.q');if(b)ask(b.textContent)});
+$('chFab').onclick=()=>setChat(!$('chat').classList.contains('open'));
+$('chX').onclick=()=>setChat(false);
+$('chForm').addEventListener('submit',e=>{e.preventDefault();const v=$('chIn').value;$('chIn').value='';ask(v)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('chat').classList.contains('open'))setChat(false)});
+/* ===== Thực trạng: khảo sát ===== */
+const LV=[['Tốt','#0a3a9e','#fff'],['Khá','#1c7be6','#fff'],['Trung bình','#ffb340','#12264d'],['Còn yếu','#e8590c','#fff']];
+const SV_DEFAULT={demo:true,n:200,note:'',
+ skills:[['Thuyết trình',[24,62,78,36]],['Nói',[38,74,64,24]],['Nghe',[46,70,62,22]],['Dùng AI học Ngữ văn',[18,52,76,54]]],
+ diff:[['Hồi hộp, run khi nói trước lớp',132],['Ít cơ hội luyện tập',108],['Sợ nói sai, sợ bị cười',97],['Khó sắp xếp ý, thiếu vốn từ',91],['Chưa biết dùng AI học Văn hiệu quả',84],['Khó tập trung khi nghe',63]]};
+let svMem=null;
+function svValid(d){return !!d&&Number.isInteger(d.n)&&d.n>0&&Array.isArray(d.skills)&&d.skills.length===4&&d.skills.every(x=>Array.isArray(x[1])&&x[1].length===4&&x[1].every(v=>Number.isInteger(v)&&v>=0)&&x[1].reduce((a,b)=>a+b,0)>0)&&Array.isArray(d.diff)&&d.diff.length===6&&d.diff.every(x=>Number.isInteger(x[1])&&x[1]>=0&&x[1]<=d.n)}
+function loadSV(){let d=null;try{d=JSON.parse(localStorage.getItem('tnsu_survey')||'null')}catch(e){d=svMem}
+  if(!d)d=svMem;if(svValid(d))return {...d,demo:false};
+  if(window.TNSU_SURVEY&&svValid(window.TNSU_SURVEY))return {...window.TNSU_SURVEY,demo:false};
+  return SV_DEFAULT}
+function renderSurvey(){
+  const d=loadSV(),pc=(v,t)=>Math.round(v*1000/t)/10;
+  $('svBadge').className='badge '+(d.demo?'admin':'mod');
+  $('svBadge').textContent=d.demo?'Số liệu minh hoạ':'Khảo sát thực tế';
+  $('svNote').textContent=d.demo?'Đây là số liệu minh hoạ để xem giao diện, chưa phải kết quả khảo sát thật.':('Khảo sát '+d.n+' học sinh.'+(d.note?' '+d.note:''));
+  $('svLegend').innerHTML=LV.map(l=>`<span style="--c:${l[1]}">${l[0]}</span>`).join('');
+  $('svStack').innerHTML=d.skills.map(([name,c])=>{const t=c.reduce((a,b)=>a+b,0),q=c.map(v=>pc(v,t));
+    const aria=name+': '+LV.map((l,i)=>l[0]+' '+q[i]+'%').join(', ');
+    return `<div><div class="cl"><span>${esc(name)}</span><small>Tốt + Khá: ${Math.round((c[0]+c[1])*100/t)}%</small></div><div class="stack" role="img" aria-label="${esc(aria)}">${c.map((v,i)=>`<i style="width:${q[i]}%;background:${LV[i][1]};color:${LV[i][2]}" title="${LV[i][0]}: ${v} học sinh">${q[i]>=7?q[i]+'%':''}</i>`).join('')}</div></div>`}).join('');
+  $('svDiff').innerHTML=[...d.diff].sort((a,b)=>b[1]-a[1]).map(([name,v])=>{const q=pc(v,d.n);
+    return `<div><div class="cl"><span>${esc(name)}</span><b>${q}%</b></div><div class="hb" role="img" aria-label="${esc(name)}: ${q}%"><i style="width:${q}%"></i></div></div>`}).join('');
+  const adm=!!me&&me.role==='admin';$('svEditW').classList.toggle('hide',!adm);
+  if(adm){
+    const inp=(attr,v,lab)=>`<input type="number" min="0" step="1" ${attr} value="${v}" aria-label="${esc(lab)}">`;
+    $('svFields').innerHTML=`<label for="svN">Số học sinh tham gia khảo sát</label><input id="svN" type="number" min="1" step="1" value="${d.n}">
+      <label for="svNoteIn">Ghi chú nguồn (không bắt buộc, ví dụ: khối 6 đến 9, tháng 10/2026)</label><input id="svNoteIn" maxlength="120" value="${esc(d.note||'')}">
+      <p class="hint" style="margin-bottom:6px">Mức tự đánh giá: số học sinh ở mỗi mức</p>
+      <div class="tw"><table class="svt"><thead><tr><th>Kỹ năng</th>${LV.map(l=>`<th>${l[0]}</th>`).join('')}</tr></thead><tbody>${d.skills.map(([name,c],i)=>`<tr><td>${esc(name)}</td>${c.map((v,j)=>`<td>${inp(`data-s="${i}-${j}"`,v,name+' - '+LV[j][0])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+      <p class="hint" style="margin:12px 0 6px">Khó khăn gặp phải: số học sinh chọn mỗi mục</p>
+      <div class="tw"><table class="svt"><tbody>${d.diff.map(([name,v],i)=>`<tr><td>${esc(name)}</td><td>${inp(`data-d="${i}"`,v,name)}</td></tr>`).join('')}</tbody></table></div>`}
+}
+function readSV(){
+  const n=parseInt($('svN').value,10);if(!(n>0))throw 'Số học sinh khảo sát cần lớn hơn 0.';
+  const skills=SV_DEFAULT.skills.map(([name],i)=>[name,[0,1,2,3].map(j=>parseInt(document.querySelector('[data-s="'+i+'-'+j+'"]').value,10))]);
+  const diff=SV_DEFAULT.diff.map(([name],i)=>[name,parseInt(document.querySelector('[data-d="'+i+'"]').value,10)]);
+  const d={n,note:$('svNoteIn').value.trim(),skills,diff};
+  if(!svValid(d))throw 'Số liệu chưa hợp lệ: mỗi ô là số nguyên từ 0, mỗi kỹ năng cần có ít nhất một học sinh, và số học sinh chọn mỗi khó khăn không vượt quá tổng số khảo sát.';
+  return d}
+$('svSave').onclick=()=>{try{const d=readSV();svMem=d;try{localStorage.setItem('tnsu_survey',JSON.stringify(d))}catch(e){}renderSurvey();noteChange();say('svMsg','Đã lưu số liệu khảo sát.','ok')}catch(e){say('svMsg',typeof e==='string'?e:'Có lỗi, bạn kiểm tra lại số liệu nhé.','err')}};
+$('svCode').onclick=async()=>{try{const d=readSV(),t='window.TNSU_SURVEY='+JSON.stringify(d)+';';
+  try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}
+  say('svMsg','Đã sao chép. Dán dòng này vào file saoluu.js rồi tải lại trang.','ok')}catch(e){say('svMsg',typeof e==='string'?e:'Có lỗi, bạn kiểm tra lại số liệu nhé.','err')}};
+$('svReset').onclick=()=>{if(!confirm('Xoá số liệu đã lưu trên trình duyệt này và dùng lại số liệu minh hoạ?'))return;svMem=null;try{localStorage.removeItem('tnsu_survey')}catch(e){}renderSurvey();noteChange();say('svMsg','Đã quay về số liệu minh hoạ.','ok')};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-sc]');if(b){const el=$(b.dataset.sc);if(el)el.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'start'})}});
+/* ===== Sao lưu tự động ===== */
+var BK={t:null,supported:!!window.showSaveFilePicker,handle:null,file:'none',fileAt:'',hide:false};
+function fmt(iso){try{return new Date(iso).toLocaleString('vi-VN')}catch(e){return iso}}
+function getSnaps(){try{const a=JSON.parse(localStorage.getItem('tnsu_snaps')||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+function setSnaps(a){while(true){try{localStorage.setItem('tnsu_snaps',JSON.stringify(a));return}catch(e){if(a.length<=1)return;a.shift()}}}
+function svSaved(){let d=null;try{d=JSON.parse(localStorage.getItem('tnsu_survey')||'null')}catch(e){}if(!d)d=svMem;return svValid(d)?d:null}
+function bkExtra(){const v=svSaved(),p=postsSaved();return {...(v?{survey:v}:{}),...(p?{posts:p}:{})}}
+function restoreSurvey(d){restorePosts(d);if(d.survey&&svValid(d.survey)){svMem=d.survey;try{localStorage.setItem('tnsu_survey',JSON.stringify(d.survey))}catch(e){}renderSurvey()}}
+function isDirty(){try{return (localStorage.getItem('tnsu_chg_at')||'')>(localStorage.getItem('tnsu_ext_at')||'')}catch(e){return false}}
+function markExt(){try{localStorage.setItem('tnsu_ext_at',new Date().toISOString())}catch(e){}renderBk()}
+/* Cầu nối tới file trên máy (File System Access API: Chrome, Edge trên máy tính) */
+function fsOpen(){return new Promise((res,rej)=>{const r=indexedDB.open('tnsu_fs',1);r.onupgradeneeded=()=>r.result.createObjectStore('h');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function fsGet(){try{const db=await fsOpen();return await new Promise(res=>{const q=db.transaction('h').objectStore('h').get('file');q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}catch(e){return null}}
+async function fsPut(h){const db=await fsOpen();await new Promise((res,rej)=>{const t=db.transaction('h','readwrite');t.objectStore('h').put(h,'file');t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+async function fsDel(){try{const db=await fsOpen();await new Promise(res=>{const t=db.transaction('h','readwrite');t.objectStore('h').delete('file');t.oncomplete=res;t.onerror=res})}catch(e){}}
+function noteChange(){clearTimeout(BK.t);BK.t=setTimeout(()=>{BK.t=null;runBackup().catch(()=>{})},1200)}
+async function runBackup(force){
+  if(!accounts.length)return;
+  const sv=svSaved(),sig=JSON.stringify({accounts,survey:sv,posts:postsSaved()});
+  const h=(await hash('snap',sig)).slice(0,16);
+  let snaps=getSnaps();const last=snaps[snaps.length-1],iso=new Date().toISOString();
+  const changed=!last||last.h!==h;let code=null;
+  const mk=async()=>code||(code=await makeCode(bkExtra()));
+  if(changed){snaps.push({at:iso,h,n:accounts.length,code:await mk()});snaps=snaps.slice(-10);setSnaps(snaps);try{localStorage.setItem('tnsu_chg_at',iso)}catch(e){}}
+  if(BK.handle&&(changed||force||isDirty())){
+    try{
+      if(await BK.handle.queryPermission({mode:'readwrite'})!=='granted')BK.file='perm';
+      else{const w=await BK.handle.createWritable();await w.write(/\.js$/i.test(BK.handle.name)?'window.TNSU_BACKUP="'+await mk()+'";\n':await mk());await w.close();BK.file='ok';BK.fileAt=iso;try{localStorage.setItem('tnsu_ext_at',iso)}catch(e){}}
+    }catch(e){BK.file='err'}
+  }
+  renderBk()}
+function renderBk(){
+  const adm=!!me&&me.role==='admin',snaps=getSnaps(),last=snaps[snaps.length-1],dirty=isDirty();
+  let ext='';try{ext=localStorage.getItem('tnsu_ext_at')||''}catch(e){}
+  const bar=$('bkBar');
+  if(adm&&!BK.hide&&dirty&&!(BK.handle&&BK.file==='ok')){
+    let msg,btns='';
+    if(BK.handle&&BK.file==='perm'){msg='Cần cho phép ghi file để tự sao lưu ra ngoài trình duyệt.';btns='<button class="btn ghost" data-bk="perm" type="button">Cho phép</button>'}
+    else if(BK.handle&&BK.file==='err'){msg='Không ghi được file sao lưu tự động.';btns='<button class="btn ghost" data-bk="pick" type="button">Chọn lại file</button>'}
+    else{msg='Có thay đổi chưa được sao lưu ra ngoài trình duyệt.';btns=(BK.supported&&!BK.handle?'<button class="btn ghost" data-bk="pick" type="button">Bật tự ghi file</button>':'')+'<button class="btn ghost" data-bk="dl" type="button">Tải bản sao lưu</button>'}
+    bar.innerHTML=`<span>⚠️ ${msg}</span>${btns}<button class="btn ghost" data-bk="x" type="button" aria-label="Ẩn thông báo">✕</button>`;bar.classList.remove('hide')
+  }else bar.classList.add('hide');
+  const L=[`Sao lưu trong trình duyệt: <b>bật</b>. ${last?'Bản gần nhất: '+esc(fmt(last.at))+'.':'Chưa có bản nào.'} Các bản này sẽ mất nếu xoá dữ liệu trình duyệt, nên nên kèm sao lưu ra file.`];
+  if(!BK.supported)L.push('Ghi file tự động: <b>trình duyệt này không hỗ trợ</b>. Hãy dùng Chrome hoặc Edge trên máy tính, hoặc bấm "Sao lưu ngay" để tải file về.');
+  else if(!BK.handle)L.push('Ghi file tự động: <b>chưa bật</b>. Bấm "Chọn file để tự ghi" và chọn một vị trí, nên là thư mục đồng bộ như Google Drive hoặc OneDrive.');
+  else L.push('Ghi file tự động vào <b>'+esc(BK.handle.name)+'</b>: '+(BK.file==='ok'?'<b>đang bật</b>'+(BK.fileAt?', lần ghi gần nhất '+esc(fmt(BK.fileAt)):''):BK.file==='perm'?'<b>cần cho phép ghi file</b> (trình duyệt hỏi lại mỗi lần mở lại trang)':'<b>có lỗi khi ghi</b>, hãy thử chọn lại file')+'.');
+  L.push(dirty?'<b>Có thay đổi chưa được sao lưu ra ngoài trình duyệt.</b>':(ext?'Sao lưu ra ngoài trình duyệt lần gần nhất: '+esc(fmt(ext))+'.':''));
+  $('autoStat').innerHTML=L.filter(Boolean).map(x=>`<li>${x}</li>`).join('');
+  $('afPick').textContent=BK.handle?'Chọn file khác':'Chọn file để tự ghi';$('afPick').classList.toggle('hide',!BK.supported);
+  $('afPerm').classList.toggle('hide',!(BK.handle&&BK.file==='perm'));$('afStop').classList.toggle('hide',!BK.handle);
+  $('snapList').innerHTML=snaps.length?snaps.map((x,i)=>[x,i]).reverse().map(([x,i])=>`<div class="snap"><span>${esc(fmt(x.at))} · ${x.n} tài khoản</span><button class="btn ghost" type="button" data-snap="${i}">Khôi phục</button></div>`).join(''):'<p class="hint">Chưa có bản nào.</p>'}
+async function pickFile(){try{
+    const h=await window.showSaveFilePicker({suggestedName:'saoluu.js',types:[{description:'saoluu.js hoặc tệp văn bản',accept:{'text/javascript':['.js'],'text/plain':['.txt']}}]});
+    BK.handle=h;BK.file='perm';await fsPut(h);await runBackup(true);say('snapMsg','Đã bật tự ghi vào file '+h.name+'.','ok')
+  }catch(e){if(!e||e.name!=='AbortError')say('snapMsg','Không bật được tự ghi file.','err')}}
+async function permFile(){try{const r=await BK.handle.requestPermission({mode:'readwrite'});
+    if(r==='granted')await runBackup(true);else say('snapMsg','Chưa được cấp quyền ghi file.','err')}catch(e){say('snapMsg','Không cấp được quyền ghi file.','err')}}
+async function downloadNow(){const t=await makeCode(bkExtra()),a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='tnspeakup-saoluu-'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);markExt()}
+$('afPick').onclick=pickFile;$('afPerm').onclick=permFile;
+$('afStop').onclick=async()=>{BK.handle=null;BK.file='none';await fsDel();renderBk();say('snapMsg','Đã ngừng tự ghi file.','ok')};
+$('afNow').onclick=async()=>{await runBackup(true);if(!BK.handle){await downloadNow();say('snapMsg','Đã sao lưu và tải file về máy.','ok')}else say('snapMsg',BK.file==='ok'?'Đã sao lưu và ghi vào file.':'Đã sao lưu trong trình duyệt. File chưa ghi được, xem trạng thái ở trên.',BK.file==='ok'?'ok':'err')};
+$('bkBar').addEventListener('click',e=>{const b=e.target.closest('[data-bk]');if(!b)return;const a=b.dataset.bk;
+  if(a==='pick')pickFile();else if(a==='perm')permFile();else if(a==='dl')downloadNow();else{BK.hide=true;renderBk()}});
+$('snapList').addEventListener('click',async e=>{const b=e.target.closest('[data-snap]');if(!b)return;
+  const sn=getSnaps()[+b.dataset.snap];if(!sn)return;
+  let d;try{d=await readCode(sn.code)}catch(_){return say('snapMsg','Bản sao lưu này bị lỗi, không đọc được.','err')}
+  if(!confirm('Khôi phục dữ liệu về thời điểm '+fmt(sn.at)+' ('+d.accounts.length+' tài khoản)? Dữ liệu hiện tại sẽ được lưu thành một bản sao lưu mới trước khi thay.'))return;
+  await runBackup();accounts=d.accounts;restoreSurvey(d);save();load();
+  const still=accounts.find(a=>a.id===me.id);
+  if(!still||still.role!=='admin'){alert('Tài khoản của bạn không còn quyền Quản trị trong bản sao lưu. Hãy đăng nhập lại.');$('out').click();return}
+  me=still;renderAccounts();renderBk();say('snapMsg','Đã khôi phục về bản ngày '+fmt(sn.at)+'.','ok')});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&BK.t){clearTimeout(BK.t);BK.t=null;runBackup().catch(()=>{})}});
+async function bkInit(){
+  if(BK.supported){BK.handle=await fsGet();
+    if(BK.handle){try{BK.file=(await BK.handle.queryPermission({mode:'readwrite'}))==='granted'?'ok':'perm'}catch(e){BK.file='err'}}}
+  noteChange();renderBk()}
+bkInit().catch(()=>{});
+/* ===== Khám phá bản thân: bài tự đánh giá ===== */
+const TSK=[{n:'Thuyết trình',e:'🎤'},{n:'Nói',e:'🗣️'},{n:'Nghe',e:'👂'},{n:'Dùng AI học Ngữ văn',e:'🤖'}];
+const TQ=[
+ ['Em xây dựng được dàn ý có mở đầu, thân bài, kết thúc trước khi trình bày.','Em nhìn vào người nghe thay vì chỉ nhìn giấy hoặc màn hình khi nói.','Em giữ được giọng nói rõ ràng, tốc độ vừa phải khi đứng trước lớp.','Em biết dùng ví dụ, hình ảnh hoặc câu hỏi để thu hút người nghe.','Em vẫn bình tĩnh nói tiếp khi lỡ quên hoặc nói sai một ý.'],
+ ['Em diễn đạt được ý kiến của mình bằng những câu rõ ràng, đủ ý.','Em dám phát biểu xây dựng bài hoặc nêu ý kiến trong giờ học.','Em có đủ vốn từ để kể lại một câu chuyện hay nói cảm xúc về một tác phẩm.','Em biết điều chỉnh cách nói cho phù hợp với người nghe (bạn bè, thầy cô).','Em nêu được lý do để bảo vệ ý kiến của mình trong thảo luận.'],
+ ['Em chăm chú nghe hết ý của người khác mà không ngắt lời.','Em ghi lại được ý chính hoặc từ khoá khi nghe bài giảng, bài nói.','Em tóm tắt lại được điều bạn vừa nói bằng lời của mình.','Em đặt được câu hỏi làm rõ khi chưa hiểu.','Em lắng nghe ý kiến khác mình mà vẫn giữ thái độ tôn trọng.'],
+ ['Em biết đặt câu hỏi rõ ràng, cụ thể khi nhờ AI hỗ trợ học Ngữ văn.','Em tự nghĩ ý của mình trước rồi mới nhờ AI gợi ý thêm.','Em kiểm chứng thông tin AI đưa ra với sách giáo khoa hoặc nguồn tin cậy.','Em viết lại câu trả lời của AI bằng lời văn và cảm xúc của riêng mình.','Em biết những việc không nên nhờ AI làm thay (như làm hộ bài kiểm tra) và tuân thủ quy định.']
+].flatMap((a,k)=>a.map(t=>({k,t})));
+const TOPT=['Chưa đúng với em','Đúng một phần','Khá đúng','Rất đúng'];
+const TLV=[['Rất vững','#0a3a9e','#0a3a9e'],['Khá tốt','#1c7be6','#0a58b5'],['Đang hình thành','#ffb340','#8a4b00'],['Mới bắt đầu','#e8590c','#b43d00']];
+const TTIPS=[
+ {low:['Chuẩn bị dàn ý ba phần: mở, thân, kết, mỗi phần một dòng.','Luyện nói 3 phút trước gương hoặc ghi âm lại, mỗi ngày một lần.','Tập nhìn vào ba vị trí trong lớp để giữ giao tiếp bằng mắt.'],high:['Thử mở đầu bằng một câu hỏi hoặc hình ảnh thật ấn tượng.','Nhờ bạn nhận xét nhịp độ và điểm nhấn của bài nói.','Thử thuyết trình trước nhóm đông hơn hoặc với chủ đề khó hơn.']},
+ {low:['Mỗi ngày nói ra một ý kiến bằng câu hoàn chỉnh: "Em nghĩ… vì…".','Kể lại một đoạn truyện hoặc bài thơ vừa học bằng lời của em trong 1 phút.','Đọc to một đoạn văn để quen nhịp và ngữ điệu.'],high:['Thử tranh biện về một chủ đề có hai phía.','Thay những từ quen bằng từ giàu sắc thái hơn.','Nhận vai người dẫn dắt trong một buổi thảo luận nhóm.']},
+ {low:['Khi nghe, chỉ ghi ba từ khoá thay vì chép cả câu.','Sau khi bạn nói xong, thử tóm tắt: "Ý của bạn là…".','Nghe một đoạn podcast ngắn rồi kể lại bằng lời của em.'],high:['Đặt một câu hỏi làm rõ hoặc mở rộng sau mỗi bài nói.','Thử ghi chú bằng sơ đồ tư duy khi nghe.','Đóng vai người phản hồi trong nhóm luyện nói.']},
+ {low:['Tập đặt câu hỏi cụ thể: nêu bối cảnh, yêu cầu và độ dài mong muốn.','Luôn tự nghĩ ý của mình trước, rồi mới nhờ AI gợi ý thêm.','Kiểm chứng dẫn chứng AI đưa ra với sách giáo khoa.'],high:['Nhờ AI đóng vai người nghe và hỏi ngược lại bài nói của em.','So sánh gợi ý của AI với ý của em để chọn cách hay hơn.','Chia sẻ cách dùng AI có trách nhiệm với bạn bè.']}
+];
+let T={i:0,ans:[]};const tMem={};
+const tKey=()=>'tnsu_test_'+me.id;
+function tHist(){try{const a=JSON.parse(localStorage.getItem(tKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return tMem[tKey()]||[]}}
+function tSave(r){const h=tHist();h.push(r);const keep=h.slice(-10);tMem[tKey()]=keep;try{localStorage.setItem(tKey(),JSON.stringify(keep))}catch(e){}}
+const tLvl=p=>p>=80?0:p>=60?1:p>=40?2:3;
+function tScores(ans){return TSK.map((_,k)=>Math.round((ans.slice(k*5,k*5+5).reduce((a,b)=>a+b,0)-5)/15*100))}
+function renderTestIntro(){
+  T={i:0,ans:[]};const h=tHist(),last=h[h.length-1];
+  $('tIntro').classList.remove('hide');$('tQ').classList.add('hide');$('tRes').classList.add('hide');
+  $('tView').classList.toggle('hide',!last);$('tStart').textContent=last?'Làm lại bài test':'Bắt đầu làm bài';
+  $('tLast').textContent=last?('Lần làm gần nhất: '+fmt(last.at)+'.'+(me.guest?' Kết quả của khách chỉ lưu trên máy này.':'')):''}
+function tStart(){T={i:0,ans:Array(TQ.length).fill(0)};$('tIntro').classList.add('hide');$('tRes').classList.add('hide');$('tQ').classList.remove('hide');renderQ();$('tQ').scrollIntoView({block:'start'})}
+function renderQ(){
+  const q=TQ[T.i],a=T.ans[T.i],N=TQ.length;
+  $('tCount').textContent='Câu '+(T.i+1)+' / '+N;$('tSk').textContent=TSK[q.k].e+' '+TSK[q.k].n;
+  $('tBar').style.width=(T.i/N*100)+'%';$('tText').textContent=q.t;
+  $('tOpts').innerHTML=TOPT.map((o,i)=>`<button class="topt${a===i+1?' sel':''}" type="button" data-v="${i+1}" aria-pressed="${a===i+1}"><b>${i+1}</b>${o}</button>`).join('');
+  $('tBack').disabled=T.i===0;$('tFwd').disabled=!a;$('tFwd').innerHTML=T.i===N-1?'Xem kết quả &rarr;':'Câu sau &rarr;';
+  $('tText').focus({preventScroll:true})}
+function tGo(i){if(i>=TQ.length)return tFinish();T.i=Math.max(0,i);renderQ()}
+$('tStart').onclick=tStart;
+$('tBack').onclick=()=>tGo(T.i-1);
+$('tFwd').onclick=()=>{if(T.ans[T.i])tGo(T.i+1)};
+$('tOpts').addEventListener('click',e=>{const b=e.target.closest('.topt');if(!b)return;
+  const idx=T.i;T.ans[idx]=+b.dataset.v;renderQ();
+  setTimeout(()=>{if(T.i===idx)tGo(idx+1)},REDUCED?0:260)});
+$('tView').onclick=()=>{const h=tHist();if(h.length)tShow(h)};
+function tFinish(){const s=tScores(T.ans);tSave({at:new Date().toISOString(),s});tShow(tHist());window.scrollTo({top:0})}
+function radar(v){
+  const cx=200,cy=150,R=100,A=[-90,0,180,90],O=[0,1,3,2];
+  const P=(k,r)=>{const a=A[k]*Math.PI/180;return [(cx+r*Math.cos(a)).toFixed(1),(cy+r*Math.sin(a)).toFixed(1)]};
+  const ring=pc=>O.map(k=>P(k,R*pc/100).join(',')).join(' ');
+  const poly=O.map(k=>P(k,R*Math.max(v[k],4)/100).join(',')).join(' ');
+  const aria='Biểu đồ radar: '+TSK.map((t,k)=>t.n+' '+v[k]+'%').join(', ');
+  return `<svg viewBox="0 0 400 300" role="img" aria-label="${esc(aria)}">
+   ${[25,50,75,100].map(pc=>`<polygon points="${ring(pc)}" fill="${pc===100?'#f3f8ff':'none'}" stroke="#cfe0fb" stroke-width="1"/>`).join('')}
+   ${[0,1,2,3].map(k=>`<line x1="${cx}" y1="${cy}" x2="${P(k,R)[0]}" y2="${P(k,R)[1]}" stroke="#cfe0fb"/>`).join('')}
+   <polygon points="${poly}" fill="rgba(28,123,230,.28)" stroke="#1c7be6" stroke-width="2.5" stroke-linejoin="round"/>
+   ${[0,1,2,3].map(k=>`<circle cx="${P(k,R*Math.max(v[k],4)/100)[0]}" cy="${P(k,R*Math.max(v[k],4)/100)[1]}" r="5" fill="${TLV[tLvl(v[k])][1]}" stroke="#fff" stroke-width="2"/>`).join('')}
+   <text x="${cx}" y="${cy-R-26}" text-anchor="middle">${TSK[0].e} ${TSK[0].n}</text><text class="pv" x="${cx}" y="${cy-R-10}" text-anchor="middle">${v[0]}%</text>
+   <text x="${cx+R+14}" y="${cy-2}">${TSK[1].e} ${TSK[1].n}</text><text class="pv" x="${cx+R+14}" y="${cy+14}">${v[1]}%</text>
+   <text x="${cx-R-14}" y="${cy-2}" text-anchor="end">${TSK[2].e} ${TSK[2].n}</text><text class="pv" x="${cx-R-14}" y="${cy+14}" text-anchor="end">${v[2]}%</text>
+   <text x="${cx}" y="${cy+R+22}" text-anchor="middle">${TSK[3].e} ${TSK[3].n}</text><text class="pv" x="${cx}" y="${cy+R+38}" text-anchor="middle">${v[3]}%</text></svg>`}
+function tShow(h){
+  const cur=h[h.length-1],prev=h.length>1?h[h.length-2]:null,v=cur.s;
+  const avg=Math.round(v.reduce((a,b)=>a+b,0)/4),mx=Math.max(...v),mn=Math.min(...v),best=v.indexOf(mx),worst=v.indexOf(mn);
+  const lead=mx-mn<10?'Bốn kỹ năng của em khá đồng đều. Em có thể chọn kỹ năng mình thích nhất để nâng cao trước.'
+    :'Điểm mạnh nổi bật của em là <b>'+TSK[best].n+'</b>. Kỹ năng nên ưu tiên luyện thêm là <b>'+TSK[worst].n+'</b>, và chỉ cần bắt đầu từ những bước nhỏ.';
+  const bars=v.map((p,k)=>{const L=TLV[tLvl(p)],d=prev?p-prev.s[k]:null;
+    return `<div class="rb"><div class="cl"><span>${TSK[k].e} ${TSK[k].n}<span class="lvl" style="background:${L[1]}2b;color:${L[2]}">${L[0]}</span>${d===null?'':`<span class="delta ${d>0?'up':d<0?'down':'eq'}">${d>0?'▲ +'+d:d<0?'▼ '+d:'= 0'}</span>`}</span><b>${p}%</b></div><div class="hb" role="img" aria-label="${esc(TSK[k].n)}: ${p}%"><i style="width:${Math.max(p,2)}%;background:${L[1]}"></i></div></div>`}).join('');
+  const cards=[0,1,2,3].sort((a,b)=>v[a]-v[b]).map(k=>{const hi=tLvl(v[k])<=1;
+    return `<article class="card"><span class="tag">${TSK[k].e} ${TSK[k].n}</span><h3>${hi?'Giữ vững và nâng cao':'Bắt đầu từ những bước nhỏ'}</h3><ul class="tl">${TTIPS[k][hi?'high':'low'].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article>`}).join('');
+  const rows=[...h].reverse().slice(0,5).map((r,i)=>`<tr><td>${esc(fmt(r.at))}${i===0?' <span class="badge">mới nhất</span>':''}</td>${r.s.map(x=>`<td>${x}%</td>`).join('')}</tr>`).join('');
+  $('tRes').innerHTML=`<div class="card" style="margin-top:14px"><div class="klab">Kết quả tự đánh giá · ${esc(fmt(cur.at))}</div>
+    <h3 style="margin-top:4px">Mức chung: ${TLV[tLvl(avg)][0]} (${avg}%)</h3><p>${lead}</p>
+    <div class="rgrid"><div class="radar">${radar(v)}</div><div>${bars}</div></div>
+    <p class="hint" style="margin-top:6px">Đây là bài tự đánh giá để định hướng luyện tập, không phải bài kiểm tra chấm điểm.${me.guest?' Kết quả của khách chỉ lưu trên máy này.':''}</p></div>
+    <h3 class="sh">Gợi ý luyện tập cho từng kỹ năng</h3><div class="posts">${cards}</div>
+    ${h.length>1?`<h3 class="sh">Tiến bộ qua các lần làm</h3><div class="card tw"><table class="hist"><thead><tr><th>Thời gian</th>${TSK.map(t=>`<th>${t.n}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`:''}
+    <div class="card cta"><h3>Bước tiếp theo</h3><p class="hint">Chọn một gợi ý ở trên, luyện đều vài phút mỗi ngày rồi quay lại làm bài để xem mình tiến bộ.</p>
+    <div class="acts"><button class="btn" type="button" data-go="journey">Vào phòng thực hành</button><button class="btn ghost" id="tRetry" type="button">Làm lại bài test</button><button class="btn ghost" type="button" data-go="survey">Xem thực trạng</button></div></div>`;
+  $('tIntro').classList.add('hide');$('tQ').classList.add('hide');$('tRes').classList.remove('hide')}
+$('tRes').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)return showTab(g.dataset.go);if(e.target.closest('#tRetry'))tStart()});
+/* ===== Hành trình tiến bộ ===== */
+const MODS=[
+ {id:'mirror',e:'🪞',n:'Luyện trước gương',d:'Bật camera, tập nhìn, đứng và nói'},
+ {id:'topic',e:'🎯',n:'Chọn đề tài',d:'Chấm điểm đề tài để chọn cho đúng'},
+ {id:'open',e:'🚀',n:'Viết dẫn dắt',d:'Mở bài thu hút trong 30 giây'},
+ {id:'close',e:'🏁',n:'Viết kết thúc',d:'Lời kết đọng lại trong lòng người nghe'},
+ {id:'talk',e:'🙋',n:'Tương tác',d:'Đặt câu hỏi, kéo người nghe vào bài nói'},
+ {id:'ai',e:'🤖',n:'Dùng AI hỗ trợ',d:'Soạn câu lệnh, kiểm chứng, tự viết lại'},
+ {id:'listen',e:'👂',n:'Luyện nghe',d:'Ghi ý chính, tóm tắt, đặt câu hỏi'},
+ {id:'log',e:'📈',n:'Nhật ký tiến bộ',d:'Xem em đã luyện được những gì'}];
+const J_TOPICS=['Vì sao em chọn một cuốn sách','Một việc nhỏ làm thay đổi em','Học Văn cùng AI','Điều em muốn thay đổi ở trường','Nhân vật văn học em quý nhất','Một ngày không điện thoại'];
+const PR={
+ mirror:{pr:J_TOPICS},
+ open:{h:'Viết dẫn dắt (mở bài)',lead:'Người nghe quyết định có lắng nghe hay không ngay trong 30 giây đầu. Chọn một cách mở bài rồi viết 2 đến 3 câu của riêng em.',pr:J_TOPICS,
+  tech:[['Đặt câu hỏi','“Em có bao giờ đứng trước lớp mà quên hết điều định nói?”'],['Con số bất ngờ','“Hơn một nửa bạn trong lớp ngại giơ tay phát biểu.”'],['Kể chuyện ngắn','“Sáng nay, tay em run khi cầm tờ giấy…”'],['Câu nói gợi mở','Một câu thơ, tục ngữ hoặc lời nhân vật gắn với đề tài.']],
+  ck:['Có 2 đến 3 câu, nói được trong 30 giây','Gây chú ý ngay từ câu đầu','Nêu được vấn đề em sắp nói','Viết bằng giọng của em, không chép mẫu'],ph:'Viết phần mở bài của em ở đây…'},
+ close:{h:'Viết kết thúc',lead:'Lời kết là điều người nghe mang về. Hãy chọn một cách kết và viết 2 đến 3 câu thật gọn.',pr:J_TOPICS,
+  tech:[['Tóm lại ý chính','“Tóm lại, em muốn nhắn ba điều: …”'],['Kêu gọi hành động','“Ngay hôm nay, mình cùng thử…”'],['Quay về phần mở đầu','Nhắc lại câu hỏi hoặc câu chuyện ở đầu bài để khép vòng.'],['Câu hỏi suy ngẫm','“Nếu là bạn, bạn sẽ chọn điều gì?”']],
+  ck:['Nhắc lại ý chính thật ngắn gọn','Có một thông điệp đọng lại','Không thêm ý mới, không nói “em xin hết”','Kết bằng lời cảm ơn hoặc một câu hỏi'],ph:'Viết phần kết thúc của em ở đây…'},
+ talk:{h:'Luyện tương tác',lead:'Bài nói hay là cuộc trò chuyện hai chiều. Hãy chuẩn bị câu hỏi cho ba thời điểm: lúc mở đầu, giữa bài và lúc kết.',pr:J_TOPICS,
+  tech:[['Hỏi nhanh, giơ tay','“Ai từng…? Mời bạn giơ tay.”'],['Hỏi rồi dừng 3 giây','Đặt câu hỏi, im lặng đếm 3 giây để người nghe kịp nghĩ.'],['Hỏi chọn phương án','“Bạn chọn A hay B? Vì sao?”'],['Mời một bạn chia sẻ','“Bạn nào muốn kể thêm trải nghiệm của mình?”']],
+  ck:['Có 3 câu hỏi: mở, giữa và kết','Câu hỏi ngắn, trả lời được trong 10 giây','Có cách phản hồi khi bạn trả lời','Có phương án dự phòng khi cả lớp im lặng'],ph:'Viết 3 câu hỏi tương tác, mỗi câu một dòng, kèm cách em phản hồi…'},
+ listen:{h:'Luyện nghe và ghi ý chính',lead:'Nghe tốt giúp em nói tốt. Nghe một đoạn ngắn, rồi ghi lại để kiểm tra mình đã hiểu chưa.',pr:['Nghe một đoạn podcast 2 đến 3 phút','Nghe một bạn kể chuyện trong 1 phút','Nghe thầy cô giảng 3 phút'],
+  tech:[['Ba từ khoá','Chỉ ghi ba từ quan trọng nhất, không chép cả câu.'],['Tóm tắt hai câu','“Ý chính là… Vì…”'],['Câu hỏi làm rõ','“Bạn có thể nói rõ hơn về… không?”'],['Phản hồi tích cực','“Mình thích ý… vì…”']],
+  ck:['Ghi được 3 từ khoá','Tóm tắt được trong 2 câu','Có một câu hỏi làm rõ','Không ngắt lời người nói'],ph:'Ghi 3 từ khoá, tóm tắt 2 câu và 1 câu hỏi làm rõ…'}};
+const TCR=['Em thấy hứng thú','Em có hiểu biết hoặc ví dụ thật','Người nghe sẽ quan tâm','Nói gọn trong 3 phút'];
+var J_V='home',camS=null,camTm=null,camSec=0,J_TS='',jMem={};
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const chks=a=>a.map(t=>`<label class="chk"><input type="checkbox" data-ck><span>${esc(t)}</span></label>`).join('');
+function gid(){if(!me.guest)return me.id;try{let g=localStorage.getItem('tnsu_gid');if(!g){g='g'+Math.random().toString(36).slice(2,9);localStorage.setItem('tnsu_gid',g)}return g}catch(e){return 'guest'}}
+const jKey=()=>'tnsu_jr_'+gid();
+function jLog(){try{const a=JSON.parse(localStorage.getItem(jKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return jMem[jKey()]||[]}}
+function jAdd(x){const l=jLog();l.push(x);const k=l.slice(-60);jMem[jKey()]=k;try{localStorage.setItem(jKey(),JSON.stringify(k))}catch(e){}}
+function camOff(){if(camS){camS.getTracks().forEach(t=>t.stop());camS=null}clearInterval(camTm);camTm=null;
+  const v=$('camV');if(v){v.srcObject=null;v.classList.add('hide')}const m=$('camMsg');if(m){m.classList.remove('hide');m.textContent='Camera đang tắt. Bấm “Bật camera” để bắt đầu.'}
+  const t=$('camT');if(t)t.classList.add('hide');const b=document.querySelector('[data-jact="camTimer"]');if(b)b.textContent='Bắt đầu tính giờ'}
+async function camOn(){const m=$('camMsg');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.isSecureContext){m.textContent='Trình duyệt chưa hỗ trợ camera, hoặc trang chưa mở bằng địa chỉ https.';return}
+  m.textContent='Đang xin quyền dùng camera…';
+  try{camS=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});const v=$('camV');if(!v){camOff();return}
+    v.srcObject=camS;v.classList.remove('hide');try{await v.play()}catch(_){}m.classList.add('hide')}
+  catch(e){camS=null;m.classList.remove('hide');
+    m.textContent=e&&e.name==='NotAllowedError'?'Em chưa cho phép dùng camera. Bấm biểu tượng ổ khoá cạnh địa chỉ trang, chọn cho phép camera rồi thử lại.':e&&e.name==='NotFoundError'?'Không tìm thấy camera trên thiết bị này.':'Chưa bật được camera. Có thể camera đang được ứng dụng khác sử dụng.'}}
+function camTimer(b){if(camTm){clearInterval(camTm);camTm=null;b.textContent='Bắt đầu tính giờ';return}
+  camSec=0;const t=$('camT');t.classList.remove('hide');t.textContent='00:00';b.textContent='Dừng tính giờ';
+  camTm=setInterval(()=>{camSec++;t.textContent=String(Math.floor(camSec/60)).padStart(2,'0')+':'+String(camSec%60).padStart(2,'0')},1000)}
+const jTitle=(m,t)=>`<h3 class="sh" style="margin-top:6px">${m.e} ${esc(t||m.n)}</h3>`;
+const mod=id=>MODS.find(x=>x.id===id);
+const saveRow=(m,msg)=>`<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-jact="save" data-m="${m}">Lưu vào nhật ký</button></div><p class="msg" id="jMsg" role="status"></p>`;
+function vHome(){const l=jLog(),h=tHist(),last=h[h.length-1];let sug='';
+  if(last){const k=last.s.indexOf(Math.min(...last.s)),id=['open','mirror','listen','ai'][k];sug=`<div class="note">Theo bài test gần nhất, em nên ưu tiên <b>${TSK[k].n}</b>. Hãy thử mục <button class="q" type="button" data-jv="${id}">${mod(id).e} ${mod(id).n}</button></div>`}
+  return `<p class="lead">Mỗi ngày luyện 5 phút, em sẽ thấy mình tiến bộ. Chọn một mục để bắt đầu; mỗi lần luyện xong, bấm lưu để ghi vào nhật ký.</p>${sug}
+  <div class="mg" style="margin-top:14px">${MODS.filter(m=>m.id!=='log').map(m=>{const n=l.filter(x=>x.m===m.id).length;return `<button class="tile" type="button" data-jv="${m.id}"><b>${m.e} ${m.n}</b><span>${m.d}</span><br><span class="badge ${n?'mod':''}" style="margin-top:6px">${n?'Đã luyện '+n+' lần':'Chưa luyện'}</span></button>`}).join('')}</div>`}
+function vMirror(){return `${jTitle(mod('mirror'))}<p class="lead">Bật camera như một chiếc gương để tự quan sát ánh mắt, tư thế, nét mặt và cử chỉ. Hình ảnh chỉ hiện trên máy của em, không được ghi lại và không gửi đi đâu.</p>
+  <div class="two"><div><div class="cam"><video id="camV" class="hide" autoplay playsinline muted></video><p id="camMsg">Camera đang tắt. Bấm “Bật camera” để bắt đầu.</p><span id="camT" class="tm hide">00:00</span></div>
+  <div class="acts" style="margin-top:10px"><button class="btn" type="button" data-jact="camOn">Bật camera</button><button class="btn ghost" type="button" data-jact="camOff">Tắt camera</button><button class="btn ghost" type="button" data-jact="camTimer">Bắt đầu tính giờ</button></div></div>
+  <div class="card"><h3>Buổi luyện 3 phút</h3><p class="hint">Đề nói: <b id="jPr">${esc(rnd(J_TOPICS))}</b> <button class="btn ghost" type="button" data-jact="rnd" data-m="mirror">Đổi đề</button></p>
+  <ol class="tl"><li>Đứng thẳng, hai chân vững, vai thả lỏng.</li><li>Nhìn vào camera như nhìn người nghe, lần lượt trái, giữa, phải.</li><li>Nói chậm và rõ, dừng hai giây sau ý quan trọng.</li><li>Dùng tay minh hoạ vừa phải, mỉm cười ở đầu và cuối.</li></ol>
+  <p class="klab" style="margin:8px 0 4px">Nói xong, em tự đánh giá</p>${chks(['Em giữ được giao tiếp bằng mắt','Tư thế đứng thẳng, không lắc người','Nét mặt tự nhiên, có mỉm cười','Cử chỉ tay hỗ trợ lời nói','Giọng rõ, tốc độ vừa phải'])}
+  <label for="jTx" style="margin-top:8px">Một điều em muốn cải thiện lần sau</label><textarea class="tx" id="jTx" style="min-height:70px"></textarea>${saveRow('mirror')}</div></div>`}
+function vTopic(){return `${jTitle(mod('topic'))}<p class="lead">Đề tài tốt là đề tài em thích, em hiểu và người nghe cần. Ghi 2 đến 3 đề tài, tích tiêu chí đúng với từng đề tài rồi bấm chấm điểm.</p>
+  <div class="card tw"><table class="svt"><thead><tr><th>Đề tài</th>${TCR.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${[0,1,2].map(i=>`<tr><td><input data-tt="${i}" maxlength="80" placeholder="Đề tài ${i+1}" aria-label="Đề tài ${i+1}" style="min-width:160px"></td>${TCR.map((c,j)=>`<td><label class="chk"><input type="checkbox" data-tc="${i}-${j}" aria-label="${c}"></label></td>`).join('')}</tr>`).join('')}</tbody></table>
+  <div class="acts" style="margin-top:10px"><button class="btn" type="button" data-jact="tScore">Chấm điểm</button></div><div id="tOut"></div></div>
+  <div class="card" style="margin-top:16px"><h3>Mẹo thu hẹp đề tài</h3><ul class="tl"><li>“Môi trường” thu hẹp thành “Rác nhựa ở căng tin trường em”.</li><li>“AI” thu hẹp thành “Ba cách em nhờ AI góp ý mà vẫn tự viết”.</li><li>“Văn học” thu hẹp thành “Vì sao em nhớ mãi một nhân vật”.</li></ul></div>`}
+function tScore(){const r=[0,1,2].map(i=>({t:document.querySelector('[data-tt="'+i+'"]').value.trim(),n:TCR.filter((_,j)=>document.querySelector('[data-tc="'+i+'-'+j+'"]').checked).length})).filter(x=>x.t);
+  if(!r.length)return $('tOut').innerHTML='<p class="msg err">Em hãy ghi ít nhất một đề tài.</p>';
+  r.sort((a,b)=>b.n-a.n);const b=r[0];
+  J_TS=r.map(x=>x.t+': '+x.n+'/4').join('; ')+'. Chọn: '+b.t;
+  $('tOut').innerHTML=`<div class="note" style="margin-top:12px"><b>Đề tài nên chọn: ${esc(b.t)}</b> (${b.n}/4 tiêu chí). ${b.n>=3?'Đề tài này khá phù hợp, em có thể bắt đầu lập dàn ý.':'Điểm còn thấp, em thử thu hẹp đề tài hoặc tìm thêm ví dụ thật của riêng mình.'}</div>`+r.map(x=>`<div class="cl" style="margin-top:8px"><span>${esc(x.t)}</span><b>${x.n}/4</b></div><div class="hb"><i style="width:${x.n*25}%"></i></div>`).join('')+'<div class="acts" style="margin-top:12px"><button class="btn ghost" type="button" data-jact="tSave">Lưu vào nhật ký</button></div>'}
+function vPractice(id){const c=PR[id],m=mod(id);
+  return `${jTitle(m,c.h)}<p class="lead">${esc(c.lead)}</p><div class="posts">${c.tech.map(([n,x])=>`<div class="card"><span class="tag">${esc(n)}</span><p class="hint">${esc(x)}</p></div>`).join('')}</div>
+  <div class="card" style="margin-top:16px"><h3>Đến lượt em luyện</h3><p class="hint">Đề bài: <b id="jPr">${esc(rnd(c.pr))}</b> <button class="btn ghost" type="button" data-jact="rnd" data-m="${id}">Đổi đề</button></p>
+  <textarea class="tx" id="jTx" placeholder="${esc(c.ph)}" aria-label="Bài luyện của em"></textarea><p class="hint" id="jCnt">0 từ</p>
+  <p class="klab" style="margin:8px 0 4px">Tự kiểm tra</p>${chks(c.ck)}${saveRow(id)}</div>`}
+function vAI(){const f=(id,l,ph)=>`<label for="${id}">${l}</label><input id="${id}" maxlength="160" placeholder="${ph}">`;
+  return `${jTitle(mod('ai'))}<p class="lead">Nguyên tắc: <b>Tự nghĩ, nhờ AI, tự kiểm chứng, tự viết lại.</b> AI gợi ý; ý tưởng và câu chữ vẫn là của em. Hãy tuân thủ quy định dùng AI của thầy cô và nhà trường.</p>
+  <div class="two"><div class="card"><h3>Bước 1. Soạn câu lệnh cho AI</h3>${f('aCtx','Em đang làm gì?','Em chuẩn bị bài nói 3 phút về…')}${f('aMine','Em đã tự nghĩ được gì?','Ý chính của em là…')}${f('aAsk','Em muốn AI giúp việc gì?','Góp ý phần mở bài, hoặc hỏi ngược lại bài nói của em')}
+  <button class="btn" type="button" data-jact="aBuild">Tạo câu lệnh</button><textarea class="tx" id="aOut" readonly style="min-height:150px" placeholder="Câu lệnh sẽ hiện ở đây" aria-label="Câu lệnh gợi ý"></textarea><div class="acts"><button class="btn ghost" type="button" data-jact="aCopy">Sao chép câu lệnh</button></div><p class="msg" id="aMsg" role="status"></p></div>
+  <div class="card"><h3>Bước 2. Sau khi AI trả lời</h3>${chks(['Em đã đọc kỹ, không chép nguyên văn','Em kiểm tra thông tin với sách giáo khoa hoặc nguồn tin cậy','Em loại bỏ điều không đúng hoặc không phù hợp','Em viết lại bằng giọng của mình','Em ghi chú cho thầy cô biết em đã dùng AI vào việc gì'])}
+  <label for="jTx" style="margin-top:10px">Em đã tự sửa hoặc viết lại điều gì?</label><textarea class="tx" id="jTx" style="min-height:90px"></textarea>${saveRow('ai')}</div></div>`}
+function aBuild(){const a=$('aAsk').value.trim();if(!a)return say('aMsg','Em hãy ghi việc em muốn AI giúp.','err');
+  $('aOut').value=`Mình là học sinh THCS, đang ${$('aCtx').value.trim()||'luyện kỹ năng thuyết trình'}. Mình đã tự nghĩ: ${$('aMine').value.trim()||'(chưa có, hãy hỏi mình vài câu để gợi ý)'}. Nhờ bạn: ${a}. Hãy góp ý ngắn gọn bằng câu hỏi hoặc gợi ý, nêu cả điểm mạnh và điểm cần sửa, không viết thay bài của mình, và nói rõ chỗ nào bạn chưa chắc chắn để mình tự kiểm chứng.`;say('aMsg','Đã tạo câu lệnh. Em dán vào công cụ AI mà trường cho phép dùng.','ok')}
+function vLog(){const l=jLog(),days=new Set(l.map(x=>x.at.slice(0,10))).size;
+  return `${jTitle(mod('log'))}<div class="two"><div class="card"><h3>Em đã luyện</h3><p><b style="font-size:1.6rem;color:var(--tn)">${l.length}</b> lần trong <b>${days}</b> ngày</p>${me.guest?'<p class="hint">Nhật ký của khách chỉ lưu trên máy này.</p>':''}<div class="chart" style="margin-top:12px">${MODS.filter(m=>m.id!=='log').map(m=>{const n=l.filter(x=>x.m===m.id).length;return `<div><div class="cl"><span>${m.e} ${m.n}</span><b>${n}</b></div><div class="hb"><i style="width:${Math.min(100,n*20)}%"></i></div></div>`}).join('')}</div></div>
+  <div class="card"><h3>Các lần luyện gần đây</h3>${l.length?[...l].reverse().slice(0,10).map(x=>{const m=mod(x.m)||MODS[0];return `<div class="snap" style="flex-direction:column;align-items:flex-start;gap:2px"><b>${m.e} ${m.n} · ${esc(fmt(x.at))}</b>${x.p?`<span class="hint">${esc(x.p)}</span>`:''}${x.t?`<span>${esc(x.t.slice(0,200))}${x.t.length>200?'…':''}</span>`:''}<small class="hint">Tự kiểm tra: ${x.c}/${x.n}</small></div>`}).join(''):'<p class="soon">Chưa có lần luyện nào. Hãy chọn một mục để bắt đầu.</p>'}
+  ${l.length?'<div class="acts" style="margin-top:10px"><button class="btn ghost danger" type="button" data-jact="clr">Xoá nhật ký</button></div>':''}</div></div>`}
+function renderJ(){camOff();if(!mod(J_V)&&J_V!=='home')J_V='home';
+  $('jNav').innerHTML=[['home','🏠','Tổng quan'],...MODS.map(m=>[m.id,m.e,m.n])].map(t=>`<button class="q ${J_V===t[0]?'on':''}" type="button" data-jv="${t[0]}" aria-pressed="${J_V===t[0]}">${t[1]} ${t[2]}</button>`).join('');
+  $('jBody').innerHTML=({home:vHome,mirror:vMirror,topic:vTopic,ai:vAI,log:vLog}[J_V]||(()=>vPractice(J_V)))()}
+function jSave(m){const tx=$('jTx')?$('jTx').value.trim():'',ck=[...document.querySelectorAll('#jBody [data-ck]')],c=ck.filter(x=>x.checked).length;
+  if(m!=='mirror'&&tx.length<10)return say('jMsg','Em hãy viết ít nhất một câu rồi mới lưu nhé.','err');
+  jAdd({m,at:new Date().toISOString(),p:m==='ai'?'Dùng AI hỗ trợ':($('jPr')?$('jPr').textContent:''),t:m==='mirror'?(tx+(camSec?' (đã luyện '+camSec+' giây)':'')).trim():tx,c,n:ck.length});camSec=0;
+  say('jMsg','Đã lưu vào Nhật ký tiến bộ. Giỏi lắm!','ok')}
+$('p-journey').addEventListener('click',async e=>{
+  const v=e.target.closest('[data-jv]');if(v){J_V=v.dataset.jv;renderJ();return}
+  const b=e.target.closest('[data-jact]');if(!b)return;const a=b.dataset.jact;
+  if(a==='camOn')camOn();else if(a==='camOff')camOff();else if(a==='camTimer')camTimer(b);
+  else if(a==='rnd')$('jPr').textContent=rnd(PR[b.dataset.m].pr);
+  else if(a==='save')jSave(b.dataset.m);else if(a==='tScore')tScore();
+  else if(a==='tSave'){jAdd({m:'topic',at:new Date().toISOString(),p:'Chấm điểm đề tài',t:J_TS,c:0,n:4});b.textContent='Đã lưu';b.disabled=true}
+  else if(a==='aBuild')aBuild();
+  else if(a==='aCopy'){if(!$('aOut').value)return say('aMsg','Bấm “Tạo câu lệnh” trước.','err');say('aMsg',await copyTxt($('aOut').value)?'Đã sao chép.':'Không sao chép được, em hãy bôi đen và sao chép thủ công.','ok')}
+  else if(a==='clr'){if(confirm('Xoá toàn bộ nhật ký luyện tập?')){jMem[jKey()]=[];try{localStorage.removeItem(jKey())}catch(_){}renderJ()}}});
+$('p-journey').addEventListener('input',e=>{if(e.target.id==='jTx'&&$('jCnt'))$('jCnt').textContent=(e.target.value.trim().split(/\s+/).filter(Boolean).length)+' từ'});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)camOff()});
+async function copyTxt(t){try{await navigator.clipboard.writeText(t);return true}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}a.remove();return ok}}
+
+/* ===== Góc chia sẻ =====
+   Bài viết lưu trên trình duyệt (tnsu_posts) và gộp với window.TNSU_POSTS trong saoluu.js.
+   Khi nối máy chủ (Supabase), chỉ cần thay postsLocal() và putPost(). */
+const PCATS=['Kinh nghiệm thuyết trình','Thông điệp cổ vũ','Bài nói của em','Học Văn cùng AI','Góc nhìn khác'];
+const PSEED=[
+ {id:'seed1',seed:1,title:'Ba hơi thở trước khi lên bục',cat:'Kinh nghiệm thuyết trình',author:'Nhóm TNSpeakUp',role:'admin',at:'2026-10-01T00:00:00.000Z',status:'approved',body:'Trước khi bước lên, em hãy hít vào thật chậm bốn nhịp rồi thở ra sáu nhịp, lặp lại ba lần. Hồi hộp là dấu hiệu cơ thể đang chuẩn bị, không phải dấu hiệu em nói dở.\nSau đó, hãy nhớ ba ý chính thay vì học thuộc cả bài, và nhìn vào một gương mặt thân thiện trong lớp để bắt đầu câu đầu tiên.'},
+ {id:'seed2',seed:1,title:'Em dùng AI để chuẩn bị bài nói như thế nào?',cat:'Học Văn cùng AI',author:'Nhóm TNSpeakUp',role:'admin',at:'2026-10-02T00:00:00.000Z',status:'approved',body:'Em tự viết dàn ý trước, sau đó nhờ AI đóng vai người nghe và hỏi ngược lại ba câu. Những câu hỏi ấy giúp em thấy chỗ mình chưa rõ.\nVới mỗi thông tin AI đưa ra, em kiểm chứng lại bằng sách giáo khoa rồi mới dùng, và luôn viết lại bằng lời của mình. Nhờ vậy bài nói vẫn mang giọng của em.'}];
+var postsMem=null,SH_FLASH='';let SH_V='read',SH_CAT='',SH_EDIT=null,SH_MOD=false;
+const pValid=p=>!!p&&typeof p.id==='string'&&typeof p.title==='string'&&typeof p.body==='string'&&typeof p.cat==='string'&&['pending','approved','rejected'].includes(p.status);
+function postsLocal(){try{const a=JSON.parse(localStorage.getItem('tnsu_posts')||'null');if(Array.isArray(a))return a}catch(e){}return postsMem}
+function postsSaved(){const a=postsLocal();const l=Array.isArray(a)?a.filter(pValid):[];return l.length?l:null}
+function mergeBootPosts(d){if(Array.isArray(d.posts)){const m=new Map((postsLocal()||[]).filter(pValid).map(p=>[p.id,p]));
+  d.posts.filter(pValid).forEach(p=>{const o=m.get(p.id);if(!o||(p.ts||'')>=(o.ts||''))m.set(p.id,p)});const l=[...m.values()];postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}}
+  if(d.survey&&svValid(d.survey)&&!svSaved()){svMem=d.survey;try{localStorage.setItem('tnsu_survey',JSON.stringify(d.survey))}catch(e){}}}
+function restorePosts(d){if(!Array.isArray(d.posts))return;const l=d.posts.filter(pValid);postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}}
+function allPosts(){const m=new Map(PSEED.map(p=>[p.id,p])),put=p=>{const o=m.get(p.id);if(!o||(p.ts||'')>=(o.ts||''))m.set(p.id,p)};
+  (Array.isArray(window.TNSU_POSTS)?window.TNSU_POSTS:[]).filter(pValid).forEach(put);
+  (postsLocal()||[]).filter(pValid).forEach(put);return [...m.values()].filter(p=>!p.del)}
+function putPost(p){p={...p,ts:new Date().toISOString()};const l=(postsLocal()||[]).filter(x=>x&&x.id!==p.id);l.push(p);postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}try{noteChange()}catch(_){}}
+const isMod=()=>!!me&&(me.role==='admin'||me.role==='mod');
+const toLocalIn=i=>{const d=new Date(i);return isNaN(d)?'':new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,16)};
+const pdate=i=>{try{return new Date(i).toLocaleDateString('vi-VN')}catch(e){return ''}};
+const paras=t=>String(t).split(/\n+/).filter(x=>x.trim()).map(x=>`<p>${esc(x)}</p>`).join('');
+const ST={pending:['Chờ duyệt','wait'],approved:['Đã đăng','mod'],rejected:['Cần chỉnh sửa','no']};
+function postCard(p,act,st){return `<article class="card post"><details><summary><span class="tag">${esc(p.cat)}</span>${p.seed?' <span class="tag" style="background:#e6f0ff;color:var(--tn)">Bài mẫu</span>':''}${st?` <span class="badge ${ST[p.status][1]}">${ST[p.status][0]}</span>`:''}<h3>${esc(p.title)}</h3><p class="ex">${esc(p.body.slice(0,110))}${p.body.length>110?'…':''}</p><span class="meta">${esc(p.author)} · ${pdate(p.at)}</span><br><span class="more"><span class="c">Đọc bài</span><span class="o">Thu gọn</span></span></summary><div class="pbody">${paras(p.body)}${act||''}</div></details></article>`}
+function vRead(){const l=allPosts().filter(p=>p.status==='approved').sort((a,b)=>b.at.localeCompare(a.at)),f=SH_CAT?l.filter(p=>p.cat===SH_CAT):l,adm=me.role==='admin';
+  return `<div class="jump" style="margin:0 0 14px"><button class="q ${SH_CAT?'':'on'}" type="button" data-cat="">Tất cả</button>${PCATS.map(c=>`<button class="q ${SH_CAT===c?'on':''}" type="button" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+  <div class="posts">${f.length?f.map(p=>postCard(p,isMod()?`<div class="acts"><button class="btn ghost" type="button" data-pa="medit" data-id="${esc(p.id)}">Sửa bài và ngày đăng</button>${adm?`<button class="btn ghost danger" type="button" data-pa="del" data-id="${esc(p.id)}">Gỡ bài</button>`:''}</div>`:'')).join(''):'<p class="soon">Chưa có bài nào trong chuyên mục này.</p>'}</div>
+  <div class="card cta"><h3>Em cũng có điều muốn chia sẻ?</h3><p class="hint">Viết một bài ngắn về kinh nghiệm, thông điệp hay bài nói của em. Bài được duyệt sẽ đăng công khai.</p><div class="acts"><button class="btn" type="button" data-sv="write">Viết bài</button></div></div>`}
+function vWrite(){const e=SH_EDIT?allPosts().find(p=>p.id===SH_EDIT):null,adm=me.role==='admin',mm=!!e&&SH_MOD&&isMod();
+  return `<div class="two"><form id="pf" class="card"><h3>${mm?'Chỉnh sửa bài viết':e?'Chỉnh sửa và gửi lại':'Viết bài chia sẻ'}</h3>
+  <label for="pT">Tiêu đề</label><input id="pT" maxlength="100" required value="${esc(e?e.title:'')}">
+  <label for="pC">Chuyên mục</label><select id="pC">${PCATS.map(c=>`<option${e&&e.cat===c?' selected':''}>${esc(c)}</option>`).join('')}</select>
+  <label for="pA">Tên hiển thị</label><input id="pA" maxlength="40" required placeholder="Tên hoặc biệt danh" value="${esc(e?e.author:(me.guest?'':me.name))}">
+  ${mm?`<label for="pD">Ngày giờ đăng</label><input id="pD" type="datetime-local" required value="${toLocalIn(e.at)}">`:''}
+  <label for="pB">Nội dung (từ 50 đến 3000 ký tự)</label><textarea class="tx" id="pB" maxlength="3000" required>${esc(e?e.body:'')}</textarea><p class="hint" id="pCnt">${e?e.body.length:0} / 3000</p>
+  ${mm?'':'<label class="chk"><input type="checkbox" id="pOk"><span>Bài do em tự viết, không có số điện thoại, địa chỉ, ảnh hay thông tin riêng của người khác.</span></label>'}
+  <button class="btn" type="submit" style="margin-top:10px">${mm?'Lưu chỉnh sửa':adm?'Đăng bài':'Gửi bài để duyệt'}</button>${mm?'<button class="btn ghost" type="button" data-sv="read" style="margin-left:8px">Huỷ</button>':''}<p class="msg" id="pMsg" role="status"></p></form>
+  <div class="card"><h3>Bài của em đi như thế nào?</h3><ol class="tl"><li>Em bấm “Gửi bài để duyệt”.</li><li>Kiểm duyệt viên hoặc Quản trị viên đọc bài.</li><li>Bài phù hợp sẽ được đăng công khai. Nếu cần sửa, em nhận lời nhắn ở mục “Bài của tôi”.</li></ol><p class="hint" style="margin-top:8px">Tiêu chí duyệt: nội dung tích cực, tôn trọng người khác, đúng chuyên mục, do em tự viết và có dấu ấn riêng.</p></div></div>`}
+function vMine(){const l=allPosts().filter(p=>p.authorId===gid()).sort((a,b)=>b.at.localeCompare(a.at)),fl=SH_FLASH;SH_FLASH='';
+  return (fl?`<p class="msg ok">${fl}</p>`:'')+(me.guest?'<p class="note">Em đang vào với vai trò khách nên bài chỉ gắn với trình duyệt này.</p>':'')+
+  (l.length?`<div class="posts">${l.map(p=>postCard(p,`${p.note?`<p><b>Lời nhắn của ${esc(p.by||'người duyệt')}:</b> ${esc(p.note)}</p>`:''}<div class="acts">${p.status==='rejected'?`<button class="btn ghost" type="button" data-pa="edit" data-id="${esc(p.id)}">Sửa và gửi lại</button>`:''}${p.status==='pending'?`<button class="btn ghost" type="button" data-pa="code" data-id="${esc(p.id)}">Sao chép mã bài để gửi thầy cô</button>`:''}<button class="btn ghost danger" type="button" data-pa="mdel" data-id="${esc(p.id)}">Xoá bài</button></div>`,1)).join('')}</div>`:'<p class="soon">Em chưa gửi bài nào. Hãy bắt đầu ở mục “Viết bài và gửi duyệt”.</p>')}
+function vReview(){const l=allPosts().filter(p=>p.status==='pending').sort((a,b)=>a.at.localeCompare(b.at)),adm=me.role==='admin';
+  return `${l.length?`<div class="posts">${l.map(p=>postCard(p,`<p class="hint">Gửi bởi ${esc(p.author)} (${ROLE[p.role]||'Học sinh'}) lúc ${esc(fmt(p.at))}</p>`+`<div class="acts"><button class="btn ghost" type="button" data-pa="medit" data-id="${esc(p.id)}">Sửa bài và ngày đăng</button></div>`+(p.authorId===gid()&&!adm?'<p class="note">Đây là bài của bạn, cần Quản trị viên duyệt.</p>':`<div class="acts"><button class="btn" type="button" data-pa="ok" data-id="${esc(p.id)}">Duyệt và đăng</button><button class="btn ghost danger" type="button" data-pa="no" data-id="${esc(p.id)}">Từ chối, nhắn chỉnh sửa</button></div>`),1)).join('')}</div>`:'<p class="soon">Không có bài nào đang chờ duyệt.</p>'}
+  <div class="two"><div class="card"><h3>Nhận bài từ học sinh bằng mã</h3><p class="hint">Học sinh gửi bài từ máy khác sẽ bấm “Sao chép mã bài” rồi gửi mã cho thầy cô. Dán mã vào đây để bài hiện trong danh sách chờ duyệt.</p><textarea id="pImp" placeholder="Dán mã bài viết (bắt đầu bằng TNPOST1.)" aria-label="Mã bài viết"></textarea><button class="btn" type="button" data-pa="imp">Nhận bài</button><p class="msg" id="pImpMsg" role="status"></p></div>
+  ${adm?`<div class="card"><h3>Đưa bài đã đăng lên cho mọi người</h3><p class="hint">Bài hiện lưu trên trình duyệt này. Bấm nút, dán dòng mã vào file saoluu.js rồi tải lại trang để mọi máy cùng thấy các bài đã đăng. Cách khác: vào Cài đặt, bấm “Tạo mã sao lưu”; mã đó đã gồm cả bài viết.</p><button class="btn" type="button" data-pa="export">Sao chép mã bài đã đăng</button><p class="msg" id="pExMsg" role="status"></p></div>`:''}</div>`}
+function renderShare(){const pend=allPosts().filter(p=>p.status==='pending').length;
+  const tabs=[['read','Bài viết'],['write','Viết bài và gửi duyệt'],['mine','Bài của tôi']];if(isMod())tabs.push(['review','Chờ duyệt'+(pend?' ('+pend+')':'')]);
+  if(!tabs.some(t=>t[0]===SH_V))SH_V='read';
+  $('sNav').innerHTML=tabs.map(t=>`<button class="q ${SH_V===t[0]?'on':''}" type="button" data-sv="${t[0]}" aria-pressed="${SH_V===t[0]}">${t[1]}</button>`).join('');
+  $('sBody').innerHTML=({read:vRead,write:vWrite,mine:vMine,review:vReview})[SH_V]()}
+$('p-share').addEventListener('submit',e=>{if(e.target.id!=='pf')return;e.preventDefault();
+  const t=$('pT').value.trim(),b=$('pB').value.trim(),a=$('pA').value.trim(),f=m=>say('pMsg',m,'err');
+  if(t.length<5)return f('Tiêu đề cần từ 5 ký tự.');if(b.length<50)return f('Nội dung cần từ 50 ký tự.');if(!a)return f('Em hãy nhập tên hiển thị.');
+  const em=SH_EDIT&&SH_MOD&&isMod()?allPosts().find(p=>p.id===SH_EDIT):null;
+  if(em){const d=new Date($('pD').value);if(isNaN(d))return f('Ngày giờ đăng chưa hợp lệ.');
+    putPost({...em,title:t,cat:$('pC').value,body:b,author:a,at:d.toISOString(),edBy:me.name});SH_EDIT=null;SH_MOD=false;SH_V=em.status==='pending'?'review':'read';renderShare();return}
+  if(!$('pOk').checked)return f('Em hãy tích xác nhận bài tự viết và không có thông tin riêng.');
+  const old=SH_EDIT?allPosts().find(p=>p.id===SH_EDIT&&p.authorId===gid()):null,adm=me.role==='admin';
+  putPost({id:old?old.id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:t,cat:$('pC').value,body:b,author:a,authorId:gid(),role:me.role,at:new Date().toISOString(),status:adm?'approved':'pending',by:adm?me.name:'',note:''});
+  SH_EDIT=null;SH_V=adm?'read':'mine';SH_FLASH=adm?'':'Đã gửi bài. Bài sẽ hiện công khai sau khi được kiểm duyệt viên hoặc Quản trị viên duyệt.';renderShare()});
+$('p-share').addEventListener('input',e=>{if(e.target.id==='pB')$('pCnt').textContent=e.target.value.length+' / 3000'});
+function pImport(){const m='pImpMsg',v=$('pImp').value.replace(/\s+/g,'');
+  try{const [h,b]=v.split('.');if(h!=='TNPOST1'||!b)throw 0;const d=JSON.parse(decodeURIComponent(escape(atob(b))));
+    if(typeof d.id!=='string'||typeof d.title!=='string'||typeof d.body!=='string'||d.body.length<50||d.body.length>3000)throw 0;
+    if(allPosts().some(x=>x.id===d.id))return say(m,'Bài này đã có trong hệ thống.','err');
+    putPost({id:d.id.slice(0,40),title:d.title.slice(0,100),cat:PCATS.includes(d.cat)?d.cat:PCATS[4],body:d.body,author:String(d.author||'Học sinh').slice(0,40),authorId:String(d.authorId||'').slice(0,40),role:'student',at:new Date().toISOString(),status:'pending',by:'',note:''});
+    renderShare();say(m,'Đã nhận bài, xem ở danh sách chờ duyệt phía trên.','ok')}
+  catch(e){say(m,'Mã không hợp lệ hoặc thiếu ký tự.','err')}}
+$('p-share').addEventListener('click',async e=>{
+  const s=e.target.closest('[data-sv]');if(s){SH_V=s.dataset.sv;SH_EDIT=null;SH_MOD=false;renderShare();return}
+  const c=e.target.closest('[data-cat]');if(c){SH_CAT=c.dataset.cat;renderShare();return}
+  const b=e.target.closest('[data-pa]');if(!b)return;const a=b.dataset.pa;
+  if(a==='imp'&&isMod())return pImport();
+  if(a==='export'&&me.role==='admin'){const t='window.TNSU_POSTS='+JSON.stringify(allPosts().filter(p=>p.status==='approved'&&!p.seed))+';';const ok=await copyTxt(t);return say('pExMsg',ok?'Đã sao chép. Dán vào file saoluu.js rồi tải lại trang.':'Không sao chép được.',ok?'ok':'err')}
+  const p=allPosts().find(x=>x.id===b.dataset.id);if(!p)return;const own=p.authorId===gid();
+  if(a==='medit'&&isMod()){SH_EDIT=p.id;SH_MOD=true;SH_V='write';renderShare()}
+  else if(a==='edit'&&own){SH_MOD=false;SH_EDIT=p.id;SH_V='write';renderShare()}
+  else if(a==='mdel'&&own){if(confirm('Xoá bài này?')){putPost({...p,del:true});renderShare()}}
+  else if(a==='code'&&own){const t='TNPOST1.'+btoa(unescape(encodeURIComponent(JSON.stringify({id:p.id,title:p.title,cat:p.cat,body:p.body,author:p.author,authorId:p.authorId}))));
+    alert(await copyTxt(t)?'Đã sao chép mã bài. Hãy gửi mã này cho thầy cô.':'Không sao chép được mã.')}
+  else if((a==='ok'||a==='no')&&isMod()&&p.status==='pending'&&(!own||me.role==='admin')){
+    if(a==='ok')putPost({...p,status:'approved',by:me.name,decAt:new Date().toISOString(),note:''});
+    else{const n=prompt('Nhập lời nhắn để bạn học sinh chỉnh sửa bài (bắt buộc):');if(!n||!n.trim())return;putPost({...p,status:'rejected',by:me.name,decAt:new Date().toISOString(),note:n.trim().slice(0,300)})}
+    renderShare()}
+  else if(a==='del'&&me.role==='admin'){if(confirm('Gỡ bài “'+p.title+'” khỏi trang công khai?')){putPost({...p,del:true});renderShare()}}});
+load();try{const s=sessionStorage.getItem('tnsu_me');const a=s===GUEST.id?{...GUEST}:(s&&accounts.find(x=>x.id===s));if(a){me=a;enter()}}catch(_){}
+</script>
 </body>
 </html>
