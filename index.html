@@ -509,12 +509,12 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
 
 <footer><b><span class="tn">TN</span><span class="speak">Speak</span><span class="up">Up</span></b> | 2026 | Sản phẩm dự thi KHKT Trường THCS Thống Nhất</footer>
 
-<button id="chFab" type="button" aria-label="Mở trò chuyện với TN Bot" aria-expanded="false" aria-controls="chat">💬</button>
-<section id="chat" role="dialog" aria-label="TN Bot - trợ lý TNSpeakUp">
-  <div class="ch-h"><b>TN Bot<small>Trợ lý nhỏ của TNSpeakUp</small></b><button id="chX" type="button" aria-label="Đóng khung trò chuyện">&#10005;</button></div>
+<button id="chFab" type="button" aria-label="Mở trò chuyện với TNSpeakUp Bot" aria-expanded="false" aria-controls="chat">💬</button>
+<section id="chat" role="dialog" aria-label="TNSpeakUp Bot - trợ lý dự án TNSpeakUp">
+  <div class="ch-h"><b>TNSpeakUp Bot<small>Trợ lý nhỏ của dự án TNSpeakUp</small></b><button id="chX" type="button" aria-label="Đóng khung trò chuyện">&#10005;</button></div>
   <div id="chLog" aria-live="polite"></div>
   <div class="qs" id="chQs"></div>
-  <form id="chForm" autocomplete="off"><input id="chIn" placeholder="Nhập câu hỏi của bạn..." aria-label="Câu hỏi gửi TN Bot" maxlength="300"><button class="btn" type="submit">Gửi</button></form>
+  <form id="chForm" autocomplete="off"><input id="chIn" placeholder="Nhập câu hỏi của bạn..." aria-label="Câu hỏi gửi TNSpeakUp Bot" maxlength="300"><button class="btn" type="submit">Gửi</button></form>
 </section>
 
 <script src="saoluu.js"></script>
@@ -740,11 +740,11 @@ $('bCsv').onclick=()=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
 $('bCopy').onclick=async()=>{const t=['Họ tên\tID\tMật khẩu\tLớp',...bulkOut.map(r=>r.join('\t'))].join('\n');
   try{await navigator.clipboard.writeText(t);say('bmsg','Đã sao chép danh sách.','ok')}catch(e){say('bmsg','Không sao chép được. Hãy dùng nút Tải danh sách.','err')}};
 
-/* ===== TN Bot: trợ lý luôn hiện =====
+/* ===== TNSpeakUp Bot: trợ lý luôn hiện =====
    Chạy ngay trong trang bằng bộ câu trả lời có sẵn. Muốn nối với AI thật, đặt trước thẻ script này:
    window.TNSU_CHAT_URL='https://địa-chỉ-máy-chủ-của-bạn/chat'  (nhận {message}, trả {reply}). */
 const KB=[
- {k:['xin chao','chao','hello','alo','hi'],a:'Chào bạn! Mình là TN Bot, trợ lý nhỏ của TNSpeakUp. Bạn muốn hỏi về dự án, mẹo thuyết trình, cách bớt run khi nói hay cách học Văn trong thời đại số?'},
+ {k:['xin chao','chao','hello','alo','hi'],a:'Chào bạn! Mình là TNSpeakUp Bot, trợ lý nhỏ của dự án TNSpeakUp. Bạn muốn hỏi về dự án, mẹo thuyết trình, cách bớt run khi nói hay cách học Văn trong thời đại số?'},
  {k:['tnspeakup','du an','gioi thieu','ung dung','trang web','la gi'],a:'TNSpeakUp là không gian số giúp học sinh rèn kỹ năng nói, nghe và thuyết trình. Hành trình gồm 4 chặng: xem thực trạng, khám phá năng lực bản thân, luyện tập mỗi ngày và chia sẻ thông điệp của chính mình. Khẩu hiệu của dự án: "Dám cất lời - Tự tin toả sáng".',go:[['survey','Xem thực trạng'],['journey','Hành trình tiến bộ']]},
  {k:['run','hoi hop','lo lang','ngai','e de','so noi','so phat bieu','khong dam','thieu tu tin','kho noi'],a:'Hồi hộp là chuyện rất bình thường, ai cũng từng như vậy. Bạn thử nhé:\n1. Hít vào thật sâu 4 giây, thở ra chậm 6 giây trước khi nói.\n2. Chuẩn bị 3 ý chính thay vì học thuộc từng chữ.\n3. Nhìn vào một người thân thiện trong lớp để bắt đầu.\n4. Nói chậm hơn thường ngày một chút.\nLuyện đều mỗi ngày vài phút sẽ hiệu quả hơn luyện dồn một lần.',go:[['journey','Vào phòng thực hành']]},
  {k:['mo dau','mo bai','ket thuc','ket bai','cau truc','thuyet trinh','bai noi','dan y','phat bieu'],a:'Một bài thuyết trình gọn thường có 3 phần:\n• Mở đầu: gây chú ý bằng một câu hỏi, một con số hay một câu chuyện ngắn.\n• Thân bài: 3 ý chính, mỗi ý kèm một ví dụ.\n• Kết thúc: nhắc lại thông điệp chính và để lại một câu đọng lại.\nGiọng nói, ánh mắt và nhịp độ sẽ giúp bài nói sống động hơn.',go:[['journey','Luyện thuyết trình']]},
