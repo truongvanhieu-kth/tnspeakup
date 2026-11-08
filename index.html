@@ -456,9 +456,20 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
         <div id="snapList"></div>
       </div>
     </section>
+    <section id="p-progress" class="panel">
+      <h2>Theo dõi tiến trình</h2>
+      <p class="lead">Xem kết quả bài test và nhật ký luyện tập của học sinh. Dữ liệu được gửi lên Supabase mỗi khi học sinh (đăng nhập bằng tài khoản) làm bài test hoặc lưu một lần luyện.</p>
+      <div class="acts" style="margin-top:12px"><select id="pgCls" aria-label="Lọc theo lớp" style="width:auto;margin:0"></select><input id="pgQ" placeholder="Tìm theo tên hoặc ID" aria-label="Tìm học sinh" style="max-width:240px;margin:0"><button id="pgRef" class="btn" type="button">Làm mới</button><button id="pgKey" class="btn ghost" type="button">Nhập mã kiểm duyệt</button><button id="pgCsv" class="btn ghost" type="button">Tải bảng (CSV)</button></div>
+      <p class="msg" id="pgSt" role="status" style="text-align:left"></p>
+      <div class="card tw" id="pgBody"></div><div id="pgDet"></div>
+    </section>
     <section id="p-accounts" class="panel">
       <h2>Quản lý tài khoản</h2>
       <p class="soon" id="permNote"></p>
+      <form id="ef" class="card hide" style="margin-top:14px"><h3 id="efT">Chỉnh sửa thông tin</h3>
+        <div class="bgrid"><div><label for="en">Tên hiển thị</label><input id="en" required maxlength="60"></div><div id="ecW"><label for="ec">Lớp</label><input id="ec" maxlength="10"></div><div><label for="er">Vai trò</label><select id="er"></select></div></div>
+        <p class="hint" style="margin-bottom:10px">ID đăng nhập không đổi được vì gắn với bài viết và tiến trình học tập. Muốn có ID mới, hãy tạo tài khoản mới. Mật khẩu đổi bằng nút “Đặt lại mật khẩu”.</p>
+        <div class="acts"><button class="btn" type="submit">Lưu thay đổi</button><button class="btn ghost" id="eX" type="button">Huỷ</button></div><p class="msg" id="eMsg" role="status"></p></form>
       <div class="grid">
         <form id="cf" class="card">
           <label for="cn">Tên hiển thị</label><input id="cn" required>
@@ -520,12 +531,12 @@ function save(){mem=accounts;try{localStorage.setItem('tnsu_accounts',JSON.strin
 async function syncLatestData(){await Promise.all([new Promise(r=>setTimeout(r,900)),sbPull().catch(()=>{})]);load()}
 
 function showTab(t){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t));
-  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='accounts')renderAccounts();if(t!=='journey')camOff();if(t==='journey')renderJ();if(t==='share'){renderShare();sbPull(1).then(c=>{if(c&&SH_V!=='write'&&$('p-share').classList.contains('on'))renderShare()})}if(t==='survey')sbPull(1).then(c=>{if(c)renderSurvey()})}
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='accounts')renderAccounts();if(t!=='journey')camOff();if(t==='journey')renderJ();if(t==='share'){renderShare();sbPull(1).then(c=>{if(c&&SH_V!=='write'&&$('p-share').classList.contains('on'))renderShare()})}if(t==='survey')sbPull(1).then(c=>{if(c)renderSurvey()});if(t==='progress')pgLoad()}
 function enter(){
   $('login').classList.add('hide');$('app').classList.remove('hide');
   $('whoName').textContent=me.name;$('whoRole').textContent=ROLE[me.role];
   $('hello').textContent=(me.guest?'Xin chào bạn! Bạn đang vào với vai trò học sinh, không cần tài khoản. Hãy đăng nhập để viết bài và lưu tiến bộ.':'Xin chào '+me.name+'! Dữ liệu đã được cập nhật.')+(BOOT_ERR?' ⚠ Chưa nạp được dữ liệu sao lưu: '+BOOT_ERR:'');
-  const tabs=TABS.slice();if(CAN_CREATE[me.role].length)tabs.push(['accounts','Quản lý tài khoản','Tạo và quản lý tài khoản']);
+  const tabs=TABS.slice();if(CAN_CREATE[me.role].length){tabs.push(['progress','Theo dõi tiến trình','Tiến độ luyện tập của học sinh']);tabs.push(['accounts','Quản lý tài khoản','Tạo và quản lý tài khoản'])}
   if(me.role==='admin')tabs.push(['settings','Cài đặt','Sao lưu và khôi phục dữ liệu']);
   $('nav').innerHTML=tabs.map(t=>`<button class="tabbtn" data-t="${t[0]}" type="button">${t[1]}</button>`).join('');
   $('tiles').innerHTML=tabs.slice(1).map(t=>`<button class="tile" data-t="${t[0]}" type="button"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('');
@@ -537,11 +548,12 @@ function enter(){
 function manageable(a){return a.id!==me.id&&CAN_CREATE[me.role].includes(a.role)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderAccounts(){
-  $('tb').innerHTML=accounts.map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.id)}</td><td><span class="badge ${a.role}">${ROLE[a.role]}</span></td><td>${esc(a.cls||'')}</td><td>${manageable(a)?`<div class="acts"><button class="btn ghost" data-act="reset" data-id="${esc(a.id)}" type="button">Đặt lại mật khẩu</button><button class="btn ghost danger" data-act="del" data-id="${esc(a.id)}" type="button">Xoá</button></div>`:''}</td></tr>`).join('');
+  $('tb').innerHTML=accounts.map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.id)}</td><td><span class="badge ${a.role}">${ROLE[a.role]}</span></td><td>${esc(a.cls||'')}</td><td>${manageable(a)?`<div class="acts"><button class="btn ghost" data-act="edit" data-id="${esc(a.id)}" type="button">Sửa thông tin</button><button class="btn ghost" data-act="reset" data-id="${esc(a.id)}" type="button">Đặt lại mật khẩu</button><button class="btn ghost danger" data-act="del" data-id="${esc(a.id)}" type="button">Xoá</button></div>`:''}</td></tr>`).join('');
 }
 $('tb').addEventListener('click',async e=>{
   const b=e.target.closest('button[data-act]');if(!b)return;
   const a=accounts.find(x=>x.id===b.dataset.id);if(!a||!manageable(a))return;
+  if(b.dataset.act==='edit')return openEdit(a);
   if(b.dataset.act==='del'){if(confirm('Xoá tài khoản '+a.name+' ('+a.id+')?')){accounts=accounts.filter(x=>x!==a);save();renderAccounts()}}
   else{const pw=prompt('Nhập mật khẩu mới cho '+a.name+' (từ 6 ký tự):');if(pw&&pw.length>=6){a.h=await hash(a.id,pw);save();alert('Đã đặt lại mật khẩu.')}else if(pw!==null)alert('Mật khẩu cần từ 6 ký tự.')}
 });
@@ -915,7 +927,7 @@ const TTIPS=[
 let T={i:0,ans:[]};const tMem={};
 const tKey=()=>'tnsu_test_'+me.id;
 function tHist(){if(me.guest)return tMem[tKey()]||[];try{const a=JSON.parse(localStorage.getItem(tKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return tMem[tKey()]||[]}}
-function tSave(r){const h=tHist();h.push(r);const keep=h.slice(-10);tMem[tKey()]=keep;if(me.guest)return;try{localStorage.setItem(tKey(),JSON.stringify(keep))}catch(e){}}
+function tSave(r){const h=tHist();h.push(r);const keep=h.slice(-10);tMem[tKey()]=keep;if(me.guest)return;try{localStorage.setItem(tKey(),JSON.stringify(keep))}catch(e){}progPush()}
 const tLvl=p=>p>=80?0:p>=60?1:p>=40?2:3;
 function tScores(ans){return TSK.map((_,k)=>Math.round((ans.slice(k*5,k*5+5).reduce((a,b)=>a+b,0)-5)/15*100))}
 function renderTestIntro(){
@@ -1007,7 +1019,7 @@ const chks=a=>a.map(t=>`<label class="chk"><input type="checkbox" data-ck><span>
 function gid(){if(!me.guest)return me.id;try{let g=localStorage.getItem('tnsu_gid');if(!g){g='g'+Math.random().toString(36).slice(2,9);localStorage.setItem('tnsu_gid',g)}return g}catch(e){return 'guest'}}
 const jKey=()=>'tnsu_jr_'+gid();
 function jLog(){try{const a=JSON.parse(localStorage.getItem(jKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return jMem[jKey()]||[]}}
-function jAdd(x){if(me.guest)return;const l=jLog();l.push(x);const k=l.slice(-60);jMem[jKey()]=k;try{localStorage.setItem(jKey(),JSON.stringify(k))}catch(e){}}
+function jAdd(x){if(me.guest)return;const l=jLog();l.push(x);const k=l.slice(-60);jMem[jKey()]=k;try{localStorage.setItem(jKey(),JSON.stringify(k))}catch(e){}progPush()}
 function camOff(){if(camS){camS.getTracks().forEach(t=>t.stop());camS=null}clearInterval(camTm);camTm=null;
   const v=$('camV');if(v){v.srcObject=null;v.classList.add('hide')}const m=$('camMsg');if(m){m.classList.remove('hide');m.textContent='Camera đang tắt. Bấm “Bật camera” để bắt đầu.'}
   const t=$('camT');if(t)t.classList.add('hide');const b=document.querySelector('[data-jact="camTimer"]');if(b)b.textContent='Bắt đầu tính giờ'}
@@ -1187,7 +1199,7 @@ async function sbPush(key,value,retry){if(!SB())return;
       if(k&&k.trim()){try{localStorage.setItem('tnsu_modkey',k.trim())}catch(_){}return sbPush(key,value,1)}}
     SB_ST='chưa gửi được ('+(e.st||'lỗi mạng')+')'}}
 async function sbPull(th){if(!SB())return false;if(th&&Date.now()-SB_AT<20000)return false;SB_AT=Date.now();
-  try{const rows=await sbReq('tnsu_kv?select=key,value,ts');let ch=false;
+  try{const rows=await sbReq('tnsu_kv?select=key,value,ts&key=not.like.prog:*');let ch=false;
     const m=new Map((postsLocal()||[]).filter(pValid).map(p=>[p.id,p])),rm=new Map();
     rows.forEach(r=>{if(r.key.startsWith('post:')&&pValid(r.value)){rm.set(r.value.id,r.value.ts||'');const o=m.get(r.value.id);if(!o||(r.value.ts||'')>(o.ts||'')){m.set(r.value.id,r.value);ch=true}}
       else if(r.key==='survey'&&svValid(r.value)&&Date.parse(r.ts)>(+lsGet('tnsu_sv_ts')||0)){svMem=r.value;try{localStorage.setItem('tnsu_survey',JSON.stringify(r.value));localStorage.setItem('tnsu_sv_ts',String(Date.parse(r.ts)))}catch(e){}ch=true;try{renderSurvey()}catch(_){}}});
@@ -1195,6 +1207,52 @@ async function sbPull(th){if(!SB())return false;if(th&&Date.now()-SB_AT<20000)re
     (postsLocal()||[]).filter(pValid).forEach(p=>{if(!rm.has(p.id)||(p.ts||'')>rm.get(p.id))sbPush('post:'+p.id,p)});
     SB_ST='đã đồng bộ lúc '+new Date().toLocaleTimeString('vi-VN');return ch}
   catch(e){SB_ST='lỗi kết nối ('+(e.st||'mạng')+')';return false}}
+/* ===== Sửa thông tin tài khoản ===== */
+var EDIT_ID=null;
+function openEdit(a){EDIT_ID=a.id;$('efT').textContent='Chỉnh sửa thông tin: '+a.id;$('en').value=a.name;$('ec').value=a.cls||'';
+  $('er').innerHTML=CAN_CREATE[me.role].map(r=>`<option value="${r}"${r===a.role?' selected':''}>${ROLE[r]}</option>`).join('');
+  $('ecW').classList.toggle('hide',$('er').value!=='student');$('eMsg').textContent='';$('ef').classList.remove('hide');$('en').focus();$('ef').scrollIntoView({block:'center'})}
+$('er').onchange=()=>$('ecW').classList.toggle('hide',$('er').value!=='student');
+$('eX').onclick=()=>{EDIT_ID=null;$('ef').classList.add('hide')};
+$('ef').addEventListener('submit',e=>{e.preventDefault();const a=accounts.find(x=>x.id===EDIT_ID);
+  if(!a||!manageable(a))return say('eMsg','Bạn không có quyền sửa tài khoản này.','err');
+  const n=$('en').value.trim(),r=$('er').value;if(!n)return say('eMsg','Tên hiển thị không được để trống.','err');
+  if(!CAN_CREATE[me.role].includes(r))return say('eMsg','Bạn không có quyền đặt vai trò này.','err');
+  a.name=n;a.role=r;a.cls=r==='student'?$('ec').value.trim():'';save();renderAccounts();$('ef').classList.add('hide');EDIT_ID=null});
+/* ===== Theo dõi tiến trình học sinh ===== */
+var PG={rows:[],cls:''};
+function progPush(){if(!me||me.role!=='student'||me.guest||!SB())return;
+  sbPush('prog:'+me.id,{id:me.id,name:me.name,cls:me.cls||'',test:tHist(),log:jLog().slice(-30),at:new Date().toISOString()})}
+function pgLocal(a){let t=[],l=[];try{t=JSON.parse(localStorage.getItem('tnsu_test_'+a.id)||'[]')}catch(e){}try{l=JSON.parse(localStorage.getItem('tnsu_jr_'+a.id)||'[]')}catch(e){}return {test:Array.isArray(t)?t:[],log:Array.isArray(l)?l:[]}}
+const lastAt=x=>x.length?String(x[x.length-1].at):'';
+async function pgLoad(){say('pgSt','Đang tải dữ liệu…');const rem=new Map();let note='';
+  if(SB()){try{const r=await sbReq('tnsu_kv?select=key,value&key=like.prog:*');r.forEach(x=>{if(x.value&&typeof x.value.id==='string')rem.set(x.value.id,x.value)});
+      if(!r.length)note=lsGet('tnsu_modkey')?'Supabase chưa có dữ liệu tiến trình nào, hoặc mã kiểm duyệt chưa đúng.':'Bấm “Nhập mã kiểm duyệt” để xem dữ liệu từ Supabase.'}
+    catch(e){note='Không kết nối được Supabase ('+(e.st||'lỗi mạng')+'). Đang hiện dữ liệu có trên máy này.'}}
+  else note='Chưa cấu hình Supabase nên chỉ thấy dữ liệu của học sinh đã dùng trên máy này.';
+  PG.rows=accounts.filter(a=>a.role==='student').map(a=>{const L=pgLocal(a),R=rem.get(a.id)||{test:[],log:[]};
+    return {a,test:lastAt(L.test)>=lastAt(R.test)?L.test:R.test,log:lastAt(L.log)>=lastAt(R.log)?L.log:R.log}});
+  say('pgSt',note,note?'':'ok');renderPg()}
+const pgAvg=s=>Math.round(s.reduce((x,y)=>x+y,0)/s.length);
+function pgFiltered(){const q=plain($('pgQ').value);return PG.rows.filter(r=>(!PG.cls||r.a.cls===PG.cls)&&(!q||plain(r.a.name+' '+r.a.id).includes(q)))}
+function renderPg(){const cl=[...new Set(PG.rows.map(r=>r.a.cls||'').filter(Boolean))].sort();
+  $('pgCls').innerHTML='<option value="">Tất cả các lớp</option>'+cl.map(c=>`<option${c===PG.cls?' selected':''}>${esc(c)}</option>`).join('');
+  const rows=pgFiltered();
+  $('pgBody').innerHTML=rows.length?`<table><thead><tr><th>Học sinh</th><th>Lớp</th><th>Test gần nhất</th><th>Số lần luyện</th><th>Hoạt động gần nhất</th><th></th></tr></thead><tbody>${rows.map(r=>{const t=r.test[r.test.length-1],la=[lastAt(r.test),lastAt(r.log)].sort().pop();
+    return `<tr><td>${esc(r.a.name)}<br><small class="hint">${esc(r.a.id)}</small></td><td>${esc(r.a.cls||'')}</td><td>${t?'<b>'+pgAvg(t.s)+'%</b> <small class="hint">'+t.s.join(' / ')+'</small>':'<span class="hint">Chưa làm</span>'}</td><td>${r.log.length}</td><td>${la?esc(fmt(la)):'<span class="hint">Chưa có</span>'}</td><td><button class="btn ghost" type="button" data-pg="${esc(r.a.id)}">Xem chi tiết</button></td></tr>`}).join('')}</tbody></table><p class="hint" style="margin-top:8px">Điểm test hiện theo thứ tự: ${TSK.map(s=>s.n).join(' / ')}.</p>`:'<p class="soon">Chưa có học sinh nào trong danh sách.</p>'}
+function pgDetail(id){const r=PG.rows.find(x=>x.a.id===id);if(!r)return;const t=r.test,l=r.log,c=t[t.length-1];
+  $('pgDet').innerHTML=`<div class="card" style="margin-top:16px"><h3>${esc(r.a.name)} (${esc(r.a.id)}${r.a.cls?', lớp '+esc(r.a.cls):''})</h3>
+  ${c?`<p class="hint">Bài test gần nhất: ${esc(fmt(c.at))}. Đã làm ${t.length} lần (hiển thị tối đa 10 lần gần nhất).</p><div class="rgrid"><div class="radar">${radar(c.s)}</div><div>${TSK.map((s,k)=>{const d=c.s[k]-t[0].s[k];return `<div class="rb"><div class="cl"><span>${s.e} ${s.n}</span><b>${c.s[k]}%${t.length>1?` <span class="delta ${d>0?'up':d<0?'down':'eq'}">${d>0?'▲ +'+d:d<0?'▼ '+d:'='} so với lần đầu</span>`:''}</b></div><div class="hb"><i style="width:${c.s[k]}%"></i></div></div>`}).join('')}</div></div>`:'<p class="soon">Chưa làm bài test.</p>'}
+  <h3 class="sh">Nhật ký luyện tập (15 lần gần nhất)</h3>${l.length?[...l].reverse().slice(0,15).map(x=>{const m=mod(x.m)||MODS[0];return `<div class="snap" style="flex-direction:column;align-items:flex-start;gap:2px"><b>${m.e} ${m.n} · ${esc(fmt(x.at))}</b>${x.p?`<span class="hint">${esc(x.p)}</span>`:''}${x.t?`<span>${esc(String(x.t).slice(0,200))}</span>`:''}<small class="hint">Tự kiểm tra: ${x.c}/${x.n}</small></div>`}).join(''):'<p class="soon">Chưa có lần luyện nào.</p>'}</div>`;
+  $('pgDet').scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'start'})}
+$('pgBody').addEventListener('click',e=>{const b=e.target.closest('[data-pg]');if(b)pgDetail(b.dataset.pg)});
+$('pgCls').onchange=()=>{PG.cls=$('pgCls').value;renderPg()};
+$('pgQ').addEventListener('input',renderPg);
+$('pgRef').onclick=pgLoad;
+$('pgKey').onclick=()=>{const k=prompt('Nhập mã kiểm duyệt (do quản trị viên cấp):');if(k&&k.trim()){try{localStorage.setItem('tnsu_modkey',k.trim())}catch(_){}pgLoad()}};
+$('pgCsv').onclick=()=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"',L=['Họ tên','ID','Lớp',...TSK.map(s=>s.n),'Điểm chung','Số lần luyện','Hoạt động gần nhất'];
+  const rows=[L,...pgFiltered().map(r=>{const t=r.test[r.test.length-1],la=[lastAt(r.test),lastAt(r.log)].sort().pop();return [r.a.name,r.a.id,r.a.cls||'',...(t?t.s:['','','','']),t?pgAvg(t.s):'',r.log.length,la?fmt(la):'']})].map(r=>r.map(q).join(',')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows],{type:'text/csv;charset=utf-8'}));a.download='tien-trinh-'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(a.href)};
 load();(async()=>{try{await applyBootBackup();load()}catch(_){}try{const s=sessionStorage.getItem('tnsu_me');const a=s===GUEST.id?{...GUEST}:(s&&accounts.find(x=>x.id===s));if(a){me=a;enter()}}catch(_){}})();
 </script>
 </body>
