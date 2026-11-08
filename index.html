@@ -462,7 +462,7 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
     <section id="p-progress" class="panel">
       <h2>Theo dõi tiến trình</h2>
       <p class="lead">Xem kết quả bài test và nhật ký luyện tập của học sinh. Dữ liệu được gửi lên Supabase mỗi khi học sinh (đăng nhập bằng tài khoản) làm bài test hoặc lưu một lần luyện.</p>
-      <div class="acts" style="margin-top:12px"><select id="pgCls" aria-label="Lọc theo lớp" style="width:auto;margin:0"></select><input id="pgQ" placeholder="Tìm theo tên hoặc ID" aria-label="Tìm học sinh" style="max-width:240px;margin:0"><button id="pgRef" class="btn" type="button">Làm mới</button><button id="pgKey" class="btn ghost" type="button">Nhập mã kiểm duyệt</button><button id="pgCsv" class="btn ghost" type="button">Tải bảng (CSV)</button></div>
+      <div class="acts" style="margin-top:12px"><select id="pgCls" aria-label="Lọc theo lớp" style="width:auto;margin:0"></select><input id="pgQ" placeholder="Tìm theo tên hoặc ID" aria-label="Tìm học sinh" style="max-width:240px;margin:0"><button id="pgRef" class="btn" type="button">Làm mới</button><button id="pgKey" class="btn ghost" type="button">Nhập mã kiểm duyệt</button><button id="pgDiag" class="btn ghost" type="button">Kiểm tra kết nối</button><button id="pgCsv" class="btn ghost" type="button">Tải bảng (CSV)</button></div>
       <p class="msg" id="pgSt" role="status" style="text-align:left"></p>
       <div class="card tw" id="pgBody"></div><div id="pgDet"></div>
     </section>
@@ -509,12 +509,12 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
 
 <footer><b><span class="tn">TN</span><span class="speak">Speak</span><span class="up">Up</span></b> | 2026 | Sản phẩm dự thi KHKT Trường THCS Thống Nhất</footer>
 
-<button id="chFab" type="button" aria-label="Mở trò chuyện với TNSpeakUp Bot" aria-expanded="false" aria-controls="chat">💬</button>
-<section id="chat" role="dialog" aria-label="TNSpeakUp Bot - trợ lý dự án TNSpeakUp">
-  <div class="ch-h"><b>TNSpeakUp Bot<small>Trợ lý nhỏ của dự án TNSpeakUp</small></b><button id="chX" type="button" aria-label="Đóng khung trò chuyện">&#10005;</button></div>
+<button id="chFab" type="button" aria-label="Mở trò chuyện với TN Bot" aria-expanded="false" aria-controls="chat">💬</button>
+<section id="chat" role="dialog" aria-label="TN Bot - trợ lý TNSpeakUp">
+  <div class="ch-h"><b>TN Bot<small>Trợ lý nhỏ của TNSpeakUp</small></b><button id="chX" type="button" aria-label="Đóng khung trò chuyện">&#10005;</button></div>
   <div id="chLog" aria-live="polite"></div>
   <div class="qs" id="chQs"></div>
-  <form id="chForm" autocomplete="off"><input id="chIn" placeholder="Nhập câu hỏi của bạn..." aria-label="Câu hỏi gửi TNSpeakUp Bot" maxlength="300"><button class="btn" type="submit">Gửi</button></form>
+  <form id="chForm" autocomplete="off"><input id="chIn" placeholder="Nhập câu hỏi của bạn..." aria-label="Câu hỏi gửi TN Bot" maxlength="300"><button class="btn" type="submit">Gửi</button></form>
 </section>
 
 <script src="saoluu.js"></script>
@@ -740,11 +740,11 @@ $('bCsv').onclick=()=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
 $('bCopy').onclick=async()=>{const t=['Họ tên\tID\tMật khẩu\tLớp',...bulkOut.map(r=>r.join('\t'))].join('\n');
   try{await navigator.clipboard.writeText(t);say('bmsg','Đã sao chép danh sách.','ok')}catch(e){say('bmsg','Không sao chép được. Hãy dùng nút Tải danh sách.','err')}};
 
-/* ===== TNSpeakUp Bot: trợ lý luôn hiện =====
+/* ===== TN Bot: trợ lý luôn hiện =====
    Chạy ngay trong trang bằng bộ câu trả lời có sẵn. Muốn nối với AI thật, đặt trước thẻ script này:
    window.TNSU_CHAT_URL='https://địa-chỉ-máy-chủ-của-bạn/chat'  (nhận {message}, trả {reply}). */
 const KB=[
- {k:['xin chao','chao','hello','alo','hi'],a:'Chào bạn! Mình là TNSpeakUp Bot, trợ lý nhỏ của dự án TNSpeakUp. Bạn muốn hỏi về dự án, mẹo thuyết trình, cách bớt run khi nói hay cách học Văn trong thời đại số?'},
+ {k:['xin chao','chao','hello','alo','hi'],a:'Chào bạn! Mình là TN Bot, trợ lý nhỏ của TNSpeakUp. Bạn muốn hỏi về dự án, mẹo thuyết trình, cách bớt run khi nói hay cách học Văn trong thời đại số?'},
  {k:['tnspeakup','du an','gioi thieu','ung dung','trang web','la gi'],a:'TNSpeakUp là không gian số giúp học sinh rèn kỹ năng nói, nghe và thuyết trình. Hành trình gồm 4 chặng: xem thực trạng, khám phá năng lực bản thân, luyện tập mỗi ngày và chia sẻ thông điệp của chính mình. Khẩu hiệu của dự án: "Dám cất lời - Tự tin toả sáng".',go:[['survey','Xem thực trạng'],['journey','Hành trình tiến bộ']]},
  {k:['run','hoi hop','lo lang','ngai','e de','so noi','so phat bieu','khong dam','thieu tu tin','kho noi'],a:'Hồi hộp là chuyện rất bình thường, ai cũng từng như vậy. Bạn thử nhé:\n1. Hít vào thật sâu 4 giây, thở ra chậm 6 giây trước khi nói.\n2. Chuẩn bị 3 ý chính thay vì học thuộc từng chữ.\n3. Nhìn vào một người thân thiện trong lớp để bắt đầu.\n4. Nói chậm hơn thường ngày một chút.\nLuyện đều mỗi ngày vài phút sẽ hiệu quả hơn luyện dồn một lần.',go:[['journey','Vào phòng thực hành']]},
  {k:['mo dau','mo bai','ket thuc','ket bai','cau truc','thuyet trinh','bai noi','dan y','phat bieu'],a:'Một bài thuyết trình gọn thường có 3 phần:\n• Mở đầu: gây chú ý bằng một câu hỏi, một con số hay một câu chuyện ngắn.\n• Thân bài: 3 ý chính, mỗi ý kèm một ví dụ.\n• Kết thúc: nhắc lại thông điệp chính và để lại một câu đọng lại.\nGiọng nói, ánh mắt và nhịp độ sẽ giúp bài nói sống động hơn.',go:[['journey','Luyện thuyết trình']]},
@@ -1298,6 +1298,14 @@ $('pgBody').addEventListener('click',e=>{const b=e.target.closest('[data-pg]');i
 $('pgCls').onchange=()=>{PG.cls=$('pgCls').value;renderPg()};
 $('pgQ').addEventListener('input',renderPg);
 $('pgRef').onclick=pgLoad;
+async function sbDiag(){const o=[];if(!SB())return 'Chưa có cấu hình Supabase: trong saoluu.js chưa có dòng window.TNSU_SB (hoặc thiếu url/key), hoặc file saoluu.js trên hosting chưa được cập nhật, hoặc trình duyệt đang dùng bản cũ (hãy bấm Ctrl+F5).';
+  o.push('Đã có cấu hình Supabase.');
+  try{await sbReq('tnsu_kv?select=key&limit=1');o.push('Đọc dữ liệu: được.')}catch(e){o.push('Đọc dữ liệu: LỖI '+(e.st||'mạng')+(e.st===404?' (chưa có bảng tnsu_kv, hãy chạy SQL)':e.st===401||e.st===403?' (khoá API sai hoặc quyền chưa đúng)':''))}
+  try{await sbReq('rpc/tnsu_put',{method:'POST',body:JSON.stringify({k:'prog:__diag',v:{id:'__diag'}})});o.push('Ghi dữ liệu: được.')}catch(e){o.push('Ghi dữ liệu: LỖI '+(e.st||'mạng')+(e.st===404?' (chưa có hàm tnsu_put, hãy chạy lại SQL bản mới)':''))}
+  if(lsGet('tnsu_modkey')){o.push('Máy này đã lưu mã kiểm duyệt.');try{const r=await sbReq('tnsu_kv?select=key&key=like.prog:*');o.push('Đọc tiến trình: được, hiện có '+r.filter(x=>x.key!=='prog:__diag').length+' bản ghi học sinh.'+(r.length<=1?' Nếu học sinh đã làm mà vẫn 0, hãy kiểm tra lại mã kiểm duyệt.':''))}catch(e){o.push('Đọc tiến trình: LỖI '+(e.st||'mạng'))}}
+  else o.push('Máy này chưa nhập mã kiểm duyệt (bấm nút Nhập mã kiểm duyệt).');
+  return o.join('\n')}
+$('pgDiag').onclick=async()=>{const b=$('pgDiag');b.disabled=true;b.textContent='Đang kiểm tra…';const t=await sbDiag();b.disabled=false;b.textContent='Kiểm tra kết nối';alert(t)};
 $('pgKey').onclick=()=>{const k=prompt('Nhập mã kiểm duyệt (do quản trị viên cấp):');if(k&&k.trim()){try{localStorage.setItem('tnsu_modkey',k.trim())}catch(_){}pgLoad()}};
 $('pgCsv').onclick=()=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"',L=['Họ tên','ID','Lớp',...TSK.map(s=>s.n),'Điểm chung','Số lần luyện','Hoạt động gần nhất'];
   const rows=[L,...pgFiltered().map(r=>{const t=r.test[r.test.length-1],la=[lastAt(r.test),lastAt(r.log)].sort().pop();return [r.a.name,r.a.id,r.a.cls||'',...(t?t.s:['','','','']),t?pgAvg(t.s):'',r.log.length,la?fmt(la):'']})].map(r=>r.map(q).join(',')).join('\r\n');
