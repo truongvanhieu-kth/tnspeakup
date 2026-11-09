@@ -1199,7 +1199,7 @@ function renderShare(){const pend=allPosts().filter(p=>p.status==='pending').len
   const tabs=me.guest?[['read','Bài viết']]:[['read','Bài viết'],['write','Viết bài và gửi duyệt'],['mine','Bài của tôi']];if(isMod())tabs.push(['review','Chờ duyệt'+(pend?' ('+pend+')':'')]);
   if(!tabs.some(t=>t[0]===SH_V))SH_V='read';
   $('sNav').innerHTML=tabs.map(t=>`<button class="q ${SH_V===t[0]?'on':''}" type="button" data-sv="${t[0]}" aria-pressed="${SH_V===t[0]}">${t[1]}</button>`).join('');
-  $('sBody').innerHTML=(isMod()&&SB()?`<p class="hint">Supabase: ${esc(SB_ST||'chưa chạy')}</p>`:'')+({read:vRead,write:vWrite,mine:vMine,review:vReview})[SH_V]()}
+  $('sBody').innerHTML=(isMod()&&SB()?`<div class="note" style="margin-bottom:12px"><b>Supabase:</b> ${esc(SB_ST||'chưa chạy')} · Mã kiểm duyệt: ${lsGet('tnsu_modkey')?'<b style="color:#1b7f3b">đã nhập trên máy này</b>':'<b style="color:#c62828">chưa nhập</b>'}<div class="acts" style="margin-top:8px"><button class="btn ghost" type="button" data-pa="key">${lsGet('tnsu_modkey')?'Đổi mã kiểm duyệt':'Nhập mã kiểm duyệt'}</button><button class="btn ghost" type="button" data-pa="ref">Làm mới</button></div></div>`:'')+({read:vRead,write:vWrite,mine:vMine,review:vReview})[SH_V]()}
 $('p-share').addEventListener('submit',async e=>{if(e.target.id!=='pf')return;e.preventDefault();if(me.guest)return;
   const t=$('pT').value.trim(),b=$('pB').value.trim(),a=$('pA').value.trim(),f=m=>say('pMsg',m,'err');
   if(t.length<5)return f('Tiêu đề cần từ 5 ký tự.');if(b.length<50)return f('Nội dung cần từ 50 ký tự.');if(!a)return f('Em hãy nhập tên hiển thị.');
@@ -1273,6 +1273,9 @@ $('p-share').addEventListener('click',async e=>{
   const rm=e.target.closest('[data-rmimg]');if(rm){SH_IMGS.splice(+rm.dataset.rmimg,1);drawImgs();setIm('Đã bỏ ảnh.');return}
   const c=e.target.closest('[data-cat]');if(c){SH_CAT=c.dataset.cat;renderShare();return}
   const b=e.target.closest('[data-pa]');if(!b)return;const a=b.dataset.pa;
+  if(a==='key'&&isMod()){const k=prompt('Nhập mã kiểm duyệt do quản trị viên cấp (để trống rồi bấm OK để xoá mã đã lưu):','');if(k===null)return;
+    try{if(k.trim())localStorage.setItem('tnsu_modkey',k.trim());else localStorage.removeItem('tnsu_modkey')}catch(_){}
+    SB_AT=0;SB_ST='đang đồng bộ…';renderShare();await sbPull();renderShare();return}
   if(a==='ref'&&isMod()){await sbPull();renderShare();return}
   if(a==='imp'&&isMod())return pImport();
   if(a==='export'&&me.role==='admin'){const t='window.TNSU_POSTS='+JSON.stringify(allPosts().filter(p=>p.status==='approved'&&!p.seed))+';';const ok=await copyTxt(t);return say('pExMsg',ok?'Đã sao chép. Dán vào file saoluu.js rồi tải lại trang.':'Không sao chép được.',ok?'ok':'err')}
