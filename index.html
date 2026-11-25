@@ -294,7 +294,31 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
 .vchip small{color:var(--mute)}
 .vchip button{flex:none;width:24px;height:24px;border-radius:50%;border:0;background:#c62828;color:#fff;font-weight:800;cursor:pointer;line-height:1}
 .vchip button:focus-visible{outline:3px solid var(--up);outline-offset:2px}
+
+/* Ghim bài viết tiêu biểu */
+.pins{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:12px}
+.pcard{display:flex;flex-direction:column;text-align:left;font:inherit;color:inherit;background:#fff;border:1.5px solid #f6d78a;border-radius:18px;overflow:hidden;cursor:pointer;padding:0;box-shadow:0 8px 22px rgba(10,58,158,.08);transition:border-color .15s,transform .15s}
+.pcard:hover{border-color:var(--up);transform:translateY(-2px)}
+.pcard:focus-visible{outline:3px solid var(--up);outline-offset:3px}
+.pcard>img,.pcard .pph{width:100%;height:150px;object-fit:cover;display:block;background:linear-gradient(135deg,#e6f0ff,#fff0d6)}
+.pcard .pph{display:grid;place-items:center;font-size:2.6rem}
+.pcard .pcb{display:flex;flex-direction:column;gap:2px;padding:14px 16px 16px}
+.pcard .pt{font-weight:800;font-size:1.04rem;color:var(--tn);line-height:1.35}
+.pcard .ex{color:var(--mute);font-size:.9rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pcard .meta{color:var(--mute);font-size:.8rem;margin-top:4px}
+.pcard .go{color:var(--speak);font-weight:700;font-size:.88rem;margin-top:6px}
+.pitem.pinned{border-color:var(--up);background:#fffaf0}
+.tag.pin{background:#ffe3b3;color:#8a4a00}
+
+.rx{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}.rx button{border:1.5px solid #cfd8ea;background:#fff;border-radius:99px;padding:7px 14px;font:inherit;font-size:.9rem;cursor:pointer}.rx button.on{background:#e6f0ff;border-color:var(--tn);font-weight:700}.rx button:disabled{opacity:.55;cursor:default}
+.cm{border-left:3px solid #cfd8ea;padding:4px 12px;margin:8px 0;background:#f8faff;border-radius:0 8px 8px 0}.cm p{margin:4px 0}.cm.wait{opacity:.75}
+.wk{border:2px solid #f5b942;background:#fffaf0;margin-bottom:14px}.wk .wn{background:#fff;border-radius:8px;padding:6px 10px;margin:6px 0}
+.badges{display:flex;flex-wrap:wrap;gap:10px}.bdg{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:99px;background:#fff3d6;border:1.5px solid #f5b942;font-size:.88rem;font-weight:600}.bdg.off{filter:grayscale(1);opacity:.45;background:#eef1f6;border-color:#cfd8ea}
+.mgt{overflow-x:auto}.mgt table{min-width:640px}
+.led{background:#0b0b10;border-radius:10px;overflow:hidden;padding:18px 0;white-space:nowrap}.led span{display:inline-block;padding-left:100%;font:800 2rem/1.2 'Courier New',monospace;color:var(--lc);text-shadow:0 0 6px var(--lc),0 0 16px var(--lc);animation:ledm var(--ls) linear infinite}@keyframes ledm{to{transform:translateX(-100%)}}
+@media(prefers-reduced-motion:reduce){.led{white-space:normal;text-align:center}.led span{animation:none;padding:0}}
 </style>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a3a9e"><link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
 
@@ -346,6 +370,13 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
       </section>
 
       <div class="ticker" aria-hidden="true"><div class="tk" id="tk"></div></div>
+
+      <section id="bdgSec" class="hide"><h2 class="sec">🏅 Huy hiệu của em</h2><div id="bdg" class="badges"></div></section>
+      <section id="pwaSec" class="hide"><div class="card cta"><h3>📲 Cài về màn hình điện thoại</h3><p class="hint">Mở nhanh như một ứng dụng, không cần gõ địa chỉ.</p><div class="acts"><button class="btn" id="pwaBtn" type="button">Cài về màn hình</button></div></div></section>
+      <section id="pinSec" class="hide" aria-labelledby="pinH2">
+        <h2 class="sec" id="pinH2">📌 Bài viết tiêu biểu</h2>
+        <div class="pins" id="pins"></div>
+      </section>
 
       <h2 class="sec">Truy cập nhanh</h2>
       <div class="row" id="tiles" style="margin-top:12px"></div>
@@ -497,6 +528,14 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
     <section id="p-settings" class="panel">
       <h2>Cài đặt</h2>
       <p class="soon">Chỉ Quản trị viên thấy mục này.</p>
+      <div class="card" style="margin-bottom:14px"><h3>Bật tắt chức năng</h3><p class="hint">Chức năng mới đang tắt cho tới khi thầy bật. Thay đổi áp dụng cho mọi người dùng khi dữ liệu đã đồng bộ.</p><div id="featList"></div></div>
+      <div class="card" style="margin-bottom:14px"><h3>Pop-up chào mừng</h3><p class="hint">Hiện một lần mỗi lần đăng nhập, kể cả khi vào với vai trò khách.</p>
+        <label class="chk"><input type="checkbox" id="wOn"><span>Bật pop-up chào mừng</span></label>
+        <label for="wTi">Tiêu đề</label><input id="wTi" maxlength="60">
+        <label for="wMo">Kiểu nội dung</label><select id="wMo"><option value="text">Chữ LED chạy</option><option value="image">Hình ảnh</option></select>
+        <div id="wTx"><label for="wTe">Nội dung chữ chạy</label><input id="wTe" maxlength="200"><div class="bgrid"><div><label for="wCo">Màu chữ</label><input id="wCo" type="color" value="#ff3b3b"></div><div><label for="wSp">Thời gian chạy một vòng (giây, càng nhỏ càng nhanh)</label><input id="wSp" type="number" min="5" max="40" value="14"></div></div></div>
+        <div id="wIm" class="hide"><label for="wFi">Hình ảnh</label><input id="wFi" type="file" accept="image/*"><div id="wPv" style="margin-top:8px"></div></div>
+        <div class="acts" style="margin-top:10px"><button class="btn" id="wSave" type="button">Lưu pop-up</button><button class="btn ghost" id="wTry" type="button">Xem thử</button></div><p class="msg" id="wMsg" role="status"></p></div>
       <div class="two">
         <div class="card">
           <h3>Mã sao lưu dữ liệu</h3>
@@ -539,7 +578,7 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
       <h2>Quản lý tài khoản</h2>
       <p class="soon" id="permNote"></p>
       <form id="ef" class="card hide" style="margin-top:14px"><h3 id="efT">Chỉnh sửa thông tin</h3>
-        <div class="bgrid"><div><label for="en">Tên hiển thị</label><input id="en" required maxlength="60"></div><div id="ecW"><label for="ec">Lớp</label><input id="ec" maxlength="10"></div><div><label for="er">Vai trò</label><select id="er"></select></div></div>
+        <div class="bgrid"><div><label for="en">Tên hiển thị</label><input id="en" required maxlength="60"></div><div id="ecW"><label for="ec">Lớp</label><input id="ec" maxlength="10"></div><div><label for="er">Vai trò</label><select id="er"></select></div><div><label for="et">Chức vụ</label><select id="et"></select></div></div>
         <p class="hint" style="margin-bottom:10px">ID đăng nhập không đổi được vì gắn với bài viết và tiến trình học tập. Muốn có ID mới, hãy tạo tài khoản mới. Mật khẩu đổi bằng nút “Đặt lại mật khẩu”.</p>
         <div class="acts"><button class="btn" type="submit">Lưu thay đổi</button><button class="btn ghost" id="eX" type="button">Huỷ</button></div><p class="msg" id="eMsg" role="status"></p></form>
       <div class="grid">
@@ -548,6 +587,7 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
           <label for="ci">ID đăng nhập</label><input id="ci" autocapitalize="none" placeholder="tự gợi ý theo tên và lớp, có thể sửa" required>
           <label for="cp">Mật khẩu ban đầu</label><input id="cp" type="text" placeholder="từ 6 ký tự" required>
           <label for="cr">Vai trò</label><select id="cr"></select>
+          <label for="ct">Chức vụ</label><select id="ct"></select>
           <label for="cc">Lớp (với học sinh)</label><input id="cc" placeholder="ví dụ 5A">
           <button class="btn" type="submit">Tạo tài khoản</button>
           <p class="msg" id="cmsg" role="status"></p>
@@ -579,17 +619,19 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
 <footer><b><span class="tn">TN</span><span class="speak">Speak</span><span class="up">Up</span></b> | 2026 | Sản phẩm dự thi KHKT Trường THCS Thống Nhất</footer>
 
 <button id="chFab" type="button" aria-label="Mở trò chuyện với TN Bot" aria-expanded="false" aria-controls="chat">💬</button>
-<section id="chat" role="dialog" aria-label="TN Bot - trợ lý TNSpeakUp">
-  <div class="ch-h"><b>TN Bot<small>Trợ lý nhỏ của TNSpeakUp</small></b><button id="chX" type="button" aria-label="Đóng khung trò chuyện">&#10005;</button></div>
+<section id="chat" role="dialog" aria-label="TNSpeakUp Bot - trợ lý TNSpeakUp">
+  <div class="ch-h"><b>TN Bot<small>Trợ lý nhỏ của dự án TNSpeakUp</small></b><button id="chX" type="button" aria-label="Đóng khung trò chuyện">&#10005;</button></div>
   <div id="chLog" aria-live="polite"></div>
   <div class="qs" id="chQs"></div>
-  <form id="chForm" autocomplete="off"><input id="chIn" placeholder="Nhập câu hỏi của bạn..." aria-label="Câu hỏi gửi TN Bot" maxlength="300"><button class="btn" type="submit">Gửi</button></form>
+  <form id="chForm" autocomplete="off"><input id="chIn" placeholder="Nhập câu hỏi của bạn..." aria-label="Câu hỏi gửi TNSpeakUp Bot" maxlength="300"><button class="btn" type="submit">Gửi</button></form>
 </section>
 
 <script src="saoluu.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const ROLE={admin:'Quản trị viên',mod:'Kiểm duyệt viên',student:'Học sinh'};
+const ttlHtml=(role,cur)=>(role==='student'?['Học sinh']:['Thầy','Cô']).map(t=>`<option${t===cur?' selected':''}>${t}</option>`).join('');
+const ttlOf=a=>a&&a.ttl&&a.role!=='student'?a.ttl:'';
 const CAN_CREATE={admin:['admin','mod','student'],mod:['student'],student:[]};
 const TABS=[['home','Trang chủ','Giới thiệu'],['survey','Thực trạng','Khảo sát, bài viết và video minh chứng'],['test','Khám phá bản thân','Bài test năng lực'],['journey','Hành trình tiến bộ','Luyện tập kỹ năng mỗi ngày'],['share','Góc chia sẻ','Thông điệp và bài viết của em']];
 /* Mật khẩu không nằm trong code: chỉ lưu mã băm (SHA-256 của "ID:mật khẩu"). */
@@ -603,19 +645,19 @@ function save(){mem=accounts;try{localStorage.setItem('tnsu_accounts',JSON.strin
 async function syncLatestData(){await Promise.all([new Promise(r=>setTimeout(r,900)),sbPull().catch(()=>{})]);load()}
 
 function showTab(t){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t));
-  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='accounts')renderAccounts();if(t!=='journey')camOff();if(t==='journey')renderJ();if(t==='share'){renderShare();sbPull(1).then(c=>{if(c&&SH_V!=='write'&&$('p-share').classList.contains('on'))renderShare()})}if(t==='survey')sbPull(1).then(c=>{if(c)renderSurvey()});if(t==='progress')pgLoad()}
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='home'){renderPins();renderBadges();pwaShow()}if(t==='accounts')renderAccounts();if(t!=='journey')camOff();if(t==='journey')renderJ();if(t==='share'){renderShare();sbPull(1).then(c=>{if(c&&SH_V!=='write'&&$('p-share').classList.contains('on'))renderShare()})}if(t==='survey')sbPull(1).then(c=>{if(c)renderSurvey()});if(t==='progress')pgLoad()}
 function enter(){
   $('login').classList.add('hide');$('app').classList.remove('hide');
-  $('whoName').textContent=me.name;$('whoRole').textContent=ROLE[me.role];
-  $('hello').textContent=(me.guest?'Xin chào bạn! Bạn đang vào với vai trò học sinh, không cần tài khoản. Hãy đăng nhập để viết bài và lưu tiến bộ.':'Xin chào '+me.name+'! Dữ liệu đã được cập nhật.')+(BOOT_ERR?' ⚠ Chưa nạp được dữ liệu sao lưu: '+BOOT_ERR:'');
+  $('whoName').textContent=me.name;$('whoRole').textContent=(ttlOf(me)?ttlOf(me)+' · ':'')+ROLE[me.role];
+  $('hello').textContent=(me.guest?'Xin chào bạn! Bạn đang vào với vai trò học sinh, không cần tài khoản. Hãy đăng nhập để viết bài và lưu tiến bộ.':'Xin chào '+(ttlOf(me)?ttlOf(me)+' ':'')+me.name+'! Dữ liệu đã được cập nhật.')+(BOOT_ERR?' ⚠ Chưa nạp được dữ liệu sao lưu: '+BOOT_ERR:'');
   const tabs=TABS.slice();if(CAN_CREATE[me.role].length){tabs.push(['progress','Theo dõi tiến trình','Tiến độ luyện tập của học sinh']);tabs.push(['accounts','Quản lý tài khoản','Tạo và quản lý tài khoản'])}
   if(me.role==='admin')tabs.push(['settings','Cài đặt','Sao lưu và khôi phục dữ liệu']);
   $('nav').innerHTML=tabs.map(t=>`<button class="tabbtn" data-t="${t[0]}" type="button">${t[1]}</button>`).join('');
   $('tiles').innerHTML=tabs.slice(1).map(t=>`<button class="tile" data-t="${t[0]}" type="button"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('');
   document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>showTab(b.dataset.t));
-  $('cr').innerHTML=CAN_CREATE[me.role].map(r=>`<option value="${r}">${ROLE[r]}</option>`).join('');$('bRole').innerHTML=CAN_CREATE[me.role].filter(r=>r!=='admin').map(r=>`<option value="${r}">${ROLE[r]}</option>`).join('');$('bRole').onchange=syncB;syncB();
+  $('cr').innerHTML=CAN_CREATE[me.role].map(r=>`<option value="${r}">${ROLE[r]}</option>`).join('');$('bRole').innerHTML=CAN_CREATE[me.role].filter(r=>r!=='admin').map(r=>`<option value="${r}">${ROLE[r]}</option>`).join('');$('bRole').onchange=syncB;syncB();$('ct').innerHTML=ttlHtml($('cr').value);$('cr').onchange=()=>{$('ct').innerHTML=ttlHtml($('cr').value)};
   $('permNote').textContent=me.role==='admin'?'Quản trị viên tạo và quản lý Quản trị viên khác, Kiểm duyệt viên và học sinh. Tài khoản Quản trị viên gốc được bảo vệ: người khác không xoá, hạ quyền hay đặt lại mật khẩu được.':'Kiểm duyệt viên tạo và quản lý tài khoản học sinh.';
-  renderSurvey();renderBk();renderTestIntro();showTab('home');
+  renderSurvey();renderBk();renderFeat();renderWel();renderTestIntro();showTab('home');showWelcome();
 }
 const isSeed=a=>a.id===SEED.id;
 function manageable(a){return a.id!==me.id&&CAN_CREATE[me.role].includes(a.role)&&!isSeed(a)}
@@ -623,7 +665,7 @@ function selfEdit(a){return me.role==='admin'&&a.id===me.id}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderAccounts(){
   const btn=(act,id,t,c)=>`<button class="btn ghost${c?' '+c:''}" data-act="${act}" data-id="${esc(id)}" type="button">${t}</button>`;
-  $('tb').innerHTML=accounts.map(a=>`<tr><td>${esc(a.name)}${a.id===me.id?' <small class="hint">(bạn)</small>':''}</td><td>${esc(a.id)}</td><td><span class="badge ${a.role}">${ROLE[a.role]}</span></td><td>${esc(a.cls||'')}</td><td>${manageable(a)?`<div class="acts">${btn('edit',a.id,'Sửa thông tin')}${btn('reset',a.id,'Đặt lại mật khẩu')}${btn('del',a.id,'Xoá','danger')}</div>`:selfEdit(a)?`<div class="acts">${btn('edit',a.id,'Sửa thông tin')}${btn('selfpw',a.id,'Đổi mật khẩu')}</div>`:''}</td></tr>`).join('');
+  $('tb').innerHTML=accounts.map(a=>`<tr><td>${esc(a.name)}${a.id===me.id?' <small class="hint">(bạn)</small>':''}</td><td>${esc(a.id)}</td><td><span class="badge ${a.role}">${ROLE[a.role]}</span>${ttlOf(a)?' <small class="hint">'+esc(ttlOf(a))+'</small>':''}</td><td>${esc(a.cls||'')}</td><td>${manageable(a)?`<div class="acts">${btn('edit',a.id,'Sửa thông tin')}${btn('reset',a.id,'Đặt lại mật khẩu')}${btn('del',a.id,'Xoá','danger')}</div>`:selfEdit(a)?`<div class="acts">${btn('edit',a.id,'Sửa thông tin')}${btn('selfpw',a.id,'Đổi mật khẩu')}</div>`:''}</td></tr>`).join('');
 }
 $('tb').addEventListener('click',async e=>{
   const b=e.target.closest('button[data-act]');if(!b)return;
@@ -648,8 +690,8 @@ $('cf').addEventListener('submit',async e=>{
   if(pw.length<6)return fail('Mật khẩu cần từ 6 ký tự.');
   if(accounts.some(a=>a.id===id))return fail('ID này đã có người dùng.');
   if(role==='admin'&&!confirm('Tạo tài khoản Quản trị viên "'+name+'"? Tài khoản này sẽ có toàn quyền: tạo, sửa, xoá tài khoản khác và thay đổi dữ liệu.'))return;
-  accounts.push({id,name,role,cls:role==='student'?$('cc').value.trim():'',h:await hash(id,pw)});save();
-  m.textContent='Đã tạo tài khoản '+name+' ('+id+').';m.classList.add('ok');$('cf').reset();ciTouched=false;renderAccounts();
+  accounts.push({id,name,role,ttl:$('ct').value,cls:role==='student'?$('cc').value.trim():'',h:await hash(id,pw)});save();
+  m.textContent='Đã tạo tài khoản '+name+' ('+id+').';m.classList.add('ok');$('cf').reset();$('ct').innerHTML=ttlHtml($('cr').value);ciTouched=false;renderAccounts();
 });
 const GUEST={id:'__guest',name:'Khách',role:'student',cls:'',guest:true};
 $('guest').onclick=async()=>{delete tMem['tnsu_test_'+GUEST.id];const g=$('guest');g.disabled=true;$('msg').className='msg';$('msg').textContent='Đang cập nhật dữ liệu mới nhất...';
@@ -715,7 +757,7 @@ $('rsGo').onclick=async()=>{
   const still=accounts.find(a=>a.id===me.id);
   if(!still||still.role!=='admin'){alert('Tài khoản của bạn không còn quyền Quản trị trong bản sao lưu. Hãy đăng nhập lại.');$('out').click();return}
   me=still;$('rs').value='';say('rsMsg','Đã khôi phục '+accounts.length+' tài khoản.','ok');renderAccounts()};
-$('out').onclick=()=>{camOff();J_V='home';SH_V='read';SH_EDIT=null;VID_OPEN=null;try{vidFormReset(null)}catch(_){}try{sessionStorage.removeItem('tnsu_me')}catch(_){}me=null;$('app').classList.add('hide');$('login').classList.remove('hide');$('f').reset();$('msg').textContent=''};
+$('out').onclick=()=>{camOff();J_V='home';SH_V='read';SH_EDIT=null;VID_OPEN=null;try{vidFormReset(null)}catch(_){}try{sessionStorage.removeItem('tnsu_me');sessionStorage.removeItem('tnsu_wel')}catch(_){}me=null;$('app').classList.add('hide');$('login').classList.remove('hide');$('f').reset();$('msg').textContent=''};
 /* ===== Banner trang chủ ===== */
 const SLIDES=[
  {e:'🌟',k:'Lời cổ động',t:'Dám cất lời – Tự tin toả sáng',p:'Mỗi giọng nói đều đáng được lắng nghe. Hôm nay, em hãy mạnh dạn nói ra một ý tưởng của riêng mình – dù nhỏ thôi, em nhé!',c:['Dám nói','Dám nghe','Dám toả sáng'],g:['journey','Vào phòng thực hành']},
@@ -836,7 +878,10 @@ const KB=[
  {k:['thuc trang','khao sat','kham pha','bai test','hanh trinh','thuc hanh','chia se','goc chia se','muc nao','o dau','tab','menu','cac muc','muc chinh','trang chu'],a:'Các mục chính của TNSpeakUp:\n• Thực trạng: biểu đồ khảo sát và bài viết.\n• Khám phá bản thân: bài test năng lực.\n• Hành trình tiến bộ: phòng thực hành nói.\n• Góc chia sẻ: nơi gửi thông điệp và bài viết của em.',go:[['survey','Thực trạng'],['test','Khám phá bản thân'],['journey','Hành trình tiến bộ'],['share','Góc chia sẻ']]},
  {k:['dong vien','co vu','buon','chan','met','nan','khich le','khong tu tin'],a:'__cheer'},
  {k:['cam on','thanks','tks'],a:'Không có gì! Chúc bạn luôn dám cất lời và toả sáng nhé.'},
- {k:['tam biet','bye'],a:'Hẹn gặp lại bạn! Nhớ luyện nói một chút mỗi ngày nhé.'}
+ {k:['tam biet','bye'],a:'Hẹn gặp lại bạn! Nhớ luyện nói một chút mỗi ngày nhé.'},
+ {k:['toi co lam duoc khong', 'minh co the lam duoc khong', 'co nen thu khong'],a:['Bạn sẽ không biết khả năng của mình đến đâu nếu chưa thử. Hãy bắt đầu bằng bước nhỏ nhất và cho bản thân cơ hội học hỏi.',
+    'Có thể bạn chưa làm được ngay, nhưng điều đó không có nghĩa là bạn không thể tiến bộ. Hãy chuẩn bị và thử sức nhé!',
+    'Mình không thể hứa mọi việc sẽ hoàn hảo, nhưng bạn hoàn toàn có thể học thêm từ mỗi lần thực hiện.']}
 ];
 const QUICK=['TNSpeakUp là gì?','Mẹo bớt run khi nói','Cách mở đầu bài thuyết trình','AI giúp gì cho mình?','Học Văn thời đại số','Các mục trong trang'];
 function local(q){
@@ -1204,6 +1249,21 @@ async function copyTxt(t){try{await navigator.clipboard.writeText(t);return true
    Bài viết lưu trên trình duyệt (tnsu_posts) và gộp với window.TNSU_POSTS trong saoluu.js.
    Khi nối máy chủ (Supabase), chỉ cần thay postsLocal() và putPost(). */
 const PCATS=['Kinh nghiệm thuyết trình','Thông điệp cổ vũ','Bài nói của em','Học Văn cùng AI','Góc nhìn khác'];
+/* ===== Ghim bài viết: pinS = đầu Góc chia sẻ, pinH = ngoài trang chủ ===== */
+const PIN_MAX={pinS:5,pinH:3};
+const pinOn=(p,k)=>!!p[k]&&!(p.pinExp&&Date.now()>Date.parse(p.pinExp+'T23:59:59'));
+const pinCmp=(a,b)=>(pinOn(b,'pinS')-pinOn(a,'pinS'))||(pinOn(a,'pinS')&&pinOn(b,'pinS')?(b.pinSAt||'').localeCompare(a.pinSAt||''):0)||b.at.localeCompare(a.at);
+const pinBadges=p=>(pinOn(p,'pinS')?'<span class="tag pin">📌 Ghim</span> ':'')+(pinOn(p,'pinH')?'<span class="tag pin">🏠 Trang chủ</span> ':'')+(p.wkAt&&Date.now()-Date.parse(p.wkAt)<6048e5?'<span class="tag pin">⭐ Bài của tuần</span> ':'')+(p.ch?'<span class="tag pin">🎯 Thử thách</span> ':'');
+function togglePin(p,k){const on=!pinOn(p,k);
+  if(on){const n=allPosts().filter(x=>x.status==='approved'&&pinOn(x,k)&&x.id!==p.id).length;
+    if(n>=PIN_MAX[k]){alert('Chỉ ghim tối đa '+PIN_MAX[k]+' bài '+(k==='pinH'?'ngoài trang chủ':'ở Góc chia sẻ')+'. Hãy bỏ ghim một bài khác trước.');return}}
+  putPost({...p,[k]:on,[k+'At']:on?new Date().toISOString():'',pinExp:on?'':(p.pinExp||'')});renderShare()}
+function renderPins(){const s=$('pinSec');if(!s||!me)return;
+  const l=allPosts().filter(p=>p.status==='approved'&&pinOn(p,'pinH')).sort((a,b)=>(b.pinHAt||'').localeCompare(a.pinHAt||''));
+  if(!l.length){s.classList.toggle('hide',!isMod());$('pins').innerHTML=isMod()?'<p class="soon">Chưa có bài nào được ghim. Mở một bài trong Góc chia sẻ rồi bấm “Ghim ra trang chủ”.</p>':'';return}
+  s.classList.remove('hide');
+  $('pins').innerHTML=l.map(p=>{const im=pImgs(p);return `<button class="pcard" type="button" data-pin="${esc(p.id)}">${im.length?`<img src="${im[0]}" alt="" loading="lazy">`:'<span class="pph">📝</span>'}<span class="pcb"><span><span class="tag">${esc(p.cat)}</span></span><span class="pt">${esc(p.title)}</span><span class="ex">${esc(p.body.slice(0,160))}</span><span class="meta">${esc(p.author)} · ${pdate(p.at)}</span><span class="go">Đọc bài →</span></span></button>`}).join('')}
+$('pins').addEventListener('click',e=>{const b=e.target.closest('[data-pin]');if(!b)return;SH_V='read';SH_CAT='';SH_OPEN=b.dataset.pin;SH_EDIT=null;SH_MOD=false;showTab('share');window.scrollTo({top:0,behavior:REDUCED?'auto':'smooth'})});
 const PSEED=[
  {id:'seed1',seed:1,title:'Ba hơi thở trước khi lên bục',cat:'Kinh nghiệm thuyết trình',author:'Nhóm TNSpeakUp',role:'admin',at:'2026-10-01T00:00:00.000Z',status:'approved',body:'Trước khi bước lên, em hãy hít vào thật chậm bốn nhịp rồi thở ra sáu nhịp, lặp lại ba lần. Hồi hộp là dấu hiệu cơ thể đang chuẩn bị, không phải dấu hiệu em nói dở.\nSau đó, hãy nhớ ba ý chính thay vì học thuộc cả bài, và nhìn vào một gương mặt thân thiện trong lớp để bắt đầu câu đầu tiên.'},
  {id:'seed2',seed:1,title:'Em dùng AI để chuẩn bị bài nói như thế nào?',cat:'Học Văn cùng AI',author:'Nhóm TNSpeakUp',role:'admin',at:'2026-10-02T00:00:00.000Z',status:'approved',body:'Em tự viết dàn ý trước, sau đó nhờ AI đóng vai người nghe và hỏi ngược lại ba câu. Những câu hỏi ấy giúp em thấy chỗ mình chưa rõ.\nVới mỗi thông tin AI đưa ra, em kiểm chứng lại bằng sách giáo khoa rồi mới dùng, và luôn viết lại bằng lời của mình. Nhờ vậy bài nói vẫn mang giọng của em.'}];
@@ -1219,7 +1279,7 @@ function allPostsRaw(){const m=new Map(PSEED.map(p=>[p.id,p])),put=p=>{const o=m
   (Array.isArray(window.TNSU_POSTS)?window.TNSU_POSTS:[]).filter(pValid).forEach(put);
   (postsLocal()||[]).filter(pValid).forEach(put);return [...m.values()].filter(p=>!p.del)}
 function isVid(p){return !!p&&p.kind==='video'}
-function allPosts(){return allPostsRaw().filter(p=>!isVid(p)&&p.kind!=='practice')}
+function allPosts(){return allPostsRaw().filter(p=>!p.kind)}
 function allVideos(){return allPostsRaw().filter(p=>isVid(p)&&p.status==='approved')}
 function putPost(p){if(me&&me.guest)return;p={...p,ts:new Date().toISOString()};const pr=sbPush('post:'+p.id,p);const l=(postsLocal()||[]).filter(x=>x&&x.id!==p.id);l.push(p);postsMem=l;try{localStorage.setItem('tnsu_posts',JSON.stringify(l))}catch(e){}try{noteChange()}catch(_){}return pr}
 const isMod=()=>!!me&&(me.role==='admin'||me.role==='mod');
@@ -1229,11 +1289,120 @@ const paras=t=>String(t).split(/\n+/).filter(x=>x.trim()).map(x=>`<p>${esc(x)}</
 const ST={pending:['Chờ duyệt','wait'],approved:['Đã đăng','mod'],rejected:['Cần chỉnh sửa','no']};
 const imgOk=s=>typeof s==='string'&&s.length<400000&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(s);
 const pImgs=p=>Array.isArray(p.imgs)?p.imgs.filter(imgOk).slice(0,3):[];
+
+/* ===== Tương tác: cảm xúc, góp ý, bài của tuần, huy hiệu, thử thách, thống kê =====
+   Cảm xúc/lượt đọc: mỗi học sinh một bản ghi riêng (react_<id>, view_<id>); góp ý và cấu hình là bản ghi riêng, đi cùng kho bài viết. */
+const RX=[['👍','Hay quá'],['❤️','Cảm ơn bạn đã chia sẻ'],['💪','Cổ vũ bạn']];
+const recs=k=>allPostsRaw().filter(p=>p.kind===k);
+function mapOf(k,uid){const r=allPostsRaw().find(p=>p.id===k+'_'+uid);try{return r?(JSON.parse(r.body)||{}):{}}catch(e){return{}}}
+function saveMap(k,m){if(!me||me.guest)return;putPost({id:k+'_'+gid(),kind:k,title:k,cat:'x',body:JSON.stringify(m),author:me.name,authorId:gid(),role:me.role,at:new Date().toISOString(),status:'approved'})}
+function rxCount(pid){const c=[0,0,0];recs('react').forEach(r=>{try{const v=JSON.parse(r.body)[pid];if(v>=0&&v<3)c[v]++}catch(e){}});return c}
+const rxTotal=pid=>rxCount(pid).reduce((a,b)=>a+b,0);
+function setRx(pid,i){const m=mapOf('react',gid());if(m[pid]===i)delete m[pid];else m[pid]=i;saveMap('react',m);renderShare()}
+function markView(p){if(!me||me.guest||me.role!=='student'||p.authorId===gid())return;const m=mapOf('view',gid());if(m[p.id])return;m[p.id]=1;saveMap('view',m)}
+function rxBar(p){if(p.status!=='approved'||!feat('react'))return'';const c=rxCount(p.id),my=mapOf('react',gid())[p.id];
+  return `<div class="rx" role="group" aria-label="Thả cảm xúc">${RX.map((r,i)=>`<button type="button" class="${my===i?'on':''}" data-rx="${i}" data-id="${esc(p.id)}" aria-pressed="${my===i}"${me.guest?' disabled':''}>${r[0]} ${r[1]} <b>${c[i]||''}</b></button>`).join('')}</div>${me.guest?'<p class="hint">Đăng nhập để thả cảm xúc.</p>':''}`}
+function cmtBox(p){if(p.status!=='approved'||!feat('react'))return'';const all=recs('comment').filter(c=>c.pid===p.id),ok=all.filter(c=>c.status==='approved').sort((a,b)=>a.at.localeCompare(b.at)),mine=all.filter(c=>c.status==='pending'&&c.authorId===gid());
+  return `<h3 class="sh">💬 Lời góp ý (${ok.length})</h3>${ok.map(c=>`<div class="cm"><b>${esc(c.author)}</b> <small class="hint">${pdate(c.at)}</small><p>${esc(c.body)}</p></div>`).join('')||'<p class="hint">Chưa có góp ý nào.</p>'}${mine.map(c=>`<div class="cm wait"><b>${esc(c.author)}</b> <span class="badge wait">Chờ duyệt</span><p>${esc(c.body)}</p></div>`).join('')}${me.guest?'':`<label for="cmT">Em muốn góp ý điều gì? (10 đến 300 ký tự, thầy cô duyệt rồi mới hiện)</label><textarea id="cmT" maxlength="300" class="tx" style="min-height:70px"></textarea><div class="acts"><button class="btn ghost" type="button" data-pa="cmt" data-id="${esc(p.id)}">Gửi góp ý</button></div>`}`}
+function cmtReview(){if(!feat('react'))return'';const l=recs('comment').filter(c=>c.status==='pending'),t={};allPosts().forEach(p=>t[p.id]=p.title);
+  return `<h3 class="sh" style="margin-top:16px">💬 Góp ý chờ duyệt (${l.length})</h3>`+(l.length?l.map(c=>`<div class="cm"><b>${esc(c.author)}</b> góp ý bài “${esc(t[c.pid]||'')}”<p>${esc(c.body)}</p><div class="acts"><button class="btn" type="button" data-pa="cok" data-id="${esc(c.id)}">Duyệt</button><button class="btn ghost danger" type="button" data-pa="cno" data-id="${esc(c.id)}">Xoá</button></div></div>`).join(''):'<p class="soon">Không có góp ý nào chờ duyệt.</p>')}
+function cmtAct(a,id){if(!isMod())return;const c=recs('comment').find(x=>x.id===id);if(!c)return;putPost(a==='cok'?{...c,status:'approved',by:me.name}:{...c,del:true});renderShare()}
+/* Bài của tuần */
+const wkOn=p=>!!p.wkAt&&Date.now()-Date.parse(p.wkAt)<6048e5;
+function wkPost(){const l=allPosts().filter(p=>p.status==='approved'),m=l.filter(wkOn).sort((a,b)=>b.wkAt.localeCompare(a.wkAt))[0];if(m)return{p:m,note:m.wkNote||'',auto:0};
+  const c=!feat('react')?null:l.map(p=>[p,rxTotal(p.id)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1])[0];return c?{p:c[0],note:'',auto:1,n:c[1]}:null}
+function wkCard(){if(!feat('wk'))return'';const w=wkPost();if(!w)return'';const p=w.p;
+  return `<div class="card wk"><h3>⭐ Bài nổi bật tuần này</h3><p class="hint">${w.auto?'Được thả cảm xúc nhiều nhất ('+w.n+' lượt)':'Thầy cô chọn'}</p><p><b>${esc(p.title)}</b> · ${esc(p.author)}</p>${w.note?`<div class="wn"><b>Nhận xét của thầy cô:</b> ${esc(w.note)}</div>`:''}<div class="acts"><button class="btn ghost" type="button" data-po="${esc(p.id)}">Đọc bài →</button></div></div>`}
+function wkToggle(p){if(wkOn(p)){putPost({...p,wkAt:'',wkNote:''})}else{const n=prompt('Lời nhận xét ngắn của thầy cô về bài này (có thể để trống):','');if(n===null)return;
+  allPosts().filter(x=>x.wkAt&&x.id!==p.id).forEach(x=>putPost({...x,wkAt:'',wkNote:''}));putPost({...p,wkAt:new Date().toISOString(),wkNote:n.trim().slice(0,200)})}renderShare()}
+/* Huy hiệu (tính từ dữ liệu có sẵn, không lưu riêng) */
+function badges(){if(!me||me.guest)return[];const id=gid(),mine=allPosts().filter(p=>p.authorId===id&&p.status==='approved'),days=[...new Set(jLog().map(x=>String(x.at).slice(0,10)))].sort();let best=0,run=0,prev=null;
+  days.forEach(d=>{run=prev&&Date.parse(d)-Date.parse(prev)===864e5?run+1:1;prev=d;best=Math.max(best,run)});
+  return [['✍️','Bài viết đầu tiên',mine.length>0],['📌','Bài được ghim',mine.some(p=>p.pinS||p.pinH)],['⭐','Bài của tuần',mine.some(p=>p.wkAt)],['🔥','Luyện tập 7 ngày liên tiếp',best>=7],['🧭','Đã khám phá bản thân',tHist().length>0],['💬','Góp ý được đăng',recs('comment').some(c=>c.authorId===id&&c.status==='approved')],['🤝','Cổ vũ bạn bè (5 lượt thả cảm xúc)',Object.keys(mapOf('react',id)).length>=5],['⚔️','Đã thách đấu',duels().some(x=>x.d.authorId===id||x.j.to===id&&x.st!=='wait')],['🏆','Thắng thách đấu',duels().some(x=>x.win==='a'&&x.d.authorId===id||x.win==='b'&&x.j.to===id)]]}
+function badgeHtml(){if(!feat('badges'))return'';return badges().map(b=>`<span class="bdg${b[2]?'':' off'}" title="${b[2]?'Đã đạt':'Chưa đạt'}">${b[0]} ${esc(b[1])}</span>`).join('')}
+function renderBadges(){const s=$('bdgSec');if(!s)return;const h=badgeHtml();s.classList.toggle('hide',!h);$('bdg').innerHTML=h}
+/* Thử thách nói theo tuần */
+const CH=['Giới thiệu bản thân trong 60 giây','Kể một kỷ niệm đáng nhớ ở trường trong 1 phút','Giới thiệu một cuốn sách em thích','Nêu ý kiến của em về việc dùng điện thoại trong lớp','Cảm ơn một người thầy cô hoặc một người bạn','Tả một món ăn quê em để người nghe thèm','Thuyết phục bạn cùng lớp đọc một cuốn sách','Chia sẻ một việc tốt em đã làm','Giải thích một điều em biết cho bạn nhỏ hơn','Nói về ước mơ của em sau 10 năm nữa','Kể lại một câu chuyện cổ bằng lời của em','Em dùng AI học Ngữ văn như thế nào cho đúng']
+function wkKey(){const d=new Date(),t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())),n=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-n);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return t.getUTCFullYear()+'-W'+String(Math.ceil(((t-y)/864e5+1)/7)).padStart(2,'0')}
+function chTopic(){const k=wkKey(),c=allPostsRaw().find(p=>p.id==='cfg_challenge');try{const j=c&&JSON.parse(c.body);if(j&&j.wk===k&&j.topic)return j.topic}catch(e){}return CH[(+k.slice(-2)+ +k.slice(0,4))%CH.length]}
+function chCard(){if(!feat('wk'))return'';return `<div class="card cta" style="margin-bottom:14px"><h3>🎯 Thử thách nói tuần này</h3><p><b>${esc(chTopic())}</b></p><p class="hint">Luyện trước camera ở Hành trình tiến bộ, rồi viết vài dòng cảm nhận để chia sẻ.</p><div class="acts"><button class="btn" type="button" data-pa="chcam">Luyện với camera</button>${me.guest?'':'<button class="btn ghost" type="button" data-pa="chwrite">Chia sẻ cảm nhận</button>'}${isMod()?'<button class="btn ghost" type="button" data-pa="chset">Đổi chủ đề</button>':''}</div></div>`}
+var SH_Q='',SH_PRE=null,SH_CH='';
+function readList(){const q=plain(SH_Q.trim()),l=allPosts().filter(p=>p.status==='approved').sort(pinCmp).filter(p=>(!SH_CAT||p.cat===SH_CAT)&&(!q||plain(p.title+' '+p.author+' '+p.body).includes(q)));return pList(l,q?'Không tìm thấy bài phù hợp.':'Chưa có bài nào trong chuyên mục này.')}
+/* Quản lý bài cho thầy cô */
+function vManage(){const l=allPosts().filter(p=>p.status==='approved').sort(pinCmp),vw={},st={};
+  recs('view').forEach(r=>{try{Object.keys(JSON.parse(r.body)).forEach(k=>vw[k]=(vw[k]||0)+1)}catch(e){}});
+  allPosts().forEach(p=>{const k=p.authorId||p.author,x=st[k]||(st[k]={n:p.author,a:0,w:0,r:0});if(p.status==='approved'){x.a++;x.r+=rxTotal(p.id)}else if(p.status==='pending')x.w++});
+  const ck=(k,p,on,lb)=>`<input type="checkbox" data-mg="${k}" data-id="${esc(p.id)}"${on?' checked':''} aria-label="${lb}">`;
+  return `<div class="card"><h3>Ghim nhanh, hạn ghim và lượt đọc</h3><p class="hint">Lượt đọc tính theo học sinh đã đăng nhập mở bài. Ghim hết hạn sẽ tự bỏ vào cuối ngày đã chọn.</p><div class="mgt"><table><thead><tr><th>Bài</th><th>Lượt đọc</th><th>Cảm xúc</th><th>Ghim GCS</th><th>Ghim trang chủ</th><th>Hết hạn ghim</th><th>Bài của tuần</th></tr></thead><tbody>${l.map(p=>`<tr><td>${esc(p.title)}<br><small class="hint">${esc(p.author)}</small></td><td>${vw[p.id]||0}</td><td>${rxTotal(p.id)}</td><td>${ck('pinS',p,pinOn(p,'pinS'),'Ghim ở Góc chia sẻ')}</td><td>${ck('pinH',p,pinOn(p,'pinH'),'Ghim ra trang chủ')}</td><td><input type="date" data-mx="${esc(p.id)}" value="${esc(p.pinExp||'')}" aria-label="Ngày hết hạn ghim"></td><td>${ck('wk',p,wkOn(p),'Bài của tuần')}</td></tr>`).join('')||'<tr><td colspan="7">Chưa có bài đã đăng.</td></tr>'}</tbody></table></div></div>
+  <div class="card" style="margin-top:14px"><h3>Số bài theo học sinh</h3><div class="mgt"><table><thead><tr><th>Tác giả</th><th>Đã đăng</th><th>Chờ duyệt</th><th>Cảm xúc nhận được</th></tr></thead><tbody>${Object.values(st).sort((a,b)=>b.a-a.a).map(x=>`<tr><td>${esc(x.n)}</td><td>${x.a}</td><td>${x.w}</td><td>${x.r}</td></tr>`).join('')}</tbody></table></div></div>`}
+$('p-share').addEventListener('change',e=>{const g=e.target.dataset;if(!isMod()||!(g.mg||g.mx))return;const p=allPosts().find(x=>x.id===(g.id||g.mx));if(!p)return;
+  if(g.mx){if(!p.pinS&&!p.pinH)return;putPost({...p,pinExp:e.target.value||''});renderShare();return}
+  if(g.mg==='wk')wkToggle(p);else togglePin(p,g.mg)});
+function pwaShow(){const s=$('pwaSec');if(s)s.classList.toggle('hide',!feat('pwa')||!!(matchMedia('(display-mode: standalone)').matches||navigator.standalone))}
+var DIP=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();DIP=e});
+$('pwaBtn').onclick=async()=>{if(DIP){DIP.prompt();await DIP.userChoice.catch(()=>{});DIP=null}else alert(/iphone|ipad|ipod/i.test(navigator.userAgent)?'Trên iPhone: mở bằng Safari, bấm nút Chia sẻ rồi chọn “Thêm vào MH chính”.':'Mở menu ⋮ của trình duyệt rồi chọn “Cài đặt ứng dụng” hoặc “Thêm vào màn hình chính”.')};
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+
+/* ===== Thách đấu giữa học sinh =====
+   Bản ghi: duel (người thách, kèm bài của mình), duelr (người nhận trả lời hoặc từ chối), vote (phiếu, mỗi người một bản ghi). Bình chọn 3 ngày kể từ lúc có trả lời. */
+const DAYS3=2592e5;
+function duels(){const rp={},vt={};recs('duelr').forEach(r=>{try{rp[r.id.slice(3)]={...JSON.parse(r.body),at:r.at}}catch(e){}});
+  recs('vote').forEach(x=>{try{const m=JSON.parse(x.body);for(const k in m){const o=vt[k]||(vt[k]={a:0,b:0});if(m[k]==='a'||m[k]==='b')o[m[k]]++}}catch(e){}});
+  return recs('duel').map(d=>{let j={};try{j=JSON.parse(d.body)}catch(e){}const r=rp[d.id],v=vt[d.id]||{a:0,b:0},st=!r?'wait':r.ok?(Date.now()>Date.parse(r.at)+DAYS3?'end':'live'):'no';
+    return {d,j,r,v,st,win:st==='end'?(v.a>v.b?'a':v.b>v.a?'b':''):''}}).sort((x,y)=>y.d.at.localeCompare(x.d.at))}
+function vDuel(){const L=duels(),id=gid(),opp=accounts.filter(a=>a.role==='student'&&a.id!==id),w={},mv=mapOf('vote',id),tp=CH[Math.floor(Math.random()*CH.length)];
+  const nm=x=>x.win==='a'?x.d.author:x.j.toName;L.filter(x=>x.win).forEach(x=>{const k=nm(x);w[k]=(w[k]||0)+1});
+  const inbox=L.filter(x=>x.st==='wait'&&x.j.to===id),out=L.filter(x=>x.st==='wait'&&x.d.authorId===id),ong=L.filter(x=>x.st==='live'||x.st==='end');
+  const card=x=>{const part=x.d.authorId===id||x.j.to===id,end=x.st==='end',vb=t=>`<button class="btn ghost" type="button" data-pa="dvote" data-id="${esc(x.d.id)}" data-v="${t}">Bình chọn bài này</button>`;
+    return `<div class="card" style="margin-bottom:12px"><h3>⚔️ ${esc(x.d.author)} vs ${esc(x.j.toName)}</h3><p class="hint">Chủ đề: ${esc(x.j.topic)} · ${end?'Đã kết thúc':'Bình chọn đến '+esc(fmt(new Date(Date.parse(x.r.at)+DAYS3).toISOString()))}</p><div class="cm"><b>${esc(x.d.author)}</b> · ${x.v.a} phiếu<p>${esc(x.j.a)}</p>${!end&&!part&&!mv[x.d.id]?vb('a'):''}</div><div class="cm"><b>${esc(x.j.toName)}</b> · ${x.v.b} phiếu<p>${esc(x.r.b)}</p>${!end&&!part&&!mv[x.d.id]?vb('b'):''}</div>${end?`<p><b>${x.win?'🏆 Thắng: '+esc(nm(x)):'🤝 Hoà'}</b></p>`:mv[x.d.id]?'<p class="hint">Em đã bình chọn.</p>':part?'<p class="hint">Người trong cuộc không bình chọn.</p>':''}${isMod()?`<div class="acts"><button class="btn ghost danger" type="button" data-pa="ddel" data-id="${esc(x.d.id)}">Gỡ trận đấu</button></div>`:''}</div>`};
+  return `<div class="two"><div class="card"><h3>⚔️ Thách đấu một bạn</h3><p class="hint">Cùng nói về một chủ đề bằng vài câu. Bạn kia trả lời, cả lớp bình chọn trong 3 ngày. Giữ lời lẽ lịch sự nhé.</p>
+  <label for="dO">Em thách bạn nào?</label><select id="dO">${opp.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}${a.cls?' · '+esc(a.cls):''}</option>`).join('')||'<option value="">Chưa có bạn nào</option>'}</select>
+  <label for="dT">Chủ đề</label><input id="dT" maxlength="120" value="${esc(tp)}"><label for="dA">Phần trình bày của em (30 đến 300 ký tự)</label><textarea class="tx" id="dA" maxlength="300" style="min-height:90px"></textarea>
+  <div class="acts"><button class="btn" type="button" data-pa="dnew">Gửi lời thách đấu</button></div></div>
+  <div class="card"><h3>🏆 Bảng vàng</h3>${Object.keys(w).length?'<ol class="tl">'+Object.entries(w).sort((a,b)=>b[1]-a[1]).slice(0,10).map(x=>`<li>${esc(x[0])}: ${x[1]} trận thắng</li>`).join('')+'</ol>':'<p class="soon">Chưa có trận nào kết thúc.</p>'}</div></div>
+  ${inbox.map(x=>`<div class="card" style="margin:12px 0"><h3>📩 ${esc(x.d.author)} thách đấu em!</h3><p class="hint">Chủ đề: ${esc(x.j.topic)}. Bài của bạn ấy sẽ hiện sau khi em trả lời.</p><textarea class="tx" id="dB_${esc(x.d.id)}" maxlength="300" placeholder="Phần trình bày của em (30 đến 300 ký tự)" style="min-height:80px"></textarea><div class="acts"><button class="btn" type="button" data-pa="dacc" data-id="${esc(x.d.id)}">Nhận lời</button><button class="btn ghost" type="button" data-pa="ddec" data-id="${esc(x.d.id)}">Từ chối</button></div></div>`).join('')}
+  ${out.length?`<p class="hint">Đang chờ trả lời: ${out.map(x=>esc(x.j.toName)).join(', ')}</p>`:''}
+  <h3 class="sh">Các trận đang diễn ra và đã xong</h3>${ong.map(card).join('')||'<p class="soon">Chưa có trận nào. Hãy là người thách đấu đầu tiên!</p>'}`}
+function duelAct(a,g){const id=gid(),now=new Date().toISOString(),mk=(i,k,b)=>putPost({id:i,kind:k,title:k,cat:'x',body:JSON.stringify(b),author:me.name,authorId:id,role:me.role,at:now,status:'approved'});
+  if(a==='dnew'){const to=accounts.find(x=>x.id===$('dO').value&&x.role==='student'),t=$('dT').value.trim(),txt=$('dA').value.trim();if(!to||t.length<5)return alert('Hãy chọn bạn và nhập chủ đề.');if(txt.length<30)return alert('Phần trình bày cần từ 30 ký tự.');
+    mk('d'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),'duel',{to:to.id,toName:to.name,topic:t.slice(0,120),a:txt.slice(0,300)});alert('Đã gửi lời thách đấu cho '+to.name+'.')}
+  else if(a==='dacc'||a==='ddec'){const x=duels().find(y=>y.d.id===g.id);if(!x||x.j.to!==id||x.r)return;
+    if(a==='dacc'){const t=($('dB_'+g.id).value||'').trim();if(t.length<30)return alert('Phần trình bày cần từ 30 ký tự.');mk('dr_'+g.id,'duelr',{ok:1,b:t.slice(0,300)})}else mk('dr_'+g.id,'duelr',{ok:0})}
+  else if(a==='dvote'){const x=duels().find(y=>y.d.id===g.id);if(!x||x.st!=='live'||x.d.authorId===id||x.j.to===id)return;const m=mapOf('vote',id);if(m[g.id])return;m[g.id]=g.v==='b'?'b':'a';saveMap('vote',m)}
+  else if(a==='ddel'&&isMod()){const d=recs('duel').find(y=>y.id===g.id);if(d)putPost({...d,del:true})}
+  renderShare()}
+
+/* ===== Bật tắt chức năng (Cài đặt, chỉ quản trị viên) ===== */
+const FEATS=[['duel','⚔️ Thách đấu giữa học sinh'],['react','👍 Thả cảm xúc và góp ý bài viết'],['wk','⭐ Bài của tuần và thử thách nói theo tuần'],['manage','🗂 Quản lý bài (ghim nhanh, hạn ghim, thống kê)'],['badges','🏅 Huy hiệu'],['pwa','📲 Nút cài về màn hình điện thoại']];
+function featMap(){const r=allPostsRaw().find(p=>p.id==='cfg_features');try{return r?(JSON.parse(r.body)||{}):{}}catch(e){return{}}}
+const feat=k=>!!featMap()[k];
+function renderFeat(){const b=$('featList');if(!b)return;const m=featMap();b.innerHTML=FEATS.map(f=>`<label class="chk"><input type="checkbox" data-ft="${f[0]}"${m[f[0]]?' checked':''}><span>${f[1]}</span></label>`).join('')}
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.ft;if(!k||!me||me.role!=='admin')return;const m=featMap();m[k]=e.target.checked?1:0;
+  putPost({id:'cfg_features',kind:'config',title:'cfg',cat:'x',body:JSON.stringify(m),author:me.name,authorId:gid(),role:me.role,at:new Date().toISOString(),status:'approved'});try{renderShare()}catch(_){}try{renderBadges();pwaShow()}catch(_){}});
+
+/* ===== Pop-up chào mừng (cấu hình ở Cài đặt) ===== */
+var WIMG='';
+const welCfg=()=>{const r=allPostsRaw().find(p=>p.id==='cfg_welcome');try{return r?(JSON.parse(r.body)||{}):{}}catch(e){return{}}};
+function welForm(){return {on:$('wOn').checked?1:0,title:$('wTi').value.trim().slice(0,60),mode:$('wMo').value,text:$('wTe').value.trim().slice(0,200),color:$('wCo').value,speed:Math.min(40,Math.max(5,+$('wSp').value||14)),img:WIMG}}
+function renderWel(){if(!$('wOn'))return;const c=welCfg();WIMG=c.img||'';$('wOn').checked=!!c.on;$('wTi').value=c.title||'Chào mừng đến TNSpeakUp';$('wMo').value=c.mode||'text';$('wTe').value=c.text||'';$('wCo').value=c.color||'#ff3b3b';$('wSp').value=c.speed||14;welMode()}
+function welMode(){const im=$('wMo').value==='image';$('wTx').classList.toggle('hide',im);$('wIm').classList.toggle('hide',!im);$('wPv').innerHTML=WIMG&&imgOk(WIMG)?`<img src="${WIMG}" alt="Ảnh pop-up" style="max-width:240px;border-radius:8px">`:''}
+function showWelcome(force,cfg){const c=cfg||welCfg();if(!force){if(!c.on)return;try{if(sessionStorage.getItem('tnsu_wel'))return;sessionStorage.setItem('tnsu_wel','1')}catch(_){}}
+  const body=c.mode==='image'&&imgOk(c.img||'')?`<img src="${c.img}" alt="Thông báo" style="max-width:100%;border-radius:10px;display:block;margin:0 auto">`:`<div class="led" style="--lc:${/^#[0-9a-f]{6}$/i.test(c.color)?c.color:'#ff3b3b'};--ls:${Math.min(40,Math.max(5,+c.speed||14))}s"><span>${esc(c.text||'')}</span></div>`;
+  if(!force&&c.mode!=='image'&&!c.text)return;if(!force&&c.mode==='image'&&!imgOk(c.img||''))return;
+  const o0=$('wm');if(o0)o0.remove();const o=document.createElement('div');o.className='mbk';o.id='wm';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label','Chào mừng');
+  o.innerHTML=`<div class="mbx" style="max-width:640px;width:92%"><h3 style="margin-bottom:12px">${esc(c.title||'Chào mừng')}</h3>${body}<div class="acts" style="margin-top:14px"><button class="btn" type="button">Vào TNSpeakUp</button></div></div>`;
+  o.addEventListener('click',e=>{if(e.target===o||e.target.closest('button'))o.remove()});document.addEventListener('keydown',function k(e){if(e.key==='Escape'){o.remove();document.removeEventListener('keydown',k)}});document.body.appendChild(o);o.querySelector('button').focus()}
+document.addEventListener('change',async e=>{if(e.target.id==='wMo')welMode();
+  if(e.target.id==='wFi'){const f=e.target.files[0];e.target.value='';if(!f||!/^image\//.test(f.type))return;try{WIMG=await imgShrink(f);welMode();say('wMsg','Đã chọn ảnh. Bấm “Lưu pop-up” để áp dụng.','ok')}catch(_){say('wMsg','Không đọc được ảnh này.','err')}}});
+document.addEventListener('click',e=>{const b=e.target.closest('#wSave,#wTry');if(!b||!me||me.role!=='admin')return;const c=welForm();
+  if(b.id==='wTry')return showWelcome(true,c);
+  if(c.mode==='text'&&!c.text)return say('wMsg','Hãy nhập nội dung chữ chạy.','err');if(c.mode==='image'&&!imgOk(c.img))return say('wMsg','Hãy chọn một hình ảnh.','err');
+  putPost({id:'cfg_welcome',kind:'config',title:'cfg',cat:'x',body:JSON.stringify(c),author:me.name,authorId:gid(),role:me.role,at:new Date().toISOString(),status:'approved'});say('wMsg','Đã lưu pop-up chào mừng.','ok')});
 function pItem(p,st){const im=pImgs(p);
-  return `<button class="pitem" type="button" data-po="${esc(p.id)}"><span class="pth">${im.length?`<img src="${im[0]}" alt="" loading="lazy">`:'📝'}</span><span class="pit"><span><span class="tag">${esc(p.cat)}</span>${p.seed?' <span class="tag" style="background:#e6f0ff;color:var(--tn)">Bài mẫu</span>':''}${st?` <span class="badge ${ST[p.status][1]}">${ST[p.status][0]}</span>`:''}${im.length>1?` <span class="badge">🖼 ${im.length} ảnh</span>`:''}</span><span class="pt">${esc(p.title)}</span><span class="ex">${esc(p.body.slice(0,160))}</span><span class="meta">${esc(p.author)} · ${pdate(p.at)}</span><span class="go">Đọc bài →</span></span></button>`}
+  return `<button class="pitem${pinOn(p,'pinS')?' pinned':''}" type="button" data-po="${esc(p.id)}"><span class="pth">${im.length?`<img src="${im[0]}" alt="" loading="lazy">`:'📝'}</span><span class="pit"><span>${pinBadges(p)}<span class="tag">${esc(p.cat)}</span>${p.seed?' <span class="tag" style="background:#e6f0ff;color:var(--tn)">Bài mẫu</span>':''}${st?` <span class="badge ${ST[p.status][1]}">${ST[p.status][0]}</span>`:''}${im.length>1?` <span class="badge">🖼 ${im.length} ảnh</span>`:''}</span><span class="pt">${esc(p.title)}</span><span class="ex">${esc(p.body.slice(0,160))}</span><span class="meta">${esc(p.author)} · ${pdate(p.at)}</span><span class="go">Đọc bài →</span></span></button>`}
 function pList(l,empty,st){return l.length?`<div class="plist">${l.map(p=>pItem(p,st)).join('')}</div>`:`<p class="soon">${empty}</p>`}
 function pDetail(p,act,st){const im=pImgs(p);
-  return `<div class="pview"><button class="btn ghost pback" type="button" data-po="">← Danh sách bài viết</button><article class="card"><span class="tag">${esc(p.cat)}</span>${p.seed?' <span class="tag" style="background:#e6f0ff;color:var(--tn)">Bài mẫu</span>':''}${st?` <span class="badge ${ST[p.status][1]}">${ST[p.status][0]}</span>`:''}<h2>${esc(p.title)}</h2><p class="hint">${esc(p.author)} · ${pdate(p.at)}</p><div class="pbody">${paras(p.body)}</div>${im.length?`<div class="pgal">${im.map((s,i)=>`<button type="button" data-zoom="${i}" aria-label="Phóng to ảnh ${i+1}"><img src="${s}" alt="Ảnh minh hoạ ${i+1}"></button>`).join('')}</div>`:''}${act||''}</article></div>`}
+  return `<div class="pview"><button class="btn ghost pback" type="button" data-po="">← Danh sách bài viết</button><article class="card">${pinBadges(p)}<span class="tag">${esc(p.cat)}</span>${p.seed?' <span class="tag" style="background:#e6f0ff;color:var(--tn)">Bài mẫu</span>':''}${st?` <span class="badge ${ST[p.status][1]}">${ST[p.status][0]}</span>`:''}<h2>${esc(p.title)}</h2><p class="hint">${esc(p.author)} · ${pdate(p.at)}</p><div class="pbody">${paras(p.body)}</div>${im.length?`<div class="pgal">${im.map((s,i)=>`<button type="button" data-zoom="${i}" aria-label="Phóng to ảnh ${i+1}"><img src="${s}" alt="Ảnh minh hoạ ${i+1}"></button>`).join('')}</div>`:''}${act||''}</article></div>`}
 function imgShrink(f){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),im=new Image();
   im.onload=()=>{try{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));
     const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
@@ -1244,16 +1413,16 @@ function drawImgs(){const d=$('pImgs');if(d)d.innerHTML=imgThumbs()}
 function setIm(m,err){const h=$('pIm');if(h){h.textContent=m;h.style.color=err?'#c62828':''}}
 function zoomImg(s){const o0=$('zm');if(o0)o0.remove();const o=document.createElement('div');o.className='mbk';o.id='zm';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label','Xem ảnh');
   const i=document.createElement('img');i.className='zimg';i.alt='Ảnh phóng to';i.src=s;o.appendChild(i);o.addEventListener('click',()=>o.remove());document.body.appendChild(o)}
-function vRead(){const l=allPosts().filter(p=>p.status==='approved').sort((a,b)=>b.at.localeCompare(a.at)),f=SH_CAT?l.filter(p=>p.cat===SH_CAT):l,adm=me.role==='admin',op=SH_OPEN&&l.find(p=>p.id===SH_OPEN);
-  if(op)return pDetail(op,isMod()?`<div class="acts" style="margin-top:14px"><button class="btn ghost" type="button" data-pa="medit" data-id="${esc(op.id)}">Sửa bài và ngày đăng</button>${adm?`<button class="btn ghost danger" type="button" data-pa="del" data-id="${esc(op.id)}">Gỡ bài</button>`:''}</div>`:'');
-  return `<div class="jump" style="margin:0 0 14px"><button class="q ${SH_CAT?'':'on'}" type="button" data-cat="">Tất cả</button>${PCATS.map(c=>`<button class="q ${SH_CAT===c?'on':''}" type="button" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
-  ${pList(f,'Chưa có bài nào trong chuyên mục này.')}
-  <div class="card cta" style="margin-top:16px"><h3>Em cũng có điều muốn chia sẻ?</h3><p class="hint">Viết một bài ngắn về kinh nghiệm, thông điệp hay bài nói của em, có thể kèm hình ảnh. Bài được duyệt sẽ đăng công khai.</p>${me.guest?'<p class="note">Cần đăng nhập bằng tài khoản do thầy cô cấp để viết và gửi bài.</p>':'<div class="acts"><button class="btn" type="button" data-sv="write">Viết bài</button></div>'}</div>`}
+function vRead(){const l=allPosts().filter(p=>p.status==='approved').sort(pinCmp),f=SH_CAT?l.filter(p=>p.cat===SH_CAT):l,adm=me.role==='admin',op=SH_OPEN&&l.find(p=>p.id===SH_OPEN);
+  if(op)return markView(op),pDetail(op,rxBar(op)+(isMod()?`<div class="acts" style="margin-top:14px"><button class="btn ghost" type="button" data-pa="pinS" data-id="${esc(op.id)}">${pinOn(op,'pinS')?'📌 Bỏ ghim ở Góc chia sẻ':'📌 Ghim ở Góc chia sẻ'}</button><button class="btn ghost" type="button" data-pa="pinH" data-id="${esc(op.id)}">${pinOn(op,'pinH')?'🏠 Bỏ ghim ở trang chủ':'🏠 Ghim ra trang chủ'}</button>${feat('wk')?`<button class="btn ghost" type="button" data-pa="wk" data-id="${esc(op.id)}">${wkOn(op)?'⭐ Bỏ Bài của tuần':'⭐ Chọn Bài của tuần'}</button>`:''}<button class="btn ghost" type="button" data-pa="exp" data-id="${esc(op.id)}">Hẹn hạn ghim</button><button class="btn ghost" type="button" data-pa="medit" data-id="${esc(op.id)}">Sửa bài và ngày đăng</button>${adm?`<button class="btn ghost danger" type="button" data-pa="del" data-id="${esc(op.id)}">Gỡ bài</button>`:''}</div>`:'')+cmtBox(op)+(op.wkAt&&wkOn(op)&&op.wkNote?`<p class="note"><b>Nhận xét của thầy cô:</b> ${esc(op.wkNote)}</p>`:''));
+  return wkCard()+chCard()+`<input id="sQ" type="search" placeholder="Tìm bài theo từ khoá hoặc tên tác giả" aria-label="Tìm bài viết" value="${esc(SH_Q)}" style="margin-bottom:10px"><div class="jump" style="margin:0 0 14px"><button class="q ${SH_CAT?'':'on'}" type="button" data-cat="">Tất cả</button>${PCATS.map(c=>`<button class="q ${SH_CAT===c?'on':''}" type="button" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+  <div id="sLst">${readList()}</div>
+  <div class="card cta" style="margin-top:16px"><h3>${me.role==='student'?'Em':(ttlOf(me)||'Bạn')} cũng có điều muốn chia sẻ?</h3><p class="hint">Viết một bài ngắn về kinh nghiệm, thông điệp hay bài nói của em, có thể kèm hình ảnh. Bài được duyệt sẽ đăng công khai.</p>${me.guest?'<p class="note">Cần đăng nhập bằng tài khoản do thầy cô cấp để viết và gửi bài.</p>':'<div class="acts"><button class="btn" type="button" data-sv="write">Viết bài</button></div>'}</div>`}
 function vWrite(){const e=SH_EDIT?allPosts().find(p=>p.id===SH_EDIT):null,adm=me.role==='admin',mm=!!e&&SH_MOD&&isMod();
   if(SH_IMGK!==(SH_EDIT||'')){SH_IMGS=e?pImgs(e):[];SH_IMGK=SH_EDIT||''}
   return `<div class="two"><form id="pf" class="card"><h3>${mm?'Chỉnh sửa bài viết':e?'Chỉnh sửa và gửi lại':'Viết bài chia sẻ'}</h3>
-  <label for="pT">Tiêu đề</label><input id="pT" maxlength="100" required value="${esc(e?e.title:'')}">
-  <label for="pC">Chuyên mục</label><select id="pC">${PCATS.map(c=>`<option${e&&e.cat===c?' selected':''}>${esc(c)}</option>`).join('')}</select>
+  <label for="pT">Tiêu đề</label><input id="pT" maxlength="100" required value="${esc(e?e.title:(SH_PRE?SH_PRE.title:''))}">
+  <label for="pC">Chuyên mục</label><select id="pC">${PCATS.map(c=>`<option${(e?e.cat:SH_PRE&&SH_PRE.cat)===c?' selected':''}>${esc(c)}</option>`).join('')}</select>
   <label for="pA">Tên hiển thị</label><input id="pA" maxlength="40" required placeholder="Tên hoặc biệt danh" value="${esc(e?e.author:(me.guest?'':me.name))}">
   ${mm?`<label for="pD">Ngày giờ đăng</label><input id="pD" type="datetime-local" required value="${toLocalIn(e.at)}">`:''}
   <label for="pB">Nội dung (từ 50 đến 3000 ký tự)</label><textarea class="tx" id="pB" maxlength="3000" required>${esc(e?e.body:'')}</textarea><p class="hint" id="pCnt">${e?e.body.length:0} / 3000</p>
@@ -1264,17 +1433,17 @@ function vWrite(){const e=SH_EDIT?allPosts().find(p=>p.id===SH_EDIT):null,adm=me
 function vMine(){const l=allPosts().filter(p=>p.authorId===gid()).sort((a,b)=>b.at.localeCompare(a.at)),fl=SH_FLASH;SH_FLASH='';
   const hd=(fl?`<p class="msg ok">${fl}</p>`:'')+(me.guest?'<p class="note">Em đang vào với vai trò khách nên bài chỉ gắn với trình duyệt này.</p>':''),op=SH_OPEN&&l.find(p=>p.id===SH_OPEN);
   if(op)return hd+pDetail(op,`${op.note?`<p><b>Lời nhắn của ${esc(op.by||'người duyệt')}:</b> ${esc(op.note)}</p>`:''}<div class="acts" style="margin-top:14px">${op.status==='rejected'?`<button class="btn ghost" type="button" data-pa="edit" data-id="${esc(op.id)}">Sửa và gửi lại</button>`:''}${op.status==='pending'&&!SB()?`<button class="btn ghost" type="button" data-pa="code" data-id="${esc(op.id)}">Gửi qua Zalo cho thầy cô</button>`:''}<button class="btn ghost danger" type="button" data-pa="mdel" data-id="${esc(op.id)}">Xoá bài</button></div>${SH_SEND&&SH_SEND.id===op.id?sendPanel():''}`,1);
-  return hd+pList(l,'Em chưa gửi bài nào. Hãy bắt đầu ở mục “Viết bài và gửi duyệt”.',1)}
+  return hd+(me.guest||!feat('badges')?'':`<h3 class="sh">🏅 Huy hiệu của em</h3><div class="badges" style="margin-bottom:14px">${badgeHtml()}</div>`)+pList(l,'Em chưa gửi bài nào. Hãy bắt đầu ở mục “Viết bài và gửi duyệt”.',1)}
 function vReview(){const l=allPosts().filter(p=>p.status==='pending').sort((a,b)=>a.at.localeCompare(b.at)),adm=me.role==='admin',op=SH_OPEN&&l.find(p=>p.id===SH_OPEN);
   if(op)return pDetail(op,`<p class="hint" style="margin-top:14px">Gửi bởi ${esc(op.author)} (${ROLE[op.role]||'Học sinh'}) lúc ${esc(fmt(op.at))}</p><div class="acts"><button class="btn ghost" type="button" data-pa="medit" data-id="${esc(op.id)}">Sửa bài và ngày đăng</button></div>`+(op.authorId===gid()&&!adm?'<p class="note">Đây là bài của bạn, cần Quản trị viên duyệt.</p>':`<div class="acts" style="margin-top:8px"><button class="btn" type="button" data-pa="ok" data-id="${esc(op.id)}">Duyệt và đăng</button><button class="btn ghost danger" type="button" data-pa="no" data-id="${esc(op.id)}">Từ chối, nhắn chỉnh sửa</button></div>`),1);
-  return `${SB()?'<div class="acts" style="margin-bottom:10px"><button class="btn ghost" type="button" data-pa="ref">Làm mới danh sách</button></div>':''}${pList(l,'Không có bài nào đang chờ duyệt.',1)}
+  return `${SB()?'<div class="acts" style="margin-bottom:10px"><button class="btn ghost" type="button" data-pa="ref">Làm mới danh sách</button></div>':''}${pList(l,'Không có bài nào đang chờ duyệt.',1)}${cmtReview()}
   <div class="two"><div class="card"><h3>Nhận bài từ học sinh bằng mã</h3><p class="hint">Học sinh gửi mã bài qua Zalo. Thầy cô dán mã vào đây (bài dài có nhiều phần thì dán tất cả cùng lúc) để bài hiện trong danh sách chờ duyệt.</p><textarea id="pImp" placeholder="Dán mã bài (bắt đầu bằng TNP…)" aria-label="Mã bài viết"></textarea><button class="btn" type="button" data-pa="imp">Nhận bài</button><p class="msg" id="pImpMsg" role="status"></p></div>
   ${adm?`<div class="card"><h3>Đưa bài đã đăng lên cho mọi người</h3><p class="hint">Bài hiện lưu trên trình duyệt này. Bấm nút, dán dòng mã vào file saoluu.js rồi tải lại trang để mọi máy cùng thấy các bài đã đăng. Cách khác: vào Cài đặt, bấm “Tạo mã sao lưu”; mã đó đã gồm cả bài viết.</p><button class="btn" type="button" data-pa="export">Sao chép mã bài đã đăng</button><p class="msg" id="pExMsg" role="status"></p></div>`:''}</div>`}
-function renderShare(){const pend=allPosts().filter(p=>p.status==='pending').length;
-  const tabs=me.guest?[['read','Bài viết']]:[['read','Bài viết'],['write','Viết bài và gửi duyệt'],['mine','Bài của tôi']];if(isMod())tabs.push(['review','Chờ duyệt'+(pend?' ('+pend+')':'')]);
+function renderShare(){const pend=allPosts().filter(p=>p.status==='pending').length+(feat('react')?recs('comment').filter(p=>p.status==='pending').length:0);
+  const tabs=me.guest?[['read','Bài viết']]:[['read','Bài viết'],['write','Viết bài và gửi duyệt'],['mine','Bài của tôi']];if(!me.guest&&feat('duel'))tabs.splice(2,0,['duel','⚔️ Thách đấu']);if(isMod()){tabs.push(['review','Chờ duyệt'+(pend?' ('+pend+')':'')]);if(feat('manage'))tabs.push(['manage','Quản lý bài'])}
   if(!tabs.some(t=>t[0]===SH_V))SH_V='read';
   $('sNav').innerHTML=tabs.map(t=>`<button class="q ${SH_V===t[0]?'on':''}" type="button" data-sv="${t[0]}" aria-pressed="${SH_V===t[0]}">${t[1]}</button>`).join('');
-  $('sBody').innerHTML=(isMod()&&SB()?`<div class="note" style="margin-bottom:12px"><b>Supabase:</b> ${esc(SB_ST||'chưa chạy')} · Mã kiểm duyệt: ${lsGet('tnsu_modkey')?'<b style="color:#1b7f3b">đã nhập trên máy này</b>':'<b style="color:#c62828">chưa nhập</b>'}<div class="acts" style="margin-top:8px"><button class="btn ghost" type="button" data-pa="key">${lsGet('tnsu_modkey')?'Đổi mã kiểm duyệt':'Nhập mã kiểm duyệt'}</button><button class="btn ghost" type="button" data-pa="ref">Làm mới</button></div></div>`:'')+({read:vRead,write:vWrite,mine:vMine,review:vReview})[SH_V]()}
+  $('sBody').innerHTML=(isMod()&&SB()?`<div class="note" style="margin-bottom:12px"><b>Supabase:</b> ${esc(SB_ST||'chưa chạy')} · Mã kiểm duyệt: ${lsGet('tnsu_modkey')?'<b style="color:#1b7f3b">đã nhập trên máy này</b>':'<b style="color:#c62828">chưa nhập</b>'}<div class="acts" style="margin-top:8px"><button class="btn ghost" type="button" data-pa="key">${lsGet('tnsu_modkey')?'Đổi mã kiểm duyệt':'Nhập mã kiểm duyệt'}</button><button class="btn ghost" type="button" data-pa="ref">Làm mới</button></div></div>`:'')+({read:vRead,write:vWrite,mine:vMine,review:vReview,manage:vManage,duel:vDuel})[SH_V]()}
 $('p-share').addEventListener('submit',async e=>{if(e.target.id!=='pf')return;e.preventDefault();if(me.guest)return;
   const t=$('pT').value.trim(),b=$('pB').value.trim(),a=$('pA').value.trim(),f=m=>say('pMsg',m,'err');
   if(t.length<5)return f('Tiêu đề cần từ 5 ký tự.');if(b.length<50)return f('Nội dung cần từ 50 ký tự.');if(!a)return f('Em hãy nhập tên hiển thị.');
@@ -1284,12 +1453,12 @@ $('p-share').addEventListener('submit',async e=>{if(e.target.id!=='pf')return;e.
   if(!$('pOk').checked)return f('Em hãy tích xác nhận bài tự viết và không có thông tin riêng.');
   if(e.submitter)e.submitter.disabled=true;
   const old=SH_EDIT?allPosts().find(p=>p.id===SH_EDIT&&p.authorId===gid()):null,adm=me.role==='admin';
-  const pr=putPost({id:old?old.id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:t,cat:$('pC').value,body:b,author:a,authorId:gid(),role:me.role,at:new Date().toISOString(),status:adm?'approved':'pending',by:adm?me.name:'',note:'',imgs:SH_IMGS.slice()});
-  const nImg=SH_IMGS.length;SH_IMGK=null;SH_OPEN=null;SH_EDIT=null;SH_V=adm?'read':'mine';
+  const pr=putPost({id:old?old.id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:t,cat:$('pC').value,body:b,author:a,authorId:gid(),role:me.role,at:new Date().toISOString(),status:adm?'approved':'pending',by:adm?me.name:'',note:'',imgs:SH_IMGS.slice(),ch:SH_CH||(old&&old.ch)||''});
+  const nImg=SH_IMGS.length;SH_CH='';SH_PRE=null;SH_IMGK=null;SH_OPEN=null;SH_EDIT=null;SH_V=adm?'read':'mine';
   let ok=false;if(!adm&&SB())ok=!!(await pr);
   if(!adm&&!ok){const np=allPosts().filter(x=>x.authorId===gid()).sort((x,y)=>(y.ts||'').localeCompare(x.ts||''))[0];if(np)SH_SEND={id:np.id,parts:await pEncode(np)}}
   SH_FLASH=adm?'':'Đã gửi bài. Bài sẽ hiện công khai sau khi được kiểm duyệt viên hoặc Quản trị viên duyệt.'+(nImg&&!SB()?' Lưu ý: ảnh không đi kèm khi gửi bằng mã Zalo.':'');renderShare();if(!adm){if(ok)zOk();else if(SH_SEND)zModal()}});
-$('p-share').addEventListener('input',e=>{if(e.target.id==='pB')$('pCnt').textContent=e.target.value.length+' / 3000'});
+$('p-share').addEventListener('input',e=>{if(e.target.id==='sQ'){SH_Q=e.target.value;$('sLst').innerHTML=readList();return}if(e.target.id==='pB')$('pCnt').textContent=e.target.value.length+' / 3000'});
 $('p-share').addEventListener('change',async e=>{if(e.target.id!=='pI')return;const fs=[...e.target.files];e.target.value='';
   for(const f of fs){if(SH_IMGS.length>=3){setIm('Mỗi bài chỉ đính kèm tối đa 3 ảnh.',1);break}
     if(!/^image\//.test(f.type)){setIm('“'+f.name+'” không phải file ảnh.',1);continue}
@@ -1342,10 +1511,11 @@ async function pImport(){const m='pImpMsg';let d;
   putPost({id:d.id.slice(0,40),title:d.title.slice(0,100),cat:PCATS.includes(d.cat)?d.cat:PCATS[4],body:d.body,author:String(d.author||'Học sinh').slice(0,40),authorId:String(d.authorId||'').slice(0,40),role:'student',at:new Date().toISOString(),status:'pending',by:'',note:''});
   renderShare();say(m,'Đã nhận bài “'+d.title.slice(0,40)+'”, xem ở danh sách chờ duyệt phía trên.','ok')}
 $('p-share').addEventListener('click',async e=>{
-  const s=e.target.closest('[data-sv]');if(s){SH_V=s.dataset.sv;SH_EDIT=null;SH_MOD=false;SH_OPEN=null;SH_IMGK=null;renderShare();return}
+  const s=e.target.closest('[data-sv]');if(s){SH_V=s.dataset.sv;SH_PRE=null;SH_CH='';SH_EDIT=null;SH_MOD=false;SH_OPEN=null;SH_IMGK=null;renderShare();return}
   const po=e.target.closest('[data-po]');if(po){SH_OPEN=po.dataset.po||null;renderShare();$('sNav').scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'start'});return}
   const zm=e.target.closest('[data-zoom]');if(zm){const p=allPosts().find(x=>x.id===SH_OPEN),im=p?pImgs(p):[],s2=im[+zm.dataset.zoom];if(s2)zoomImg(s2);return}
   const rm=e.target.closest('[data-rmimg]');if(rm){SH_IMGS.splice(+rm.dataset.rmimg,1);drawImgs();setIm('Đã bỏ ảnh.');return}
+  const rx=e.target.closest('[data-rx]');if(rx){if(!me.guest)setRx(rx.dataset.id,+rx.dataset.rx);return}
   const c=e.target.closest('[data-cat]');if(c){SH_CAT=c.dataset.cat;renderShare();return}
   const b=e.target.closest('[data-pa]');if(!b)return;const a=b.dataset.pa;
   if(a==='key'&&isMod()){const k=prompt('Nhập mã kiểm duyệt do quản trị viên cấp (để trống rồi bấm OK để xoá mã đã lưu):','');if(k===null)return;
@@ -1353,11 +1523,21 @@ $('p-share').addEventListener('click',async e=>{
     SB_AT=0;SB_ST='đang đồng bộ…';renderShare();await sbPull();renderShare();return}
   if(a==='ref'&&isMod()){await sbPull();renderShare();return}
   if(a==='imp'&&isMod())return pImport();
-  if(a==='export'&&me.role==='admin'){const t='window.TNSU_POSTS='+JSON.stringify(allPostsRaw().filter(p=>p.status==='approved'&&!p.seed&&p.kind!=='practice'))+';';const ok=await copyTxt(t);return say('pExMsg',ok?'Đã sao chép. Dán vào file saoluu.js rồi tải lại trang.':'Không sao chép được.',ok?'ok':'err')}
+  if(a==='export'&&me.role==='admin'){const t='window.TNSU_POSTS='+JSON.stringify(allPostsRaw().filter(p=>p.status==='approved'&&(!p.seed||p.pinS||p.pinH)&&!['practice','react','view','vote'].includes(p.kind)))+';';const ok=await copyTxt(t);return say('pExMsg',ok?'Đã sao chép. Dán vào file saoluu.js rồi tải lại trang.':'Không sao chép được.',ok?'ok':'err')}
   if((a==='cp'||a==='sh')&&SH_SEND){const t=zText(+b.dataset.i);if(a==='sh')navigator.share({text:t}).catch(()=>{});else b.textContent=(await copyTxt(t))?'Đã sao chép ✓':'Không sao chép được';return}
   if(a==='zalo'){window.open(zaloUrl(),'_blank','noopener');return}
+  if(a==='cok'||a==='cno')return cmtAct(a,b.dataset.id);
+  if(/^d(new|acc|dec|vote|del)$/.test(a)&&!me.guest&&feat('duel'))return duelAct(a,b.dataset);
+  if(a==='chcam'){J_V='mirror';showTab('journey');return}
+  if(a==='chwrite'&&!me.guest){SH_PRE={cat:'Bài nói của em',title:'Thử thách tuần: '+chTopic().slice(0,70)};SH_CH=wkKey();SH_V='write';SH_EDIT=null;SH_MOD=false;SH_OPEN=null;SH_IMGK=null;renderShare();return}
+  if(a==='chset'&&isMod()){const t=prompt('Chủ đề thử thách nói của tuần này:',chTopic());if(t&&t.trim()){putPost({id:'cfg_challenge',kind:'config',title:'cfg',cat:'x',body:JSON.stringify({wk:wkKey(),topic:t.trim().slice(0,120)}),author:me.name,authorId:gid(),role:me.role,at:new Date().toISOString(),status:'approved'});renderShare()}return}
   const p=allPosts().find(x=>x.id===b.dataset.id);if(!p)return;const own=p.authorId===gid();
-  if(a==='medit'&&isMod()){SH_EDIT=p.id;SH_MOD=true;SH_V='write';SH_IMGK=null;renderShare()}
+  if(a==='cmt'&&!me.guest&&p.status==='approved'){const t=($('cmT').value||'').trim();if(t.length<10){alert('Lời góp ý cần từ 10 ký tự.');return}
+    putPost({id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:'comment',pid:p.id,title:'Góp ý',cat:'Góp ý',body:t.slice(0,300),author:me.name,authorId:gid(),role:me.role,at:new Date().toISOString(),status:isMod()?'approved':'pending'});renderShare();return}
+  if(a==='wk'&&isMod()&&p.status==='approved'){wkToggle(p);return}
+  if(a==='exp'&&isMod()){const d=prompt('Ngày hết hạn ghim (dạng 2026-12-31). Để trống để bỏ hạn:',p.pinExp||'');if(d===null)return;if(d.trim()&&!/^\d{4}-\d\d-\d\d$/.test(d.trim())){alert('Ngày chưa đúng dạng 2026-12-31.');return}putPost({...p,pinExp:d.trim()});renderShare();return}
+  if((a==='pinS'||a==='pinH')&&isMod()&&p.status==='approved'){togglePin(p,a)}
+  else if(a==='medit'&&isMod()){SH_EDIT=p.id;SH_MOD=true;SH_V='write';SH_IMGK=null;renderShare()}
   else if(a==='edit'&&own){SH_MOD=false;SH_EDIT=p.id;SH_V='write';SH_IMGK=null;renderShare()}
   else if(a==='mdel'&&own){if(confirm('Xoá bài này?')){putPost({...p,del:true});SH_OPEN=null;renderShare()}}
   else if(a==='code'&&own){SH_SEND={id:p.id,parts:await pEncode(p)};renderShare()}
@@ -1495,14 +1675,14 @@ async function sbPull(th){if(!SB())return false;if(th&&Date.now()-SB_AT<20000)re
 var EDIT_ID=null;
 function openEdit(a){EDIT_ID=a.id;$('efT').textContent='Chỉnh sửa thông tin: '+a.id;$('en').value=a.name;$('ec').value=a.cls||'';
   const self=a.id===me.id;$('er').disabled=self;$('er').innerHTML=(self?[a.role]:CAN_CREATE[me.role]).map(r=>`<option value="${r}"${r===a.role?' selected':''}>${ROLE[r]}</option>`).join('');
-  $('ecW').classList.toggle('hide',$('er').value!=='student');$('eMsg').textContent='';$('ef').classList.remove('hide');$('en').focus();$('ef').scrollIntoView({block:'center'})}
-$('er').onchange=()=>$('ecW').classList.toggle('hide',$('er').value!=='student');
+  $('et').innerHTML=ttlHtml($('er').value,a.ttl);$('ecW').classList.toggle('hide',$('er').value!=='student');$('eMsg').textContent='';$('ef').classList.remove('hide');$('en').focus();$('ef').scrollIntoView({block:'center'})}
+$('er').onchange=()=>{$('ecW').classList.toggle('hide',$('er').value!=='student');$('et').innerHTML=ttlHtml($('er').value)};
 $('eX').onclick=()=>{EDIT_ID=null;$('ef').classList.add('hide')};
 $('ef').addEventListener('submit',e=>{e.preventDefault();const a=accounts.find(x=>x.id===EDIT_ID);
   const self=!!a&&a.id===me.id&&me.role==='admin';if(!a||!(manageable(a)||self))return say('eMsg','Bạn không có quyền sửa tài khoản này.','err');
   const n=$('en').value.trim(),r=self?a.role:$('er').value;if(!n)return say('eMsg','Tên hiển thị không được để trống.','err');
   if(!self&&!CAN_CREATE[me.role].includes(r))return say('eMsg','Bạn không có quyền đặt vai trò này.','err');
-  a.name=n;a.role=r;if(a.id===me.id){me.name=n;$('whoName').textContent=n}a.cls=r==='student'?$('ec').value.trim():'';save();renderAccounts();$('ef').classList.add('hide');EDIT_ID=null});
+  a.name=n;a.role=r;a.ttl=r==='student'?'Học sinh':($('et').value||'Thầy');if(a.id===me.id){me.name=n;$('whoName').textContent=n}a.cls=r==='student'?$('ec').value.trim():'';save();renderAccounts();$('ef').classList.add('hide');EDIT_ID=null});
 /* ===== Theo dõi tiến trình học sinh ===== */
 var PG={rows:[],cls:''};
 function progPush(){if(!me||me.role!=='student'||me.guest||!SB())return;
