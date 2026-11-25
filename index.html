@@ -334,7 +334,7 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
       <input id="p" name="password" type="password" autocomplete="current-password" required>
       <button id="go" class="btn" type="submit">Đăng nhập</button>
       <div class="alt">hoặc</div>
-      <button id="guest" class="btn ghost" type="button">Đăng nhập mà không cần tài khoản</button>
+      <button id="guest" class="btn ghost" type="button">Vào với vai trò học sinh (không cần tài khoản)</button>
       <div class="bar" id="bar"><i id="fill"></i></div>
       <p class="msg" id="msg" role="status"></p>
     </form>
@@ -588,7 +588,7 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
           <label for="cp">Mật khẩu ban đầu</label><input id="cp" type="text" placeholder="từ 6 ký tự" required>
           <label for="cr">Vai trò</label><select id="cr"></select>
           <label for="ct">Chức vụ</label><select id="ct"></select>
-          <label for="cc">Lớp (với học sinh)</label><input id="cc" placeholder="ví dụ 5A">
+          <label for="cc">Lớp (với học sinh, kể cả kiểm duyệt viên là học sinh)</label><input id="cc" placeholder="ví dụ 5A">
           <button class="btn" type="submit">Tạo tài khoản</button>
           <p class="msg" id="cmsg" role="status"></p>
         </form>
@@ -630,7 +630,8 @@ textarea.tx{font:inherit;font-size:.95rem;line-height:1.5;word-break:normal;min-
 <script>
 const $=id=>document.getElementById(id);
 const ROLE={admin:'Quản trị viên',mod:'Kiểm duyệt viên',student:'Học sinh'};
-const ttlHtml=(role,cur)=>(role==='student'?['Học sinh']:['Thầy','Cô']).map(t=>`<option${t===cur?' selected':''}>${t}</option>`).join('');
+const ttlHtml=(role,cur)=>(role==='student'?['Học sinh']:role==='mod'?['Thầy','Cô','Học sinh']:['Thầy','Cô']).map(t=>`<option${t===cur?' selected':''}>${t}</option>`).join('');
+const isStuAcc=a=>!!a&&(a.role==='student'||a.ttl==='Học sinh');
 const ttlOf=a=>a&&a.ttl&&a.role!=='student'?a.ttl:'';
 const CAN_CREATE={admin:['admin','mod','student'],mod:['student'],student:[]};
 const TABS=[['home','Trang chủ','Giới thiệu'],['survey','Thực trạng','Khảo sát, bài viết và video minh chứng'],['test','Khám phá bản thân','Bài test năng lực'],['journey','Hành trình tiến bộ','Luyện tập kỹ năng mỗi ngày'],['share','Góc chia sẻ','Thông điệp và bài viết của em']];
@@ -649,7 +650,7 @@ function showTab(t){document.querySelectorAll('.panel').forEach(p=>p.classList.t
 function enter(){
   $('login').classList.add('hide');$('app').classList.remove('hide');
   $('whoName').textContent=me.name;$('whoRole').textContent=(ttlOf(me)?ttlOf(me)+' · ':'')+ROLE[me.role];
-  $('hello').textContent=(me.guest?'Xin chào bạn! Bạn đang vào với Khách, không cần tài khoản. Hãy đăng nhập để viết bài và lưu tiến bộ.':'Xin chào '+(ttlOf(me)?ttlOf(me)+' ':'')+me.name+'! Dữ liệu đã được cập nhật.')+(BOOT_ERR?' ⚠ Chưa nạp được dữ liệu sao lưu: '+BOOT_ERR:'');
+  $('hello').textContent=(me.guest?'Xin chào bạn! Bạn đang vào với vai trò học sinh, không cần tài khoản. Hãy đăng nhập để viết bài và lưu tiến bộ.':'Xin chào '+(ttlOf(me)&&ttlOf(me)!=='Học sinh'?ttlOf(me)+' ':'')+me.name+'! Dữ liệu đã được cập nhật.')+(BOOT_ERR?' ⚠ Chưa nạp được dữ liệu sao lưu: '+BOOT_ERR:'');
   const tabs=TABS.slice();if(CAN_CREATE[me.role].length){tabs.push(['progress','Theo dõi tiến trình','Tiến độ luyện tập của học sinh']);tabs.push(['accounts','Quản lý tài khoản','Tạo và quản lý tài khoản'])}
   if(me.role==='admin')tabs.push(['settings','Cài đặt','Sao lưu và khôi phục dữ liệu']);
   $('nav').innerHTML=tabs.map(t=>`<button class="tabbtn" data-t="${t[0]}" type="button">${t[1]}</button>`).join('');
@@ -690,7 +691,7 @@ $('cf').addEventListener('submit',async e=>{
   if(pw.length<6)return fail('Mật khẩu cần từ 6 ký tự.');
   if(accounts.some(a=>a.id===id))return fail('ID này đã có người dùng.');
   if(role==='admin'&&!confirm('Tạo tài khoản Quản trị viên "'+name+'"? Tài khoản này sẽ có toàn quyền: tạo, sửa, xoá tài khoản khác và thay đổi dữ liệu.'))return;
-  accounts.push({id,name,role,ttl:$('ct').value,cls:role==='student'?$('cc').value.trim():'',h:await hash(id,pw)});save();
+  accounts.push({id,name,role,ttl:$('ct').value,cls:role!=='admin'?$('cc').value.trim():'',h:await hash(id,pw)});save();
   m.textContent='Đã tạo tài khoản '+name+' ('+id+').';m.classList.add('ok');$('cf').reset();$('ct').innerHTML=ttlHtml($('cr').value);ciTouched=false;renderAccounts();
 });
 const GUEST={id:'__guest',name:'Khách',role:'student',cls:'',guest:true};
@@ -874,7 +875,7 @@ const KB=[
  {k:['giong','phat am','nhip','toc do','noi to','noi nho','am luong','ngu dieu','noi'],a:'Mẹo cho giọng nói: nói rõ từng chữ, dừng ngắt hai giây sau ý quan trọng, nhấn nhẹ vào từ khoá và thay đổi cao độ để người nghe không thấy đơn điệu. Em có thể ghi âm lại chính mình rồi nghe để tự nhận xét, đó là cách tiến bộ nhanh nhất.',go:[['journey','Phòng thực hành']]},
  {k:['ai','tri tue nhan tao','chatgpt','may moc'],a:'Trí tuệ nhân tạo là người bạn đồng hành, không nói thay bạn. AI có thể gợi ý dàn ý, hỏi ngược lại bài nói để bạn thấy chỗ chưa rõ và góp ý cách diễn đạt. Ý tưởng, câu chữ và cảm xúc vẫn là của bạn, và nhớ kiểm chứng thông tin trước khi dùng nhé.'},
  {k:['hoc van','mon van','van hoc','bai van','lam van','thoi dai so','ke chuyen','tranh bien','podcast','video','sang tao','ngu van'],a:'Học Văn trong thời đại số rất thú vị: bạn có thể kể lại một tác phẩm bằng lời của mình, tranh biện về nhân vật, ghi âm podcast cảm nhận hay làm video ngắn giới thiệu một cuốn sách. Nói ra được cảm xúc cũng là cách hiểu văn sâu hơn.',go:[['share','Đến Góc chia sẻ']]},
- {k:['dang nhap','tai khoan','mat khau','quen mat khau','khach','id'],a:'Bạn có thể đăng nhập bằng ID và mật khẩu do thầy cô cấp, hoặc bấm "Đăng nhập mà không cần tài khoản" ở trang đầu. Nếu quên mật khẩu, hãy nhờ thầy cô hoặc người quản lý đặt lại giúp.'},
+ {k:['dang nhap','tai khoan','mat khau','quen mat khau','khach','id'],a:'Bạn có thể đăng nhập bằng ID và mật khẩu do thầy cô cấp, hoặc bấm "Vào với vai trò học sinh (không cần tài khoản)" ở trang đầu. Nếu quên mật khẩu, hãy nhờ thầy cô hoặc người quản lý đặt lại giúp.'},
  {k:['thuc trang','khao sat','kham pha','bai test','hanh trinh','thuc hanh','chia se','goc chia se','muc nao','o dau','tab','menu','cac muc','muc chinh','trang chu'],a:'Các mục chính của TNSpeakUp:\n• Thực trạng: biểu đồ khảo sát và bài viết.\n• Khám phá bản thân: bài test năng lực.\n• Hành trình tiến bộ: phòng thực hành nói.\n• Góc chia sẻ: nơi gửi thông điệp và bài viết của em.',go:[['survey','Thực trạng'],['test','Khám phá bản thân'],['journey','Hành trình tiến bộ'],['share','Góc chia sẻ']]},
  {k:['dong vien','co vu','buon','chan','met','nan','khich le','khong tu tin'],a:'__cheer'},
  {k:['cam on','thanks','tks'],a:'Không có gì! Chúc bạn luôn dám cất lời và toả sáng nhé.'},
@@ -1350,7 +1351,7 @@ function duels(){const rp={},vt={};recs('duelr').forEach(r=>{try{rp[r.id.slice(3
   recs('vote').forEach(x=>{try{const m=JSON.parse(x.body);for(const k in m){const o=vt[k]||(vt[k]={a:0,b:0});if(m[k]==='a'||m[k]==='b')o[m[k]]++}}catch(e){}});
   return recs('duel').map(d=>{let j={};try{j=JSON.parse(d.body)}catch(e){}const r=rp[d.id],v=vt[d.id]||{a:0,b:0},st=!r?'wait':r.ok?(Date.now()>Date.parse(r.at)+DAYS3?'end':'live'):'no';
     return {d,j,r,v,st,win:st==='end'?(v.a>v.b?'a':v.b>v.a?'b':''):''}}).sort((x,y)=>y.d.at.localeCompare(x.d.at))}
-function vDuel(){const L=duels(),id=gid(),opp=accounts.filter(a=>a.role==='student'&&a.id!==id),w={},mv=mapOf('vote',id),tp=CH[Math.floor(Math.random()*CH.length)];
+function vDuel(){const L=duels(),id=gid(),opp=accounts.filter(a=>isStuAcc(a)&&a.id!==id),w={},mv=mapOf('vote',id),tp=CH[Math.floor(Math.random()*CH.length)];
   const nm=x=>x.win==='a'?x.d.author:x.j.toName;L.filter(x=>x.win).forEach(x=>{const k=nm(x);w[k]=(w[k]||0)+1});
   const inbox=L.filter(x=>x.st==='wait'&&x.j.to===id),out=L.filter(x=>x.st==='wait'&&x.d.authorId===id),ong=L.filter(x=>x.st==='live'||x.st==='end');
   const card=x=>{const part=x.d.authorId===id||x.j.to===id,end=x.st==='end',vb=t=>`<button class="btn ghost" type="button" data-pa="dvote" data-id="${esc(x.d.id)}" data-v="${t}">Bình chọn bài này</button>`;
@@ -1364,7 +1365,7 @@ function vDuel(){const L=duels(),id=gid(),opp=accounts.filter(a=>a.role==='stude
   ${out.length?`<p class="hint">Đang chờ trả lời: ${out.map(x=>esc(x.j.toName)).join(', ')}</p>`:''}
   <h3 class="sh">Các trận đang diễn ra và đã xong</h3>${ong.map(card).join('')||'<p class="soon">Chưa có trận nào. Hãy là người thách đấu đầu tiên!</p>'}`}
 function duelAct(a,g){const id=gid(),now=new Date().toISOString(),mk=(i,k,b)=>putPost({id:i,kind:k,title:k,cat:'x',body:JSON.stringify(b),author:me.name,authorId:id,role:me.role,at:now,status:'approved'});
-  if(a==='dnew'){const to=accounts.find(x=>x.id===$('dO').value&&x.role==='student'),t=$('dT').value.trim(),txt=$('dA').value.trim();if(!to||t.length<5)return alert('Hãy chọn bạn và nhập chủ đề.');if(txt.length<30)return alert('Phần trình bày cần từ 30 ký tự.');
+  if(a==='dnew'){const to=accounts.find(x=>x.id===$('dO').value&&isStuAcc(x)),t=$('dT').value.trim(),txt=$('dA').value.trim();if(!to||t.length<5)return alert('Hãy chọn bạn và nhập chủ đề.');if(txt.length<30)return alert('Phần trình bày cần từ 30 ký tự.');
     mk('d'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),'duel',{to:to.id,toName:to.name,topic:t.slice(0,120),a:txt.slice(0,300)});alert('Đã gửi lời thách đấu cho '+to.name+'.')}
   else if(a==='dacc'||a==='ddec'){const x=duels().find(y=>y.d.id===g.id);if(!x||x.j.to!==id||x.r)return;
     if(a==='dacc'){const t=($('dB_'+g.id).value||'').trim();if(t.length<30)return alert('Phần trình bày cần từ 30 ký tự.');mk('dr_'+g.id,'duelr',{ok:1,b:t.slice(0,300)})}else mk('dr_'+g.id,'duelr',{ok:0})}
@@ -1417,7 +1418,7 @@ function vRead(){const l=allPosts().filter(p=>p.status==='approved').sort(pinCmp
   if(op)return markView(op),pDetail(op,rxBar(op)+(isMod()?`<div class="acts" style="margin-top:14px"><button class="btn ghost" type="button" data-pa="pinS" data-id="${esc(op.id)}">${pinOn(op,'pinS')?'📌 Bỏ ghim ở Góc chia sẻ':'📌 Ghim ở Góc chia sẻ'}</button><button class="btn ghost" type="button" data-pa="pinH" data-id="${esc(op.id)}">${pinOn(op,'pinH')?'🏠 Bỏ ghim ở trang chủ':'🏠 Ghim ra trang chủ'}</button>${feat('wk')?`<button class="btn ghost" type="button" data-pa="wk" data-id="${esc(op.id)}">${wkOn(op)?'⭐ Bỏ Bài của tuần':'⭐ Chọn Bài của tuần'}</button>`:''}<button class="btn ghost" type="button" data-pa="exp" data-id="${esc(op.id)}">Hẹn hạn ghim</button><button class="btn ghost" type="button" data-pa="medit" data-id="${esc(op.id)}">Sửa bài và ngày đăng</button>${adm?`<button class="btn ghost danger" type="button" data-pa="del" data-id="${esc(op.id)}">Gỡ bài</button>`:''}</div>`:'')+cmtBox(op)+(op.wkAt&&wkOn(op)&&op.wkNote?`<p class="note"><b>Nhận xét của thầy cô:</b> ${esc(op.wkNote)}</p>`:''));
   return wkCard()+chCard()+`<input id="sQ" type="search" placeholder="Tìm bài theo từ khoá hoặc tên tác giả" aria-label="Tìm bài viết" value="${esc(SH_Q)}" style="margin-bottom:10px"><div class="jump" style="margin:0 0 14px"><button class="q ${SH_CAT?'':'on'}" type="button" data-cat="">Tất cả</button>${PCATS.map(c=>`<button class="q ${SH_CAT===c?'on':''}" type="button" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
   <div id="sLst">${readList()}</div>
-  <div class="card cta" style="margin-top:16px"><h3>${me.role==='student'?'Em':(ttlOf(me)||'Bạn')} cũng có điều muốn chia sẻ?</h3><p class="hint">Viết một bài ngắn về kinh nghiệm, thông điệp hay bài nói của em, có thể kèm hình ảnh. Bài được duyệt sẽ đăng công khai.</p>${me.guest?'<p class="note">Cần đăng nhập bằng tài khoản do thầy cô cấp để viết và gửi bài.</p>':'<div class="acts"><button class="btn" type="button" data-sv="write">Viết bài</button></div>'}</div>`}
+  <div class="card cta" style="margin-top:16px"><h3>${isStuAcc(me)?'Em':(ttlOf(me)||'Bạn')} cũng có điều muốn chia sẻ?</h3><p class="hint">Viết một bài ngắn về kinh nghiệm, thông điệp hay bài nói của em, có thể kèm hình ảnh. Bài được duyệt sẽ đăng công khai.</p>${me.guest?'<p class="note">Cần đăng nhập bằng tài khoản do thầy cô cấp để viết và gửi bài.</p>':'<div class="acts"><button class="btn" type="button" data-sv="write">Viết bài</button></div>'}</div>`}
 function vWrite(){const e=SH_EDIT?allPosts().find(p=>p.id===SH_EDIT):null,adm=me.role==='admin',mm=!!e&&SH_MOD&&isMod();
   if(SH_IMGK!==(SH_EDIT||'')){SH_IMGS=e?pImgs(e):[];SH_IMGK=SH_EDIT||''}
   return `<div class="two"><form id="pf" class="card"><h3>${mm?'Chỉnh sửa bài viết':e?'Chỉnh sửa và gửi lại':'Viết bài chia sẻ'}</h3>
@@ -1675,17 +1676,17 @@ async function sbPull(th){if(!SB())return false;if(th&&Date.now()-SB_AT<20000)re
 var EDIT_ID=null;
 function openEdit(a){EDIT_ID=a.id;$('efT').textContent='Chỉnh sửa thông tin: '+a.id;$('en').value=a.name;$('ec').value=a.cls||'';
   const self=a.id===me.id;$('er').disabled=self;$('er').innerHTML=(self?[a.role]:CAN_CREATE[me.role]).map(r=>`<option value="${r}"${r===a.role?' selected':''}>${ROLE[r]}</option>`).join('');
-  $('et').innerHTML=ttlHtml($('er').value,a.ttl);$('ecW').classList.toggle('hide',$('er').value!=='student');$('eMsg').textContent='';$('ef').classList.remove('hide');$('en').focus();$('ef').scrollIntoView({block:'center'})}
-$('er').onchange=()=>{$('ecW').classList.toggle('hide',$('er').value!=='student');$('et').innerHTML=ttlHtml($('er').value)};
+  $('et').innerHTML=ttlHtml($('er').value,a.ttl);$('ecW').classList.toggle('hide',$('er').value==='admin');$('eMsg').textContent='';$('ef').classList.remove('hide');$('en').focus();$('ef').scrollIntoView({block:'center'})}
+$('er').onchange=()=>{$('ecW').classList.toggle('hide',$('er').value==='admin');$('et').innerHTML=ttlHtml($('er').value)};
 $('eX').onclick=()=>{EDIT_ID=null;$('ef').classList.add('hide')};
 $('ef').addEventListener('submit',e=>{e.preventDefault();const a=accounts.find(x=>x.id===EDIT_ID);
   const self=!!a&&a.id===me.id&&me.role==='admin';if(!a||!(manageable(a)||self))return say('eMsg','Bạn không có quyền sửa tài khoản này.','err');
   const n=$('en').value.trim(),r=self?a.role:$('er').value;if(!n)return say('eMsg','Tên hiển thị không được để trống.','err');
   if(!self&&!CAN_CREATE[me.role].includes(r))return say('eMsg','Bạn không có quyền đặt vai trò này.','err');
-  a.name=n;a.role=r;a.ttl=r==='student'?'Học sinh':($('et').value||'Thầy');if(a.id===me.id){me.name=n;$('whoName').textContent=n}a.cls=r==='student'?$('ec').value.trim():'';save();renderAccounts();$('ef').classList.add('hide');EDIT_ID=null});
+  a.name=n;a.role=r;a.ttl=r==='student'?'Học sinh':($('et').value||'Thầy');if(a.id===me.id){me.name=n;$('whoName').textContent=n}a.cls=r!=='admin'?$('ec').value.trim():'';save();renderAccounts();$('ef').classList.add('hide');EDIT_ID=null});
 /* ===== Theo dõi tiến trình học sinh ===== */
 var PG={rows:[],cls:''};
-function progPush(){if(!me||me.role!=='student'||me.guest||!SB())return;
+function progPush(){if(!isStuAcc(me)||me.guest||!SB())return;
   sbPush('prog:'+me.id,{id:me.id,name:me.name,cls:me.cls||'',test:tHist(),log:jLog().slice(-30),at:new Date().toISOString()})}
 function pgLocal(a){let t=[],l=[];try{t=JSON.parse(localStorage.getItem('tnsu_test_'+a.id)||'[]')}catch(e){}try{l=JSON.parse(localStorage.getItem('tnsu_jr_'+a.id)||'[]')}catch(e){}return {test:Array.isArray(t)?t:[],log:Array.isArray(l)?l:[]}}
 const lastAt=x=>x.length?String(x[x.length-1].at):'';
@@ -1694,7 +1695,7 @@ async function pgLoad(){say('pgSt','Đang tải dữ liệu…');try{await sbPul
       if(!r.length)note=lsGet('tnsu_modkey')?'Supabase chưa có dữ liệu tiến trình nào, hoặc mã kiểm duyệt chưa đúng.':'Bấm “Nhập mã kiểm duyệt” để xem dữ liệu từ Supabase.'}
     catch(e){note='Không kết nối được Supabase ('+(e.st||'lỗi mạng')+'). Đang hiện dữ liệu có trên máy này.'}}
   else note='Chưa cấu hình Supabase nên chỉ thấy dữ liệu của học sinh đã dùng trên máy này.';
-  PG.rows=accounts.filter(a=>a.role==='student').map(a=>{const L=pgLocal(a),R=rem.get(a.id)||{test:[],log:[]};
+  PG.rows=accounts.filter(isStuAcc).map(a=>{const L=pgLocal(a),R=rem.get(a.id)||{test:[],log:[]};
     return {a,test:lastAt(L.test)>=lastAt(R.test)?L.test:R.test,log:lastAt(L.log)>=lastAt(R.log)?L.log:R.log}});
   say('pgSt',note,note?'':'ok');renderPg()}
 const pgAvg=s=>Math.round(s.reduce((x,y)=>x+y,0)/s.length);
